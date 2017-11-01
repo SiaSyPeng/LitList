@@ -1,4 +1,4 @@
-# WePlaylist
+# LitList
 The democratic, crowd-sourced playlist manager.
 
 Team Wubalubadubdub: Josiah Putman, Sia Peng, Lessley Hernandez
