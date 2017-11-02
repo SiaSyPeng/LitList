@@ -1,7 +1,7 @@
 # LitList
 The democratic, crowd-sourced playlist manager.
 
-Team Wubalubadubdub: Josiah Putman, Sia Peng, Lessley Hernandez
+Team Wubalubadubdub: Josiah Putman, Lessley Hernandez, Sia Peng 
 
 ## Project Idea
 Our idea is to create an app that allows users to collaboratively create and manage playlist with other users in their area. This app can be used as an easy way to simultaneously listen to music with others and manage playlists live. Music has always been a way to express emotion and communicate feelings. Through this app we can allow people to share a piece of themselves through music. Users have the ability to see all public playlists in a map view, and joining, participating and giving your vote for the next song are all just a tap away. LitList allows users to use playlists as a liaison for understanding the musical atmosphere on campus.
