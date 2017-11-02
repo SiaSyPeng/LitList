@@ -1,4 +1,4 @@
-# WePlaylist
+# LitPlaylist
 
 The democratic, crowd-sourced playlist manager.
 
