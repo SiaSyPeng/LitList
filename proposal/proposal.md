@@ -43,14 +43,14 @@ Please see `litlist.png` for a diagram of the user experience.
 ### APIs
 We will be using the following APIs. We already have the keys.
 #### Spotify
-We plan on using Spotify for playing songs and login
+We plan on using Spotify for playing songs and login.
 
 #### Google maps
 We plan on using Google maps for the map view.
 
 ### Sensors
-Accelerometers, GSP
-Shaking the phone auto-joins the nearest session
+Accelerometers, GPS
+Shaking the phone auto-joins the nearest session.
 
 ### Server development
 This project will require a server. We want to program in Python on a Raspberry Pi.
