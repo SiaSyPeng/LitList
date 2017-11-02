@@ -17,6 +17,7 @@ DEMOCRACY! Something that has been tragically lost in 2k17 will be revived throu
 ### Why people should care
 - Its a better way to experience and share music
 - Understanding the musical environment on campus
+-If you care about what people are thinking you care about what people are listening to
 
 ## User experience
 - Login page - uses Spotify login, after successful login opens main view
