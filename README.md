@@ -38,7 +38,7 @@ DEMOCRACY! Something that has been tragically lost in 2k17 will be revived throu
 
 	Songs get upvoted and downvoted by users, which sorts the playing order
 
-![litlist](./proposal/ListListMockup.png "All")
+![litlist](./proposal/LitListMockup.png "All")
 ![Landing](./proposal/Landing.png "Landing")
 ![Home](./proposal/Home.png "Home")
 ![Map](./proposal/Map.png "Map")
