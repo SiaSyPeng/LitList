@@ -38,8 +38,12 @@ DEMOCRACY! Something that has been tragically lost in 2k17 will be revived throu
 
 	Songs get upvoted and downvoted by users, which sorts the playing order
 
-![Alt text](relative/path/to/img.jpg?raw=true "Title")
-![Alt text](relative/path/to/img.jpg?raw=true "Title")
+![Home](./proposal/Home.png "Home")
+![Landing](./proposal/Landing.png "Landing")
+![Map](./proposal/Map.png "Map")
+![Playlist](./proposal/Playlist.png "Playlist")
+![Rank](./proposal/Rank.png "Rank")
+![Settings](./proposal/Home.png "Settings")
 
 ## Implementation Notes
 
