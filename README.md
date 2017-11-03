@@ -44,7 +44,6 @@ DEMOCRACY! Something that has been tragically lost in 2k17 will be revived throu
 ![Map](./proposal/Map.png "Map")
 ![Playlist](./proposal/Playlist.png "Playlist")
 ![Rank](./proposal/Rank.png "Rank")
-![Settings](./proposal/Home.png "Settings")
 
 ## Implementation Notes
 
