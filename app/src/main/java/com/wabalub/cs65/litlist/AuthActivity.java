@@ -20,10 +20,8 @@ public class AuthActivity extends Activity implements
         SpotifyPlayer.NotificationCallback, ConnectionStateCallback
 {
 
-    // TODO: Replace with your client ID
-    private static final String CLIENT_ID = "yourclientid";
-    // TODO: Replace with your redirect URI
-    private static final String REDIRECT_URI = "yourcustomprotocol://callback";
+    private static final String CLIENT_ID = "21b943421c7e415b9de1dac931ac13a3";
+    private static final String REDIRECT_URI = "litlist://callback";
 
     private static final int REQUEST_CODE = 1337;
 
