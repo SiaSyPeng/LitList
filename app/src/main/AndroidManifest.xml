@@ -36,14 +36,15 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
             android:parentActivityName=".SignInActivity"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".SignInActivity" />
         </activity>
-
         <activity
             android:name=".MapActivity"
             android:parentActivityName=".MainActivity"
@@ -52,7 +53,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity android:name=".SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
