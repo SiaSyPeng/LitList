@@ -8,7 +8,7 @@ package com.wabalub.cs65.litlist;
 
 public class ActionbarPagerAdapter extends FragmentPagerAdapter {
     private final int PAGE_COUNT = 4;
-    private String tabTitles[] = new String[] { "Play", "History", "Ranking", "Settings" };
+    private String tabTitles[] = new String[] { "Map", "Playlist", "Ranking", "Settings" };
     private Context context;
 
     ActionbarPagerAdapter(FragmentManager fm, Context context) {
