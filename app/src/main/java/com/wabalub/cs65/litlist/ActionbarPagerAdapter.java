@@ -11,6 +11,7 @@ public class ActionbarPagerAdapter extends FragmentPagerAdapter {
     private String tabTitles[] = new String[] { "Play", "History", "Ranking", "Settings" };
     private Context context;
 
+
     ActionbarPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
@@ -43,4 +44,5 @@ public class ActionbarPagerAdapter extends FragmentPagerAdapter {
         // Generate title based on item position
         return tabTitles[position];
     }
+
 }
