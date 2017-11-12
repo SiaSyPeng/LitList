@@ -23,7 +23,26 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
+    //Spotify libraries
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // This library handles authentication and authorization
+    //compile 'com.spotify.sdk:spotify-auth:1.0.0-beta12@aar'
+
+    // This library handles music playback
+    //compile 'com.spotify.sdk:spotify-player:2.2.0-beta12@aar'
+    compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
+
+    compile 'com.spotify.android:auth:1.0.0-alpha'
+
     implementation 'com.android.support:support-v4:26.1.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -43,9 +62,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-}
-repositories {
-    mavenCentral()
 }
 
 apply plugin: 'kotlin-android-extensions'
