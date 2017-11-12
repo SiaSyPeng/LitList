@@ -6,9 +6,11 @@ package com.wabalub.cs65.litlist;
         import android.support.v4.app.FragmentManager;
         import android.support.v4.app.FragmentPagerAdapter;
 
+        import com.wabalub.cs65.litlist.GsonClasses.Playlist;
+
 public class ActionbarPagerAdapter extends FragmentPagerAdapter {
     private final int PAGE_COUNT = 4;
-    private String tabTitles[] = new String[] { "Play", "History", "Ranking", "Settings" };
+    private String tabTitles[] = new String[] { "Map", "Playlist", "Ranking", "Settings" };
     private Context context;
 
 
@@ -32,10 +34,19 @@ public class ActionbarPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment;
 
         switch (position) {
+            case 0:
+                fragment = MapFragment.newInstance();
+                break;
+
+            case 1:
+                fragment = PlaylistFragment.newInstance(1);
+                break;
+
             default:
                 fragment = BlankFragment.newInstance();
                 break;
         }
+
         return fragment;
     }
 
