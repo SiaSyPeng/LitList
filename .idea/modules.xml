@@ -3,11 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LitList.iml" filepath="$PROJECT_DIR$/LitList.iml" />
-<<<<<<< HEAD
-      <module fileurl="file://$PROJECT_DIR$/.idea/LitList.iml" filepath="$PROJECT_DIR$/.idea/LitList.iml" />
-=======
->>>>>>> 66363d5b422c78cf9e2500f4d11a8f4eccf9780d
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
