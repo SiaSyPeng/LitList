@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.spotify.sdk.android.player.Player;
 import com.wabalub.cs65.litlist.GsonClasses.Playlist;
 import com.wabalub.cs65.litlist.GsonClasses.Song;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
@@ -27,6 +28,7 @@ public final class MainActivity extends AppCompatActivity
         implements InternetListener, OnFragmentInteractionListener, OnListFragmentInteractionListener {
     private ActionbarPagerAdapter pagerAdapter;
     private RequestQueue queue;
+
 
     public static Playlist playlist = new Playlist(new ArrayList<Song>(), "");
 
@@ -62,8 +64,13 @@ public final class MainActivity extends AppCompatActivity
         TabLayout.Tab tab = tabLayout.getTabAt(0);
         assert tab != null;
         tab.select();
+
+        // setup the player
     }
     public void onStartExploringClicked(View view) {
+
+        //When the player is logged in we ask the player to play the Spotify track with the URI
+        AuthActivity.player.playUri(null, "spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 0, 0);
         this.setIntent(new Intent(this, MapActivity.class));
         this.startActivity(this.getIntent());
     }

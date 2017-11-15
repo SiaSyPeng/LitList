@@ -25,8 +25,8 @@ public class AuthActivity extends Activity implements
     private static final String REDIRECT_URI = "litlist://callback";
 
     private static final int REQUEST_CODE = 1337;
+    public static Player player;
 
-    private Player mPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +66,9 @@ public class AuthActivity extends Activity implements
                 Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
                     @Override
                     public void onInitialized(SpotifyPlayer spotifyPlayer) {
-                        mPlayer = spotifyPlayer;
-                        mPlayer.addConnectionStateCallback(AuthActivity.this);
-                        mPlayer.addNotificationCallback(AuthActivity.this);
+                        player = spotifyPlayer;
+                        player.addConnectionStateCallback(AuthActivity.this);
+                        player.addNotificationCallback(AuthActivity.this);
                     }
 
                     @Override
@@ -113,9 +113,6 @@ public class AuthActivity extends Activity implements
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-
-        //When the player is logged in we ask the player to play the Spotify track with the URI
-        //mPlayer.playUri(null, "spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 0, 0);
     }
 
     @Override

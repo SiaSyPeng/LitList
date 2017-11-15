@@ -18,7 +18,7 @@ public class SignInActivity extends AppCompatActivity {
      * @param view the view
      */
     public void onSignInClicked(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, AuthActivity.class);
         startActivity(intent);
     }
 }
