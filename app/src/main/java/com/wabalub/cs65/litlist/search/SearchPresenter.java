@@ -10,16 +10,22 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.wabalub.cs65.litlist.MainActivity;
+import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.prefs.AbstractPreferences;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.models.Track;
 
-public class SearchPresenter implements Search.ActionListener {
+public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.InternetListener {
 
     private static final String TAG = SearchPresenter.class.getSimpleName();
     public static final int PAGE_SIZE = 20;
+    private static final String ADD_URL = "...";
+    private static final int ADD_REQUEST = 0;
 
     private final Context mContext;
     private final Search.View mView;
@@ -36,16 +42,7 @@ public class SearchPresenter implements Search.ActionListener {
 
     @Override
     public void init(String accessToken) {
-        logMessage("Api Client created");
-        SpotifyApi spotifyApi = new SpotifyApi();
-
-        if (accessToken != null) {
-            spotifyApi.setAccessToken(accessToken);
-        } else {
-            logError("No valid access token");
-        }
-
-        mSearchPager = new SearchPager(spotifyApi.getService());
+        mSearchPager = new SearchPager(MainActivity.spotifyApi.getService());
     }
 
 
@@ -100,6 +97,7 @@ public class SearchPresenter implements Search.ActionListener {
     @Override
     public void selectTrack(Track item) {
         logMessage("Selected track " + item.toString());
+
         String previewUrl = item.preview_url;
 
         if (previewUrl == null) {
@@ -134,5 +132,27 @@ public class SearchPresenter implements Search.ActionListener {
     private void logMessage(String msg) {
         Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
         Log.d(TAG, msg);
+    }
+
+    /**
+     * Method to request adding a song to the playlist
+     * @param track the track to add tot he playlist
+     */
+    private void addToPlayList(Track track){
+        Map<String, String> args = new HashMap<String, String>();
+        args.put("user_id", MainActivity.userID);
+        args.put("playlist_id", MainActivity.playlist.getId());
+        args.put("track_id", track.id);
+        InternetMgmtLib.getString(this, MainActivity.queue, ADD_URL, ADD_REQUEST, args);
+    }
+
+    @Override
+    public void onResponse(int requestCode, String res) {
+
+    }
+
+    @Override
+    public void onErrorResponse(int requestCode, String res) {
+
     }
 }

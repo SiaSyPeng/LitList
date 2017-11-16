@@ -21,10 +21,8 @@ import com.wabalub.cs65.litlist.R;
 public class PlayerService extends Service {
 
     public static TrackPlayer player = new TrackPlayer();
-    private static final String ACTION_STOP_SERVICE = "STOP";
     public static final int SERVICE_ID = 1;
     public static final String TAG = "PLAYER_SERVICE";
-    private static final int PLAYER_NOTI_ID = 0;
 
     @Override
     public IBinder onBind(Intent arg0)
