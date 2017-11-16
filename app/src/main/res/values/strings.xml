@@ -11,4 +11,7 @@
     <string name="start_exploring">Start exploring</string>
     <string name="map_message">Join a playlist!</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="login_button">Login with Spotify</string>
+    <string name="cover_art_description">Cover Art</string>
+    <string name="search_hint">Search</string>
 </resources>
