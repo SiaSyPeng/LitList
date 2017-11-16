@@ -14,6 +14,7 @@ import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib.InternetListener;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
+import com.wabalub.cs65.litlist.search.Player;
 import com.wabalub.cs65.litlist.search.SearchActivity;
 
 import java.util.ArrayList;
@@ -24,6 +25,10 @@ public final class MainActivity extends AppCompatActivity
         implements InternetListener, OnFragmentInteractionListener, OnListFragmentInteractionListener {
     private ActionbarPagerAdapter pagerAdapter;
     private RequestQueue queue;
+    public static final String EXTRA_TOKEN = "EXTRA_TOKEN";
+    public static String token = null;
+
+    public static Player player;
 
 
     public static Playlist playlist = new Playlist(new ArrayList<Song>(), "");
@@ -62,11 +67,12 @@ public final class MainActivity extends AppCompatActivity
         tab.select();
 
         // setup the player
+        Intent intent = getIntent();
+        token = intent.getStringExtra(EXTRA_TOKEN);
     }
     public void onStartExploringClicked(View view) {
 
         //When the player is logged in we ask the player to play the Spotify track with the URI
-        AuthActivity.player.playUri(null, "spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 0, 0);
         Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
     }

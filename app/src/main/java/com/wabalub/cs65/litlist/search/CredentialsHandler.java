@@ -2,6 +2,7 @@ package com.wabalub.cs65.litlist.search;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.concurrent.TimeUnit;
 
@@ -10,6 +11,7 @@ public class CredentialsHandler {
     private static final String ACCESS_TOKEN_NAME = "webapi.credentials.access_token";
     private static final String ACCESS_TOKEN = "access_token";
     private static final String EXPIRES_AT = "expires_at";
+    private static final String TAG = "CREDENTIALS";
 
     public static void setToken(Context context, String token, long expiresIn, TimeUnit unit) {
         Context appContext = context.getApplicationContext();
@@ -29,6 +31,7 @@ public class CredentialsHandler {
     }
 
     public static String getToken(Context context) {
+        Log.e(TAG, "getting token");
         Context appContext = context.getApplicationContext();
         SharedPreferences sharedPref = getSharedPreferences(appContext);
 
@@ -39,6 +42,7 @@ public class CredentialsHandler {
             return null;
         }
 
+        Log.e(TAG, "token = " + token);
         return token;
     }
 }

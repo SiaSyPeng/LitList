@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.SearchView;
 
+import com.wabalub.cs65.litlist.MainActivity;
 import com.wabalub.cs65.litlist.R;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import kaaes.spotify.webapi.android.models.Track;
 
 public class SearchActivity extends AppCompatActivity implements Search.View {
 
-    static final String EXTRA_TOKEN = "EXTRA_TOKEN";
+
     private static final String KEY_CURRENT_QUERY = "CURRENT_QUERY";
 
     private Search.ActionListener mActionListener;
@@ -49,10 +50,9 @@ public class SearchActivity extends AppCompatActivity implements Search.View {
         setContentView(R.layout.activity_search);
 
         Intent intent = getIntent();
-        String token = intent.getStringExtra(EXTRA_TOKEN);
 
         mActionListener = new SearchPresenter(this, this);
-        mActionListener.init(token);
+        mActionListener.init(MainActivity.token);
 
         // Setup search field
         final SearchView searchView = (SearchView) findViewById(R.id.search_view);

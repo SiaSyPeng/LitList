@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.wabalub.cs65.litlist.MainActivity;
+
 import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
@@ -26,17 +28,17 @@ public class SearchPresenter implements Search.ActionListener {
     private SearchPager mSearchPager;
     private SearchPager.CompleteListener mSearchListener;
 
-    private Player mPlayer;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mPlayer = ((PlayerService.PlayerBinder) service).getService();
+            logMessage("Creating player service");
+            MainActivity.player = ((PlayerService.PlayerBinder) service).getService();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            mPlayer = null;
+            MainActivity.player = null;
         }
     };
 
@@ -113,6 +115,7 @@ public class SearchPresenter implements Search.ActionListener {
 
     @Override
     public void selectTrack(Track item) {
+        logMessage("Selected track " + item.toString());
         String previewUrl = item.preview_url;
 
         if (previewUrl == null) {
@@ -120,16 +123,22 @@ public class SearchPresenter implements Search.ActionListener {
             return;
         }
 
-        if (mPlayer == null) return;
+        if (MainActivity.player == null) {
+            logMessage("Player is null");
+            return;
+        }
 
-        String currentTrackUrl = mPlayer.getCurrentTrack();
+        String currentTrackUrl = MainActivity.player.getCurrentTrack();
 
         if (currentTrackUrl == null || !currentTrackUrl.equals(previewUrl)) {
-            mPlayer.play(previewUrl);
-        } else if (mPlayer.isPlaying()) {
-            mPlayer.pause();
+            logMessage("Playing song");
+            MainActivity.player.play(previewUrl);
+        } else if (MainActivity.player.isPlaying()) {
+            logMessage("Pausing the song");
+            MainActivity.player.pause();
         } else {
-            mPlayer.resume();
+            logMessage("Resuming the song");
+            MainActivity.player.resume();
         }
     }
 

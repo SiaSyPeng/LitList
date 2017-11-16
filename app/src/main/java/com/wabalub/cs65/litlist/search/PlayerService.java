@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
 public class PlayerService extends Service {
 
     private final IBinder mBinder = new PlayerBinder();
-    private PreviewPlayer mPlayer = new PreviewPlayer();
+    private TrackPlayer mPlayer = new TrackPlayer();
 
     public static Intent getIntent(Context context) {
         return new Intent(context, PlayerService.class);
