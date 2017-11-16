@@ -138,7 +138,7 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
      * Method to request adding a song to the playlist
      * @param track the track to add tot he playlist
      */
-    private void addToPlayList(Track track){
+    private void requestAddToPlaylist(Track track){
         Map<String, String> args = new HashMap<String, String>();
         args.put("user_id", MainActivity.userID);
         args.put("playlist_id", MainActivity.playlist.getId());
@@ -148,7 +148,8 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
 
     @Override
     public void onResponse(int requestCode, String res) {
-
+        // TODO
+        // get back a playlist from the server, save the playlist to MainActivity.playlist, then return to main activity
     }
 
     @Override
