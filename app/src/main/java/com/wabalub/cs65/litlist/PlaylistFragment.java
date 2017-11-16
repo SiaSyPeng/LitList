@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.wabalub.cs65.litlist.GsonClasses.Song;
+import com.wabalub.cs65.litlist.gson.Song;
 
 /**
  * A fragment representing a list of Items.

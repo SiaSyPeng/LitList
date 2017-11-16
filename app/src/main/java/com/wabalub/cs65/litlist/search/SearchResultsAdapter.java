@@ -1,4 +1,4 @@
-package com.wabalub.cs65.litlist.SearchLib;
+package com.wabalub.cs65.litlist.search;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

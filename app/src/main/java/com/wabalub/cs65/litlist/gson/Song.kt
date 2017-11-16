@@ -1,4 +1,4 @@
-package com.wabalub.cs65.litlist.GsonClasses
+package com.wabalub.cs65.litlist.gson
 
 import android.graphics.drawable.Drawable
 

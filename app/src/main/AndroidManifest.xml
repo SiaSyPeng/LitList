@@ -74,6 +74,11 @@
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
+        <activity
+            android:name=".search.SearchActivity"
+            android:label="@string/search_activity_title">
+
+        </activity>
     </application>
 
 </manifest>

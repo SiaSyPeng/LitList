@@ -1,27 +1,23 @@
 package com.wabalub.cs65.litlist;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.TabLayout.Tab;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.spotify.sdk.android.player.Player;
-import com.wabalub.cs65.litlist.GsonClasses.Playlist;
-import com.wabalub.cs65.litlist.GsonClasses.Song;
+import com.wabalub.cs65.litlist.gson.Playlist;
+import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
-import com.wabalub.cs65.litlist.MyLibs.InternetMgmtLib.InternetListener;
+import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib.InternetListener;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
+import com.wabalub.cs65.litlist.search.SearchActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import org.jetbrains.annotations.NotNull;
+
 import org.jetbrains.annotations.Nullable;
 
 public final class MainActivity extends AppCompatActivity
@@ -71,7 +67,12 @@ public final class MainActivity extends AppCompatActivity
 
         //When the player is logged in we ask the player to play the Spotify track with the URI
         AuthActivity.player.playUri(null, "spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 0, 0);
-        this.setIntent(new Intent(this, MapActivity.class));
-        this.startActivity(this.getIntent());
+        Intent intent = new Intent(this, MapActivity.class);
+        startActivity(intent);
+    }
+
+    public void onAddSongClicked(View view) {
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
     }
 }

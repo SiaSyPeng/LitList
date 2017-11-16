@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.wabalub.cs65.litlist.GsonClasses.Song;
+import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
 
 import java.util.List;

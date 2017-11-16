@@ -73,7 +73,7 @@ public class AuthActivity extends Activity implements
 
                     @Override
                     public void onError(Throwable throwable) {
-                        Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+                        Log.e("SearchActivity", "Could not initialize player: " + throwable.getMessage());
                     }
                 });
             }
@@ -109,7 +109,7 @@ public class AuthActivity extends Activity implements
 
     @Override
     public void onLoggedIn() {
-        Log.d("MainActivity", "User logged in");
+        Log.d("SearchActivity", "User logged in");
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -117,21 +117,21 @@ public class AuthActivity extends Activity implements
 
     @Override
     public void onLoggedOut() {
-        Log.d("MainActivity", "User logged out");
+        Log.d("SearchActivity", "User logged out");
     }
 
     @Override
     public void onLoginFailed(Error e) {
-        Log.d("MainActivity", "Login failed");
+        Log.d("SearchActivity", "Login failed");
     }
 
     @Override
     public void onTemporaryError() {
-        Log.d("MainActivity", "Temporary error occurred");
+        Log.d("SearchActivity", "Temporary error occurred");
     }
 
     @Override
     public void onConnectionMessage(String message) {
-        Log.d("MainActivity", "Received connection message: " + message);
+        Log.d("SearchActivity", "Received connection message: " + message);
     }
 }

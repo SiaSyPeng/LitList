@@ -1,4 +1,4 @@
-package com.wabalub.cs65.litlist.SearchLib;
+package com.wabalub.cs65.litlist.search;
 
 import android.app.Activity;
 import android.content.ComponentName;

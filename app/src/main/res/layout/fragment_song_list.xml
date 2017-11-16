@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="com.wabalub.cs65.litlist.PlaylistFragment"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="com.wabalub.cs65.litlist.PlaylistFragment"
-    tools:listitem="@layout/fragment_song" />
+    android:layout_width="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:name="com.wabalub.cs65.litlist.PlaylistFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.wabalub.cs65.litlist.PlaylistFragment"
+        tools:listitem="@layout/fragment_song" />
+
+    <ImageButton
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="8dp"
+        android:background="@null"
+        android:layout_marginEnd="8dp"
+        android:onClick="onAddSongClicked"
+        android:scaleType="fitCenter"
+        android:src="@drawable/fire"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="8dp" />
+</android.support.constraint.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.wabalub.cs65.litlist.SearchLib;
+package com.wabalub.cs65.litlist.search;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -73,8 +73,8 @@ public class LoginActivity extends Activity {
     }
 
     private void startMainActivity(String token) {
-        Intent intent = MainActivity.createIntent(this);
-        intent.putExtra(MainActivity.EXTRA_TOKEN, token);
+        Intent intent = SearchActivity.createIntent(this);
+        intent.putExtra(SearchActivity.EXTRA_TOKEN, token);
         startActivity(intent);
         finish();
     }

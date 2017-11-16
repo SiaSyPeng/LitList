@@ -1,4 +1,4 @@
-package com.wabalub.cs65.litlist.SearchLib;
+package com.wabalub.cs65.litlist.search;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Track;
 
-public class MainActivity extends AppCompatActivity implements Search.View {
+public class SearchActivity extends AppCompatActivity implements Search.View {
 
     static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     private static final String KEY_CURRENT_QUERY = "CURRENT_QUERY";
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements Search.View {
     }
 
     public static Intent createIntent(Context context) {
-        return new Intent(context, MainActivity.class);
+        return new Intent(context, SearchActivity.class);
     }
 
     @Override
