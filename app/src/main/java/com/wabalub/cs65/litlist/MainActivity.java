@@ -2,6 +2,7 @@ package com.wabalub.cs65.litlist;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,7 @@ import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib.InternetListener;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
 import com.wabalub.cs65.litlist.search.Player;
+import com.wabalub.cs65.litlist.search.PlayerService;
 import com.wabalub.cs65.litlist.search.SearchActivity;
 
 import java.util.ArrayList;
@@ -27,8 +29,6 @@ public final class MainActivity extends AppCompatActivity
     private RequestQueue queue;
     public static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     public static String token = null;
-
-    public static Player player;
 
 
     public static Playlist playlist = new Playlist(new ArrayList<Song>(), "");
@@ -69,6 +69,14 @@ public final class MainActivity extends AppCompatActivity
         // setup the player
         Intent intent = getIntent();
         token = intent.getStringExtra(EXTRA_TOKEN);
+
+        Intent serviceIntent = PlayerService.getIntent(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent);
+        }
+        else {
+            startService(serviceIntent);
+        }
     }
     public void onStartExploringClicked(View view) {
 
