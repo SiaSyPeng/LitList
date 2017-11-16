@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LitList.iml" filepath="$PROJECT_DIR$/LitList.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/LitList-app.iml" filepath="$PROJECT_DIR$/app/LitList-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/git-LitList.iml" filepath="$PROJECT_DIR$/git-LitList.iml" />
     </modules>
   </component>
 </project>
