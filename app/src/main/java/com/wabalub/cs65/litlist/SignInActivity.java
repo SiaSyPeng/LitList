@@ -10,10 +10,13 @@ import android.widget.Toast;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.spotify.sdk.android.player.*;
+import com.spotify.sdk.android.player.Error;
+import com.spotify.sdk.android.player.Player;
 
 import java.util.concurrent.TimeUnit;
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity implements ConnectionStateCallback, Player.NotificationCallback {
 
     private static final String TAG = SignInActivity.class.getSimpleName();
 
@@ -33,6 +36,7 @@ public class SignInActivity extends AppCompatActivity {
         if (token == null) {
             setContentView(R.layout.activity_sign_in);
         } else {
+            initializePlayer(token);
             startMainActivity(token);
         }
     }
@@ -43,7 +47,7 @@ public class SignInActivity extends AppCompatActivity {
      */
     public void onSignInClicked(View view) {
        final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
-                .setScopes(new String[]{"playlist-read"})
+                .setScopes(new String[]{"playlist-read", "user-read-private", "streaming"})
                 .build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
@@ -52,6 +56,7 @@ public class SignInActivity extends AppCompatActivity {
         @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
+        logMessage("onActivityResult called for login");
 
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
@@ -59,9 +64,10 @@ public class SignInActivity extends AppCompatActivity {
             switch (response.getType()) {
                 // Response was successful and contains auth token
                 case TOKEN:
-                    logMessage("Got token: " + response.getAccessToken());
-                    CredentialsHandler.setToken(this, response.getAccessToken(), response.getExpiresIn(), TimeUnit.SECONDS);
-                    startMainActivity(response.getAccessToken());
+                    String token = response.getAccessToken();
+                    logMessage("Got token: " + token);
+                    initializePlayer(token);
+                    startMainActivity(token);
                     break;
 
                 // Auth flow returned an error
@@ -74,6 +80,29 @@ public class SignInActivity extends AppCompatActivity {
                     logError("Auth result: " + response.getType());
             }
         }
+    }
+
+    /**
+     * Method to init the spotify player
+     * @param token access token
+     */
+    private void initializePlayer(String token){
+        CredentialsHandler.setToken(this, token, 60*60*24, TimeUnit.SECONDS);
+        Config playerConfig = new Config(this, token, CLIENT_ID);
+        Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
+            @Override
+            public void onInitialized(SpotifyPlayer spotifyPlayer) {
+                logMessage("Player created");
+                PlayerService.player = spotifyPlayer;
+                PlayerService.player.addConnectionStateCallback(SignInActivity.this);
+                PlayerService.player.addNotificationCallback(SignInActivity.this);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+            }
+        });
     }
 
     private void startMainActivity(String token) {
@@ -91,5 +120,34 @@ public class SignInActivity extends AppCompatActivity {
     private void logMessage(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         Log.d(TAG, msg);
+    }
+
+    @Override
+    public void onLoggedIn() {
+
+    }
+
+    @Override
+    public void onLoggedOut() {
+    }
+
+    @Override
+    public void onLoginFailed(Error error) {
+    }
+
+    @Override
+    public void onTemporaryError() {
+    }
+
+    @Override
+    public void onConnectionMessage(String s) {
+    }
+
+    @Override
+    public void onPlaybackEvent(PlayerEvent playerEvent) {
+    }
+
+    @Override
+    public void onPlaybackError(Error error) {
     }
 }

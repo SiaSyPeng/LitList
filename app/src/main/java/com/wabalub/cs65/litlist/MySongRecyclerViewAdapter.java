@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.google.common.base.Joiner;
 import com.squareup.picasso.Picasso;
-import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Song} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link Track} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */

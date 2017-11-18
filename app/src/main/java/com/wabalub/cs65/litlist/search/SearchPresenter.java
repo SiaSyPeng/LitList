@@ -6,9 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.wabalub.cs65.litlist.MainActivity;
-import com.wabalub.cs65.litlist.Player;
 import com.wabalub.cs65.litlist.PlayerService;
-import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib;
 
 import java.util.HashMap;
@@ -98,7 +96,9 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
         String previewUrl = item.preview_url;
 
         // add to the local playlist
-        MainActivity.testTracks.add(item);
+        MainActivity.playlist.getIds().add(item.id);
+
+        // MainActivity.tracks.add(item);
         logMessage("Added " + item);
         MainActivity.pagerAdapter.notifyDataSetChanged();
 
@@ -112,19 +112,19 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
             return;
         }
 
-        String currentTrackUrl = PlayerService.player.getCurrentTrack();
+        String currentTrackUrl = PlayerService.previewPlayer.getCurrentTrack();
 
         if (currentTrackUrl == null || !currentTrackUrl.equals(previewUrl)) {
             logMessage("Playing song");
-            PlayerService.player.play(previewUrl);
+            PlayerService.previewPlayer.play(previewUrl);
         }
-        else if (PlayerService.player.isPlaying()) {
+        else if (PlayerService.previewPlayer.isPlaying()) {
             logMessage("Pausing the song");
-            PlayerService.player.pause();
+            PlayerService.previewPlayer.pause();
         }
         else {
             logMessage("Resuming the song");
-            PlayerService.player.resume();
+            PlayerService.previewPlayer.resume();
         }
         PlayerService.currentTrack = item;
     }

@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.google.common.base.Joiner;
+import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,8 @@ import kaaes.spotify.webapi.android.models.Track;
 
 public class PlayerService extends Service {
 
-    public static TrackPlayer player = new TrackPlayer();
+    public static TrackPlayer previewPlayer = new TrackPlayer();
+    public static SpotifyPlayer player;
     public static Track currentTrack = null;
     public static final int SERVICE_ID = 1;
     public static final int NOTIFICATION_ID = 1;
@@ -77,7 +79,7 @@ public class PlayerService extends Service {
 
     @Override
     public void onDestroy() {
-        player.release();
+        previewPlayer.release();
         super.onDestroy();
     }
 
