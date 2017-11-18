@@ -111,6 +111,13 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
      * Method to setup the tab layout
      */
     private void setupTabLayout(){
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        int position = 0;
+        if(extras != null) {
+            position = extras.getInt("tab_position");
+        }
+
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         pagerAdapter = new ActionbarPagerAdapter(getSupportFragmentManager(),
@@ -123,7 +130,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         tabLayout.setupWithViewPager(viewPager);
 
         // Start on the only tab we have implemented
-        TabLayout.Tab tab = tabLayout.getTabAt(0);
+        TabLayout.Tab tab = tabLayout.getTabAt(position);
         assert tab != null;
         tab.select();
     }

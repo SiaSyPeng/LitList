@@ -1,6 +1,7 @@
 package com.wabalub.cs65.litlist.search;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -99,7 +100,11 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                 MainActivity.updateTracks();
 
                 Log.d(TAG,"Added " + item.name);
-                MainActivity.pagerAdapter.notifyDataSetChanged();
+                Intent intent = new Intent(mContext, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("tab_position", 1);
+                intent.putExtra(MainActivity.EXTRA_TOKEN, MainActivity.token);
+                mContext.startActivity(intent);
             }
         });
     }
