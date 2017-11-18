@@ -27,25 +27,7 @@
         android:onClick="onAddSongClicked"
         android:scaleType="fitCenter"
         android:src="@drawable/fire"
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/lightYellow"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" >
-
-        <Button
-            android:backgroundTint="@color/white"
-            android:textColor="@color/colorPrimary"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:layout_width="90dp"
-            android:layout_height="60dp"
-            android:layout_margin="15dp"
-            android:onClick="onAddSongClicked"
-            android:text="@string/search_button" />
-    </RelativeLayout>
-
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginRight="8dp" />
 
@@ -56,10 +38,10 @@
         android:layout_marginBottom="8dp"
         android:background="@null"
         android:layout_marginEnd="8dp"
-        android:onClick="onShareClicked"
+        android:onClick="onAddSongClicked"
         android:scaleType="fitCenter"
         android:src="@drawable/fire"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/add_by_search_button" />
-
+        app:layout_constraintEnd_toStartOf="@id/add_by_search_button"
+        android:layout_marginRight="8dp" />
 </android.support.constraint.ConstraintLayout>
