@@ -87,7 +87,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionState
      * @param token access token
      */
     private void initializePlayer(String token){
-        CredentialsHandler.setToken(this, token, 60*60*24, TimeUnit.SECONDS);
+        CredentialsHandler.setToken(this, token, 1, TimeUnit.HOURS);
         Config playerConfig = new Config(this, token, CLIENT_ID);
         Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
             @Override

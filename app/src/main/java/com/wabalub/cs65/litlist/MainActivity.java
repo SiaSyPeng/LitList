@@ -10,6 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +39,7 @@ import com.wabalub.cs65.litlist.search.SearchActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -43,11 +49,13 @@ import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.UserPrivate;
 
 public final class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
-        InternetListener, OnFragmentInteractionListener, OnListFragmentInteractionListener {
+        InternetListener, OnFragmentInteractionListener, OnListFragmentInteractionListener,
+        SensorEventListener {
     private static final String TAG = "MAIN" ;
     public static ActionbarPagerAdapter pagerAdapter;
     private GoogleMap map;
 
+    // for network requests and Spotify api
     public static RequestQueue queue;
     public static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     public static String userID = null;
@@ -55,11 +63,20 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public static SpotifyApi spotifyApi;
     public static SpotifyService spotifyService;
 
+    // for playlist management
     public static Playlist playlist = new Playlist(new ArrayList<String>(), "", "");
     public static List<Track> tracks = new ArrayList<Track>();
 
     public static String USER_PREF = "profile_data";
 
+
+    // for sensors
+    private SensorManager sensorMgr;
+    private Sensor accelerometer;
+    private static final int SHAKE_THRESHOLD = 6000;
+    private long lastTime = 0, lastShakeTime = 0, TIME_THRESHOLD = 2000;
+    private int samplingPeriod = 100000; // 10 ^ 5 us = 0.1 s
+    private float last_x = 0f, last_y = 0f, last_z = 0f;
 
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,11 +84,27 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.activity_main);
         queue = Volley.newRequestQueue(this);
 
-        //setup the tab layout
+        // setup the tab layout
         setupTabLayout();
 
         // setup the Spotify API and Player
         setupSpotifyAPI();
+
+        // setup the sensors
+        setupSensors();
+    }
+
+    /**
+     * Method to setup the sensors for accelerometer shaking
+     */
+    private void setupSensors(){
+        sensorMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
+        if(sensorMgr == null) {
+            logError("Sensor manager is null.");
+            return;
+        }
+        accelerometer = sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorMgr.registerListener(this, accelerometer, samplingPeriod);
     }
 
     /**
@@ -256,6 +289,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public static void updateTracks(){
+        Log.d(TAG, "Updating tracks!");
         tracks = new ArrayList<>();
 
         for(String id : playlist.getIds()){
@@ -272,6 +306,8 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         //Remove everything from user sharedPrefs
         SharedPreferences sp = getSharedPreferences(MainActivity.USER_PREF, 0);
         sp.edit().clear().apply();
+
+        CredentialsHandler.setToken(this, null, 0, TimeUnit.HOURS);
 
         //Go back to login
         Intent intent = new Intent(this, SignInActivity.class);
@@ -299,5 +335,39 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
      */
     public void qr(View view){
 
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            long now = System.currentTimeMillis();
+            long dTime = now - lastTime;
+            lastTime = now;
+
+            float x = sensorEvent.values[SensorManager.DATA_X];
+            float y = sensorEvent.values[SensorManager.DATA_Y];
+            float z = sensorEvent.values[SensorManager.DATA_Z];
+
+            float speed = Math.abs(x + y + z - last_x - last_y - last_z) / dTime * 10000;
+            Log.d(TAG, "speed = " + speed);
+
+            // if the speed is past the threshold
+            if (speed > SHAKE_THRESHOLD && now - lastShakeTime > TIME_THRESHOLD) {
+                lastShakeTime = now;
+                onShake();
+            }
+            last_x = x;
+            last_y = y;
+            last_z = z;
+        }
+    }
+
+    private void onShake(){
+        Log.d("sensor", "shake detected");
+        Toast.makeText(this, "shake detected ", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
     }
 }
