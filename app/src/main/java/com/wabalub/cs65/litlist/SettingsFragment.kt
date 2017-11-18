@@ -20,7 +20,7 @@ import java.util.HashMap
 /**
  * Fragment for "Settings" Tab
  */
-class SettingsFragment:  PreferenceFragment(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFrag:  PreferenceFragment(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val USER_PREFS = "profile_data" //Shared with other activities
 
@@ -39,17 +39,17 @@ class SettingsFragment:  PreferenceFragment(), SharedPreferences.OnSharedPrefere
      * fragment (e.g. upon screen orientation changes).
      */
 
-    fun PlaylistFragment() {}
-
-    companion object {
-        @JvmStatic
-        fun newInstance(): SettingsFragment {
-            val fragment = SettingsFragment()
-            val args = Bundle()
-            fragment.setArguments(args)
-            return fragment
-        }
-    }
+//    fun PlaylistFragment() {}
+//
+//    companion object {
+//        @JvmStatic
+//        fun newInstance(): SettingsFragment {
+//            val fragment = SettingsFragment()
+//            val args = Bundle()
+//            fragment.setArguments(args)
+//            return fragment
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //init

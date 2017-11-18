@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -56,6 +57,9 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
 
     public static Playlist playlist = new Playlist(new ArrayList<String>(), "", "");
     public static List<Track> tracks = new ArrayList<Track>();
+
+    public static String USER_PREF = "profile_data";
+
 
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -253,5 +257,21 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         for(String id : playlist.getIds()){
             tracks.add(spotifyService.getTrack(id));
         }
+    }
+
+    /**
+     * On signout Clicked,
+     * Clear all the data and go back to sign in
+     */
+    public void signOut(View view){
+
+        //Remove everything from user sharedPrefs
+        SharedPreferences sp = getSharedPreferences(MainActivity.USER_PREF, 0);
+        sp.edit().clear().apply();
+
+        //Go back to login
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
