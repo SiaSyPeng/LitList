@@ -135,7 +135,6 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
         Log.d(TAG, msg);
     }
 
-
     /**
      * Method to request adding a song to the playlist
      * @param track the track to add tot he playlist
