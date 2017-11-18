@@ -13,6 +13,20 @@ Dartmouth has many barriers between the ability to be vulnerable on campus and e
 And finally...
 DEMOCRACY! Something that has been tragically lost in 2k17 will be revived through the LitList! All members of a playlist will have the ability to upvote, downvote and add songs!
 
+## TODO
+* UI
+    * Improved search UI
+    * Pause, play, volume slider in the Playlist fragment
+    * Settings fragment
+    * Map markers
+    * Map Panel (where you can press "join playlist" and see the playlist info)
+    * Add a upvote/downvote button to the song view in the Playlist fragment
+    
+* Server 
+    * Receive GET requests for a list of all playlists
+    * Receive GET requests for a nearest playlist
+    * Receive POST requests for adding a song to a playlist, voting on a song
+    * Send play messages ot all users in a playlist
 
 ### Why people should care
 - Its a better way to experience and share music
