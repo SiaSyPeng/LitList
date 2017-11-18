@@ -96,6 +96,11 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
 
         String previewUrl = item.preview_url;
 
+        // add to the local playlist
+        MainActivity.testTracks.add(item);
+        logMessage("Added " + item);
+        MainActivity.pagerAdapter.notifyDataSetChanged();
+
         if (previewUrl == null) {
             logMessage("Track doesn't have a preview");
             return;
@@ -120,10 +125,6 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
             logMessage("Resuming the song");
             PlayerService.player.resume();
         }
-
-        MainActivity.testTracks.add(item);
-        logMessage("Added " + item);
-        MainActivity.pagerAdapter.notifyDataSetChanged();
     }
 
     private void logError(String msg) {
