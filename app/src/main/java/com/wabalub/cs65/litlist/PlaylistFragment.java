@@ -24,7 +24,6 @@ import kaaes.spotify.webapi.android.models.Track;
  */
 public class PlaylistFragment extends Fragment {
 
-    private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String TAG = "PLAYLIST FRAGMENT";
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
@@ -36,10 +35,9 @@ public class PlaylistFragment extends Fragment {
     public PlaylistFragment() {
     }
 
-    public static PlaylistFragment newInstance(int columnCount) {
+    public static PlaylistFragment newInstance() {
         PlaylistFragment fragment = new PlaylistFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,10 +47,6 @@ public class PlaylistFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Log.d(TAG, "onCreate called");
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override

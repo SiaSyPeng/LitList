@@ -2,6 +2,7 @@ package com.wabalub.cs65.litlist;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.app.TaskStackBuilder;
@@ -15,6 +16,7 @@ public class PlayerService extends Service {
 
     public static TrackPlayer player = new TrackPlayer();
     public static final int SERVICE_ID = 1;
+    public static final int NOTIFICATION_ID = 1;
     public static final String TAG = "PLAYER_SERVICE";
 
     @Override
@@ -41,6 +43,7 @@ public class PlayerService extends Service {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void updateNotification(){
         Log.d(TAG, "Updating notification");
+        String title = player.getCurrentTrack();
 
         // setup a pending intent so if the user clicks on the notification it can open the main activity
         PendingIntent resultPendingIntent = getPendingIntent();
@@ -48,13 +51,18 @@ public class PlayerService extends Service {
         // build the notification
         Notification.Builder builder = new Notification.Builder(this)
                         .setSmallIcon(R.drawable.icon)
-                        .setContentTitle("Playing ")
+                        .setContentTitle("Playing " + title)
                         .setContentText("Artist")
+                        .setAutoCancel(false)
                         .setShowWhen(true)
                         .setContentIntent(resultPendingIntent);
 
         Notification notification = builder.build();
-        startForeground(SERVICE_ID, notification);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.notify(NOTIFICATION_ID, notification);
+        }
     }
 
     @Override

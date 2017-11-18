@@ -1,6 +1,12 @@
 package com.wabalub.cs65.litlist;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -100,12 +106,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         }
 
         Intent serviceIntent = PlayerService.getIntent(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(serviceIntent);
-        }
-        else {
-            startService(serviceIntent);
-        }
+        startService(serviceIntent);
     }
 
     /**
@@ -113,6 +114,28 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
      * @param item song selected
      */
     public void onListFragmentInteraction(@Nullable Track item) {
+        if(item == null) return;
+
+        String url = item.uri;
+        if (PlayerService.player == null) {
+            logMessage("Player is null");
+            return;
+        }
+
+        String currentTrackUrl = PlayerService.player.getCurrentTrack();
+
+        if (currentTrackUrl == null || !currentTrackUrl.equals(url)) {
+            logMessage("Playing song");
+            PlayerService.player.play(url);
+        }
+        else if (PlayerService.player.isPlaying()) {
+            logMessage("Pausing the song");
+            PlayerService.player.pause();
+        }
+        else {
+            logMessage("Resuming the song");
+            PlayerService.player.resume();
+        }
     }
 
     /**
@@ -160,18 +183,55 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public void onResponse(int requestCode, @Nullable String res) {
     }
 
-    public void updatePlaylist(){
-        logMessage("Resetting the fragments");
-        Fragment currentFragment = pagerAdapter.getItem(1);
-        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
-        fragTransaction.detach(currentFragment);
-        fragTransaction.attach(currentFragment);
-        fragTransaction.commit();
-    }
-
     public void onAddSongClicked(View view) {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Method to setup or update the notification
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void updateNotification(){
+        Log.d(TAG, "Updating notification");
+        //TODO get the track title form the url
+        String title = PlayerService.player.getCurrentTrack();
+
+        // setup a pending intent so if the user clicks on the notification it can open the main activity
+        PendingIntent resultPendingIntent = getPendingIntent();
+
+        // build the notification
+        Notification.Builder builder = new Notification.Builder(this)
+                        .setSmallIcon(R.drawable.icon)
+                        .setContentTitle("Playing " + title)
+                        .setContentText("Artist")
+                        .setAutoCancel(false)
+                        .setOngoing(true)
+                        .setShowWhen(true)
+                        .setContentIntent(resultPendingIntent);
+
+        Notification notification = builder.build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.notify(PlayerService.NOTIFICATION_ID, notification);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private PendingIntent getPendingIntent(){
+        Intent resultIntent = new Intent(this, MainActivity.class);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+
+        // Adds the back stack
+        stackBuilder.addParentStack(MainActivity.class);
+
+        // Adds the Intent to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+
+        // Gets a PendingIntent containing the entire back stack
+        return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private void logError(String msg) {
