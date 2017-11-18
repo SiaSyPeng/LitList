@@ -36,15 +36,15 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-         <activity android:name=".SignInActivity">
+        <activity android:name=".SignInActivity">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:parentActivityName=".SignInActivity"
             tools:targetApi="jelly_bean">
             <meta-data
@@ -55,19 +55,27 @@
         <!-- Needed for LoginActivity to work -->
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".search.SearchActivity"
             android:label="@string/search_activity_title">
 
         </activity>
 
-        <service android:name=".PlayerService" />
+        <service android:name=".PlayerService"/>
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider{APP_ID}"
+        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+        </receiver>
+
+        <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:exported="true"/>
+            android:authorities="com.facebook.app.FacebookContentProvider{APP_ID}"
+            android:exported="true" />
+
     </application>
 
 </manifest>
