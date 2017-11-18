@@ -27,7 +27,7 @@ public class PlayerService extends Service {
     public static SpotifyPlayer player;
     public static Track currentTrack = null;
     public static final int SERVICE_ID = 1;
-    public static final int NOTIFICATION_ID = 1;
+    public static final int NOTIFICATION_ID = 2048;
     public static final String TAG = "PLAYER_SERVICE";
 
     @Override

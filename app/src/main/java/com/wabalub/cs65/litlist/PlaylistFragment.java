@@ -51,7 +51,7 @@ public class PlaylistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView called");
-        View view = inflater.inflate(R.layout.fragment_song_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_playlist, container, false);
 
         RecyclerView recyclerView = view.findViewById(R.id.playlist);
 

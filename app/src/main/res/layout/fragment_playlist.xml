@@ -18,6 +18,7 @@
         tools:listitem="@layout/fragment_song" />
 
     <ImageButton
+        android:id="@+id/add_by_search_button"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginBottom="8dp"
@@ -29,4 +30,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginRight="8dp" />
+
+    <ImageButton
+        android:id="@+id/share_button"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="8dp"
+        android:background="@null"
+        android:layout_marginEnd="8dp"
+        android:onClick="onShareClicked"
+        android:scaleType="fitCenter"
+        android:src="@drawable/fire"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/add_by_search_button" />
+
 </android.support.constraint.ConstraintLayout>

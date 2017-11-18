@@ -138,6 +138,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     /**
      * Method to setup the Spotify API
      */
+    @TargetApi(Build.VERSION_CODES.O)
     private void setupSpotifyAPI(){
         Intent intent = getIntent();
         token = intent.getStringExtra(EXTRA_TOKEN);
@@ -162,7 +163,6 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         } catch (Exception e){
             logError("Access token expired.");
         }
-
 
         Intent serviceIntent = PlayerService.getIntent(this);
         startService(serviceIntent);
@@ -357,7 +357,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
             float z = sensorEvent.values[SensorManager.DATA_Z];
 
             float speed = Math.abs(x + y + z - last_x - last_y - last_z) / dTime * 10000;
-            Log.d(TAG, "speed = " + speed);
+            // Log.d(TAG, "speed = " + speed);
 
             // if the speed is past the threshold
             if (speed > SHAKE_THRESHOLD && now - lastShakeTime > TIME_THRESHOLD) {
@@ -377,5 +377,9 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
+    }
+
+    public void onShareClicked(View view) {
+
     }
 }
