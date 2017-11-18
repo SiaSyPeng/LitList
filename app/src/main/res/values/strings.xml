@@ -18,6 +18,7 @@
 
     <!--Playlist-->
     <string name="addSong">ADD</string>
+    <string name="search_button">SEARCH</string>
     <!--Setting-->
     <string name="prefs_group_profile">Profile</string>
     <string name="prefs_group_preferences">Preferences</string>
