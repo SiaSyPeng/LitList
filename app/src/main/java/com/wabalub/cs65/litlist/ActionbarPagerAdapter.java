@@ -1,14 +1,20 @@
 package com.wabalub.cs65.litlist;
 
 
+        import android.app.Activity;
         import android.content.Context;
+        import android.os.Handler;
         import android.support.v4.app.Fragment;
         import android.support.v4.app.FragmentManager;
         import android.support.v4.app.FragmentPagerAdapter;
+        import android.support.v4.app.FragmentTransaction;
+        import android.support.v4.view.PagerAdapter;
+        import android.util.Log;
 
         import com.google.android.gms.maps.SupportMapFragment;
 
 public class ActionbarPagerAdapter extends FragmentPagerAdapter {
+    private static final String TAG = "ACTIONBAR_ADAPTER";
     private final int PAGE_COUNT = 4;
     private String tabTitles[] = new String[] { "Map", "Playlist", "Ranking", "Settings" };
     private Context context;
@@ -35,10 +41,6 @@ public class ActionbarPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                /* Gives the map in the tab layout
-                fragment = SupportMapFragment.newInstance();
-                ((SupportMapFragment) fragment).getMapAsync((MainActivity)context);
-                */
                 fragment = MapFragment.newInstance();
                 break;
 
@@ -60,4 +62,14 @@ public class ActionbarPagerAdapter extends FragmentPagerAdapter {
         return tabTitles[position];
     }
 
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        Log.d(TAG, "Notified dataset changed!");
+    }
+
+    @Override
+    public int getItemPosition(Object object){
+        return PagerAdapter.POSITION_NONE;
+    }
 }

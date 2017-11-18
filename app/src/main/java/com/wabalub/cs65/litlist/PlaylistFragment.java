@@ -6,11 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.wabalub.cs65.litlist.gson.Song;
+
+import kaaes.spotify.webapi.android.models.Track;
 
 /**
  * A fragment representing a list of Items.
@@ -22,6 +25,7 @@ import com.wabalub.cs65.litlist.gson.Song;
 public class PlaylistFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String TAG = "PLAYLIST FRAGMENT";
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
@@ -44,6 +48,8 @@ public class PlaylistFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(TAG, "onCreate called");
+
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -52,19 +58,21 @@ public class PlaylistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView called");
         View view = inflater.inflate(R.layout.fragment_song_list, container, false);
 
+        RecyclerView recyclerView = view.findViewById(R.id.playlist);
+
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new MySongRecyclerViewAdapter(MainActivity.playlist.getSongList(), mListener));
+        Context context = view.getContext();
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
+        //recyclerView.setAdapter(new MySongRecyclerViewAdapter(MainActivity.playlist.getSongList(), mListener));
+        recyclerView.setAdapter(new MySongRecyclerViewAdapter(getContext(), MainActivity.testTracks, mListener));
+
         return view;
     }
 
@@ -97,6 +105,7 @@ public class PlaylistFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Song item);
+
+        void onListFragmentInteraction(Track mItem);
     }
 }

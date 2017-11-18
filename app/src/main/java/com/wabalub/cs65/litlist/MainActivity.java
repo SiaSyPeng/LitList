@@ -8,6 +8,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,15 +28,17 @@ import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListen
 import com.wabalub.cs65.litlist.search.SearchActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.models.Track;
 
 public final class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
         InternetListener, OnFragmentInteractionListener, OnListFragmentInteractionListener {
     private static final String TAG = "MAIN" ;
-    private ActionbarPagerAdapter pagerAdapter;
+    public static ActionbarPagerAdapter pagerAdapter;
     private GoogleMap map;
 
     public static RequestQueue queue;
@@ -44,6 +48,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public static SpotifyApi spotifyApi;
 
     public static Playlist playlist = new Playlist(new ArrayList<Song>(), "", "");
+    public static List<Track> testTracks = new ArrayList<Track>();
 
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,7 +112,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
      * Method for handling selecting a song in the playlist
      * @param item song selected
      */
-    public void onListFragmentInteraction(@Nullable Song item) {
+    public void onListFragmentInteraction(@Nullable Track item) {
     }
 
     /**
@@ -117,7 +122,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public void onFragmentInteraction(@Nullable Uri uri) {
     }
 
-        /**
+    /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      * This is where we can add markers or lines, add listeners or move the camera. In this case,
@@ -155,11 +160,19 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public void onResponse(int requestCode, @Nullable String res) {
     }
 
+    public void updatePlaylist(){
+        logMessage("Resetting the fragments");
+        Fragment currentFragment = pagerAdapter.getItem(1);
+        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+        fragTransaction.detach(currentFragment);
+        fragTransaction.attach(currentFragment);
+        fragTransaction.commit();
+    }
+
     public void onAddSongClicked(View view) {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
     }
-
 
     private void logError(String msg) {
         Toast.makeText(this, "Error: " + msg, Toast.LENGTH_SHORT).show();

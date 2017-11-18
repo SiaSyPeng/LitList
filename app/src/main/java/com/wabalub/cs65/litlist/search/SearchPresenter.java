@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.wabalub.cs65.litlist.MainActivity;
 import com.wabalub.cs65.litlist.PlayerService;
+import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib;
 
 import java.util.HashMap;
@@ -110,13 +111,19 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
         if (currentTrackUrl == null || !currentTrackUrl.equals(previewUrl)) {
             logMessage("Playing song");
             PlayerService.player.play(previewUrl);
-        } else if (PlayerService.player.isPlaying()) {
+        }
+        else if (PlayerService.player.isPlaying()) {
             logMessage("Pausing the song");
             PlayerService.player.pause();
-        } else {
+        }
+        else {
             logMessage("Resuming the song");
             PlayerService.player.resume();
         }
+
+        MainActivity.testTracks.add(item);
+        logMessage("Added " + item);
+        MainActivity.pagerAdapter.notifyDataSetChanged();
     }
 
     private void logError(String msg) {
