@@ -25,10 +25,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.spotify.sdk.android.player.PlaybackState;
-import com.spotify.sdk.android.player.SpotifyPlayer;
 import com.wabalub.cs65.litlist.gson.Playlist;
-import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib.InternetListener;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
@@ -57,8 +54,8 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public static SpotifyApi spotifyApi;
     public static SpotifyService spotifyService;
 
-    public static Playlist playlist = new Playlist(new ArrayList<Song>(), "", "");
-    public static List<Track> testTracks = new ArrayList<Track>();
+    public static Playlist playlist = new Playlist(new ArrayList<String>(), "", "");
+    public static List<Track> tracks = new ArrayList<Track>();
 
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,8 +111,9 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        UserPrivate me = spotifyService.getMe();
-        logMessage("User ID: " + me.id);
+        //UserPrivate me = spotifyService.getMe();
+        //logMessage("User ID: " + me.id);
+        //userID = me.id;
 
         Intent serviceIntent = PlayerService.getIntent(this);
         startService(serviceIntent);
@@ -127,6 +125,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
      */
     public void onListFragmentInteraction(@Nullable Track item) {
         if(item == null) return;
+        updateTracks();
 
         String url = item.uri;
         if (PlayerService.player == null) {
@@ -246,5 +245,13 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     private void logMessage(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         Log.d(TAG, msg);
+    }
+
+    private void updateTracks(){
+        tracks = new ArrayList<Track>();
+
+        for(String id : playlist.getIds()){
+            tracks.add(spotifyService.getTrack(id));
+        }
     }
 }

@@ -11,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.wabalub.cs65.litlist.gson.Song;
-
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
@@ -65,7 +63,7 @@ public class PlaylistFragment extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
         //recyclerView.setAdapter(new MySongRecyclerViewAdapter(MainActivity.playlist.getSongList(), mListener));
-        recyclerView.setAdapter(new MySongRecyclerViewAdapter(getContext(), MainActivity.testTracks, mListener));
+        recyclerView.setAdapter(new MySongRecyclerViewAdapter(getContext(), MainActivity.tracks, mListener));
 
         return view;
     }

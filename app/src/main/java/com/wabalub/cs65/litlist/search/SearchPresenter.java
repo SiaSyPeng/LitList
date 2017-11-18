@@ -6,9 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.wabalub.cs65.litlist.MainActivity;
-import com.wabalub.cs65.litlist.Player;
 import com.wabalub.cs65.litlist.PlayerService;
-import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib;
 
 import java.util.HashMap;
@@ -98,7 +96,9 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
         String previewUrl = item.preview_url;
 
         // add to the local playlist
-        MainActivity.testTracks.add(item);
+        MainActivity.playlist.getIds().add(item.id);
+
+        // MainActivity.tracks.add(item);
         logMessage("Added " + item);
         MainActivity.pagerAdapter.notifyDataSetChanged();
 
