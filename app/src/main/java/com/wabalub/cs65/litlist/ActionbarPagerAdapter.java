@@ -1,17 +1,17 @@
 package com.wabalub.cs65.litlist;
 
 
-        import android.app.Activity;
-        import android.content.Context;
-        import android.os.Handler;
-        import android.support.v4.app.Fragment;
-        import android.support.v4.app.FragmentManager;
-        import android.support.v4.app.FragmentPagerAdapter;
-        import android.support.v4.app.FragmentTransaction;
-        import android.support.v4.view.PagerAdapter;
-        import android.util.Log;
+import android.app.Activity;
+import android.content.Context;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 
-        import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 
 public class ActionbarPagerAdapter extends FragmentPagerAdapter {
     private static final String TAG = "ACTIONBAR_ADAPTER";

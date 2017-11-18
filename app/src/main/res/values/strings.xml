@@ -15,4 +15,35 @@
     <string name="cover_art_description">Cover Art</string>
     <string name="search_hint">Search</string>
     <string name="search_activity_title">Search</string>
+
+    <!--Setting-->
+    <!--preferences-->
+    <string name="prefs_group_profile">Profile</string>
+    <string name="prefs_group_preferences">Preferences</string>
+    <string name="prefs_group_miscellaneous">Miscellaneous</string>
+
+    <!--preferences: sign out-->
+    <string name="prefs_signout_title">Sign out</string>
+    <string name="prefs_signout_key">Signout</string>
+    <string name="prefs_signout_summary">Remove your account from this device</string>
+
+    <!--preferences: alert-->
+    <string name="prefs_alert_title">Alert Settings</string>
+    <string name="prefs_alert_key">alert</string>
+    <string name="prefs_alert_summary">How would you like to be alerted?</string>
+
+    <string-array name="prefs_alert_entries">
+        <item>Vibrate</item>
+        <item>Nothing</item>
+    </string-array>
+    <string-array name="prefs_alert_entryValues">
+        <item>v</item>
+        <item>n</item>
+    </string-array>
+
+    <!--Prefs -->
+    <string name="prefs_about_title">About us</string>
+    <string name="prefs_about_key">About</string>
+    <string name="prefs_about_summary">(opens in browser)</string>
+
 </resources>

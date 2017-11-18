@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/prefs_group_profile">
+
+        <Preference
+            android:title="@string/prefs_signout_title"
+            android:key="@string/prefs_signout_key"
+            android:summary="@string/prefs_signout_summary"/>
+
+    </PreferenceCategory>
+
+    <!--We need a password change thing here, and a mode easy/hard thing here-->
+
+    <PreferenceCategory android:title="@string/prefs_group_preferences">
+        <ListPreference
+            android:title="@string/prefs_alert_title"
+            android:key="@string/prefs_alert_key"
+            android:summary="@string/prefs_alert_summary"
+            android:entries= "@array/prefs_alert_entries"
+            android:entryValues="@array/prefs_alert_entryValues"
+            android:defaultValue="v"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/prefs_group_miscellaneous">
+        <Preference
+            android:title="@string/prefs_about_title"
+            android:key="@string/prefs_about_key"
+            android:summary="@string/prefs_about_summary"
+            />
+    </PreferenceCategory>
+
+</PreferenceScreen>
