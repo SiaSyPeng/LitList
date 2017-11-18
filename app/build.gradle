@@ -37,10 +37,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // This library handles authentication and authorization
-    //compile 'com.spotify.sdk:spotify-auth:1.0.0-beta12@aar'
 
     // This library handles music playback
-    //compile 'com.spotify.sdk:spotify-player:2.2.0-beta12@aar'
     compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
 
     compile 'com.spotify.android:auth:1.0.0-alpha'
@@ -53,6 +51,7 @@ dependencies {
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
 
     compile 'com.google.guava:guava:18.0'
+    compile 'com.facebook.android:facebook-share:4.28.0'
 
     compile 'com.google.android.gms:play-services-location:11.6.0'
     compile 'com.google.android.gms:play-services-maps:11.6.0'

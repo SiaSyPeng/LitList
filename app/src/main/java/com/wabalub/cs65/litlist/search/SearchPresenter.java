@@ -135,20 +135,6 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
         Log.d(TAG, msg);
     }
 
-
-    /**
-     * On Add Button Clicked,
-     * Add to playlist
-     */
-//    public void addToList(View view){
-//        // add to the local playlist
-//        MainActivity.playlist.getIds().add(item.id);
-//        MainActivity.updateTracks();
-//
-//        // MainActivity.tracks.add(item);
-//        logMessage("Added " + item);
-//        MainActivity.pagerAdapter.notifyDataSetChanged();
-//    }
     /**
      * Method to request adding a song to the playlist
      * @param track the track to add tot he playlist

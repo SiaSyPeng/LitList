@@ -2,14 +2,17 @@ package com.wabalub.cs65.litlist.search;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.common.base.Joiner;
 import com.squareup.picasso.Picasso;
+import com.wabalub.cs65.litlist.MainActivity;
 import com.wabalub.cs65.litlist.PlayerService;
 import com.wabalub.cs65.litlist.R;
 
@@ -25,18 +28,21 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     private final List<Track> mItems = new ArrayList<>();
     private final Context mContext;
     private final ItemSelectedListener mListener;
+    private static final String TAG = "SEARCH_ADAPTER";
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final TextView title;
         public final TextView subtitle;
         public final ImageView image;
+        public final Button addBtn;
 
         public ViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.entity_title);
             subtitle = (TextView) itemView.findViewById(R.id.entity_subtitle);
             image = (ImageView) itemView.findViewById(R.id.entity_image);
+            addBtn = (Button) itemView.findViewById(R.id.add_button);
             itemView.setOnClickListener(this);
         }
 
@@ -73,7 +79,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Track item = mItems.get(position);
+        final Track item = mItems.get(position);
 
         holder.title.setText(item.name);
 
@@ -84,7 +90,22 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         if (image != null) {
             Picasso.with(mContext).load(image.url).into(holder.image);
         }
+
+        holder.addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // add to the local playlist
+                MainActivity.playlist.getIds().add(item.id);
+                MainActivity.updateTracks();
+
+                MainActivity.tracks.add(item);
+                Log.d(TAG,"Added " + item.name);
+                MainActivity.pagerAdapter.notifyDataSetChanged();
+            }
+        });
     }
+
+
 
     @Override
     public int getItemCount() {
