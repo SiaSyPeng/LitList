@@ -112,19 +112,19 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
             return;
         }
 
-        String currentTrackUrl = PlayerService.player.getCurrentTrack();
+        String currentTrackUrl = PlayerService.previewPlayer.getCurrentTrack();
 
         if (currentTrackUrl == null || !currentTrackUrl.equals(previewUrl)) {
             logMessage("Playing song");
-            PlayerService.player.play(previewUrl);
+            PlayerService.previewPlayer.play(previewUrl);
         }
-        else if (PlayerService.player.isPlaying()) {
+        else if (PlayerService.previewPlayer.isPlaying()) {
             logMessage("Pausing the song");
-            PlayerService.player.pause();
+            PlayerService.previewPlayer.pause();
         }
         else {
             logMessage("Resuming the song");
-            PlayerService.player.resume();
+            PlayerService.previewPlayer.resume();
         }
         PlayerService.currentTrack = item;
     }

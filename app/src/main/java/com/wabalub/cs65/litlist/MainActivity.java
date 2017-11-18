@@ -12,10 +12,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,6 +25,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.spotify.sdk.android.player.PlaybackState;
+import com.spotify.sdk.android.player.SpotifyPlayer;
 import com.wabalub.cs65.litlist.gson.Playlist;
 import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
@@ -39,7 +40,9 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.UserPrivate;
 
 public final class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
         InternetListener, OnFragmentInteractionListener, OnListFragmentInteractionListener {
@@ -52,6 +55,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public static String userID = null;
     public static String token = null;
     public static SpotifyApi spotifyApi;
+    public static SpotifyService spotifyService;
 
     public static Playlist playlist = new Playlist(new ArrayList<Song>(), "", "");
     public static List<Track> testTracks = new ArrayList<Track>();
@@ -101,9 +105,17 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
 
         if (token != null) {
             spotifyApi.setAccessToken(token);
+            spotifyService = MainActivity.spotifyApi.getService();
         } else {
             logError("No valid access token");
         }
+
+        // allows the get me request to work
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        UserPrivate me = spotifyService.getMe();
+        logMessage("User ID: " + me.id);
 
         Intent serviceIntent = PlayerService.getIntent(this);
         startService(serviceIntent);
@@ -121,22 +133,13 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
             logMessage("Player is null");
             return;
         }
+        if(PlayerService.previewPlayer.isPlaying()) PlayerService.previewPlayer.pause();
+        if(PlayerService.player.getPlaybackState().isPlaying) PlayerService.player.pause(null);
 
-        String currentTrackUrl = PlayerService.player.getCurrentTrack();
-
-        if (currentTrackUrl == null || !currentTrackUrl.equals(url)) {
-            logMessage("Playing song");
-            PlayerService.player.play(url);
-        }
-        else if (PlayerService.player.isPlaying()) {
-            logMessage("Pausing the song");
-            PlayerService.player.pause();
-        }
-        else {
-            logMessage("Resuming the song");
-            PlayerService.player.resume();
-        }
         PlayerService.currentTrack = item;
+        String currentTrackId = item.id;
+        logMessage("currentTrackId: " + currentTrackId);
+        PlayerService.player.playUri(null, "spotify:track:" + currentTrackId, 0, 0);
     }
 
     /**
@@ -196,7 +199,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     private void updateNotification(){
         Log.d(TAG, "Updating notification");
         //TODO get the track title form the url
-        String title = PlayerService.player.getCurrentTrack();
+        String title = PlayerService.currentTrack.name;
 
         // setup a pending intent so if the user clicks on the notification it can open the main activity
         PendingIntent resultPendingIntent = getPendingIntent();
