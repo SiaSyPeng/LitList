@@ -4,9 +4,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.gms.maps.SupportMapFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +22,7 @@ import android.view.ViewGroup;
 public class MapFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+    public static final String TAG = "MAP_FRAGMENT";
 
     public MapFragment() {
         // Required empty public constructor
@@ -42,6 +46,19 @@ public class MapFragment extends Fragment {
         if (getArguments() != null) {
             // mParam1 = getArguments().getString(ARG_PARAM1);
         }
+        setupGoogleMapsFragment();
+    }
+
+    private void setupGoogleMapsFragment(){
+            SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
+                .findFragmentById(R.id.google_map);
+
+            if(mapFragment == null) {
+                Log.e(TAG, "Map fragment is null");
+                return;
+            }
+
+            mapFragment.getMapAsync((MainActivity)getActivity());
     }
 
     @Override

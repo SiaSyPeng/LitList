@@ -36,9 +36,6 @@ public class PlayerService extends Service {
         Log.d(TAG, "onStartCommand");
         super.onStartCommand(intent, flags, startId);
 
-        // get the current cat we are tracking based on the id passed in
-        int catIndex = intent.getIntExtra("catindex", 0);
-
         // setup the notification
         updateNotification();
         return START_STICKY;
