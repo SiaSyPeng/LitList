@@ -289,4 +289,11 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         startActivity(intent);
 //        finish();
     }
+
+    /*
+     * QR code clicked
+     */
+    public void qr(View view){
+
+    }
 }

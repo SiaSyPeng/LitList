@@ -144,6 +144,7 @@
                 <Button
 
                     android:id="@+id/QR_button"
+                    android:onClick="qr"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@null"

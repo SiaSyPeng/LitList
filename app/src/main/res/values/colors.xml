@@ -3,6 +3,7 @@
     <color name="colorPrimary">#FFA500</color>
     <color name="colorPrimaryDark">#ce2029</color>
     <color name="colorAccent">#ffff00</color>
+    <color name="lightYellow">#FFD80D</color>
     <color name="white">#ffffff</color>
 
 </resources>
