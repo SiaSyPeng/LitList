@@ -274,4 +274,19 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         startActivity(intent);
         finish();
     }
+
+
+    /**
+     * On About Clicked,
+     * Go to our gitlab page
+     */
+    public void about(View view){
+
+        String url = "https://gitlab.cs.dartmouth.edu/wubalub/LitList";
+        Intent intent = new Intent();
+        intent.setData(Uri.parse(url));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+//        finish();
+    }
 }

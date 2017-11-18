@@ -19,6 +19,8 @@
             android:orientation="vertical">
 
             <TextView
+                android:layout_marginHorizontal="10dp"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
@@ -34,6 +36,8 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_marginHorizontal="10dp"
+
                     android:id="@+id/_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -54,6 +58,8 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:layout_marginHorizontal="10dp"
+
                     android:id="@+id/settings_sign_out_button"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
@@ -74,6 +80,8 @@
                 android:background="@android:color/darker_gray"/>
 
             <TextView
+                android:layout_marginHorizontal="10dp"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
@@ -91,12 +99,16 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_marginHorizontal="10dp"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:text="@string/prefs_alert_key"/>
 
                 <Switch
+                    android:layout_marginHorizontal="10dp"
+
                     android:id="@+id/show_score_switch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -130,6 +142,7 @@
                 android:orientation="horizontal">
 
                 <Button
+
                     android:id="@+id/QR_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -137,7 +150,7 @@
                     android:gravity="start"
                     android:text="@string/prefs_QR_key"
                     android:textAlignment="textStart"
-                    android:textAllCaps="false"
+                    android:layout_marginHorizontal="10dp"
                     android:textSize="18sp"
                     android:layout_weight="1"/>
 
@@ -149,14 +162,16 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:layout_marginHorizontal="10dp"
+
                     android:id="@+id/about_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:gravity="start"
+                    android:onClick="about"
                     android:text="@string/prefs_about_key"
                     android:textAlignment="textStart"
-                    android:textAllCaps="false"
                     android:textSize="18sp"
                     android:layout_weight="1"/>
 
