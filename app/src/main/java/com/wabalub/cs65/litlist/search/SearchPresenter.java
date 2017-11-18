@@ -97,6 +97,7 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
 
         // add to the local playlist
         MainActivity.playlist.getIds().add(item.id);
+        MainActivity.updateTracks();
 
         // MainActivity.tracks.add(item);
         logMessage("Added " + item);

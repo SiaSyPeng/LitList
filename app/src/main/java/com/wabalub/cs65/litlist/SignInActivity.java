@@ -46,14 +46,14 @@ public class SignInActivity extends AppCompatActivity implements ConnectionState
      * @param view the view
      */
     public void onSignInClicked(View view) {
-       final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
+        final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
                 .setScopes(new String[]{"playlist-read", "user-read-private", "streaming"})
                 .build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
     }
 
-        @Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         logMessage("onActivityResult called for login");
