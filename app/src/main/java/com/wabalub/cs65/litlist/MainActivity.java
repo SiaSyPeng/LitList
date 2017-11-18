@@ -73,7 +73,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     // for sensors
     private SensorManager sensorMgr;
     private Sensor accelerometer;
-    private static final int SHAKE_THRESHOLD = 6000;
+    private static final int SHAKE_THRESHOLD = 800;
     private long lastTime = 0, lastShakeTime = 0, TIME_THRESHOLD = 2000;
     private int samplingPeriod = 100000; // 10 ^ 5 us = 0.1 s
     private float last_x = 0f, last_y = 0f, last_z = 0f;
@@ -343,6 +343,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
             long now = System.currentTimeMillis();
             long dTime = now - lastTime;
             lastTime = now;
+            if(dTime < 50) return;
 
             float x = sensorEvent.values[SensorManager.DATA_X];
             float y = sensorEvent.values[SensorManager.DATA_Y];
