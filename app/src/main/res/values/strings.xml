@@ -16,6 +16,8 @@
     <string name="search_hint">Search</string>
     <string name="search_activity_title">Search</string>
 
+    <!--Playlist-->
+    <string name="addSong">ADD</string>
     <!--Setting-->
     <string name="prefs_group_profile">Profile</string>
     <string name="prefs_group_preferences">Preferences</string>
