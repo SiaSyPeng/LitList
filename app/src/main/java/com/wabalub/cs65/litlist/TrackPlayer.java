@@ -1,4 +1,4 @@
-package com.wabalub.cs65.litlist.search;
+package com.wabalub.cs65.litlist;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;

@@ -1,23 +1,18 @@
 package com.wabalub.cs65.litlist.search;
 
-import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.wabalub.cs65.litlist.MainActivity;
+import com.wabalub.cs65.litlist.PlayerService;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.prefs.AbstractPreferences;
 
-import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.InternetListener {

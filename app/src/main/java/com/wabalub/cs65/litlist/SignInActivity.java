@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
-import com.wabalub.cs65.litlist.search.CredentialsHandler;
 
 import java.util.concurrent.TimeUnit;
 

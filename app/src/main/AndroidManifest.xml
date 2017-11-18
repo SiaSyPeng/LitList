@@ -63,7 +63,7 @@
 
         </activity>
 
-        <service android:name=".search.PlayerService" />
+        <service android:name=".PlayerService" />
     </application>
 
 </manifest>

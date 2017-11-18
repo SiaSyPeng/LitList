@@ -23,11 +23,7 @@ import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib.InternetListener;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
-import com.wabalub.cs65.litlist.search.Player;
-import com.wabalub.cs65.litlist.search.PlayerService;
-import com.wabalub.cs65.litlist.search.Search;
 import com.wabalub.cs65.litlist.search.SearchActivity;
-import com.wabalub.cs65.litlist.search.SearchPager;
 
 import java.util.ArrayList;
 
