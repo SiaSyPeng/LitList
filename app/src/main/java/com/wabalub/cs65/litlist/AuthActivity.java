@@ -21,7 +21,11 @@ public class AuthActivity extends Activity implements
         SpotifyPlayer.NotificationCallback, ConnectionStateCallback
 {
 
+    private static final String TAG = AuthActivity.class.getSimpleName();
+
+    @SuppressWarnings("SpellCheckingInspection")
     private static final String CLIENT_ID = "21b943421c7e415b9de1dac931ac13a3";
+    @SuppressWarnings("SpellCheckingInspection")
     private static final String REDIRECT_URI = "litlist://callback";
 
     private static final int REQUEST_CODE = 1337;
@@ -31,7 +35,14 @@ public class AuthActivity extends Activity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+        //setContentView(R.layout.activity_sign_in);
+
+        String token = CredentialsHandler.getToken(this);
+        if (token == null) {
+            setContentView(R.layout.activity_sign_in);
+        } else {
+            startMainActivity(token);
+        }
     }
 
     /**
@@ -61,21 +72,38 @@ public class AuthActivity extends Activity implements
         // pass it to a Config object that will be used to create the player.
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
-            if (response.getType() == AuthenticationResponse.Type.TOKEN) {
-                Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
-                Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
-                    @Override
-                    public void onInitialized(SpotifyPlayer spotifyPlayer) {
-                        player = spotifyPlayer;
-                        player.addConnectionStateCallback(AuthActivity.this);
-                        player.addNotificationCallback(AuthActivity.this);
-                    }
+//            if (response.getType() == AuthenticationResponse.Type.TOKEN) {
+//                Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
+//                Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
+//                    @Override
+//                    public void onInitialized(SpotifyPlayer spotifyPlayer) {
+//                        player = spotifyPlayer;
+//                        player.addConnectionStateCallback(AuthActivity.this);
+//                        player.addNotificationCallback(AuthActivity.this);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable throwable) {
+//                        Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+//                    }
+//                });
+//            }
+            switch (response.getType()) {
+                // Response was successful and contains auth token
+                case TOKEN:
+                    Log.d("Got token: ", response.getAccessToken());
+                    CredentialsHandler.setToken(this, response.getAccessToken(), response.getExpiresIn(), TimeUnit.SECONDS);
+                    startMainActivity(response.getAccessToken());
+                    break;
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
-                    }
-                });
+                // Auth flow returned an error
+                case ERROR:
+                    Log.d("Auth error: ", response.getError());
+                    break;
+
+                // Most likely auth flow was cancelled
+                default:
+                    Log.d("Auth result: ", response.getType());
             }
         }
     }
