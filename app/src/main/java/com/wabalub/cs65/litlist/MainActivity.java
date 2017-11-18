@@ -136,6 +136,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
             logMessage("Resuming the song");
             PlayerService.player.resume();
         }
+        PlayerService.currentTrack = item;
     }
 
     /**

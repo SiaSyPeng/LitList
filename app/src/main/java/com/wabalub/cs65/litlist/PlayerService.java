@@ -12,9 +12,18 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.google.common.base.Joiner;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import kaaes.spotify.webapi.android.models.ArtistSimple;
+import kaaes.spotify.webapi.android.models.Track;
+
 public class PlayerService extends Service {
 
     public static TrackPlayer player = new TrackPlayer();
+    public static Track currentTrack = null;
     public static final int SERVICE_ID = 1;
     public static final int NOTIFICATION_ID = 1;
     public static final String TAG = "PLAYER_SERVICE";
@@ -43,7 +52,7 @@ public class PlayerService extends Service {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void updateNotification(){
         Log.d(TAG, "Updating notification");
-        String title = player.getCurrentTrack();
+        if(currentTrack == null) return;
 
         // setup a pending intent so if the user clicks on the notification it can open the main activity
         PendingIntent resultPendingIntent = getPendingIntent();
@@ -51,9 +60,10 @@ public class PlayerService extends Service {
         // build the notification
         Notification.Builder builder = new Notification.Builder(this)
                         .setSmallIcon(R.drawable.icon)
-                        .setContentTitle("Playing " + title)
-                        .setContentText("Artist")
+                        .setContentTitle("Playing " + currentTrack.name)
+                        .setContentText("Artist " + namesToString(currentTrack.artists))
                         .setAutoCancel(false)
+                        .setOngoing(true)
                         .setShowWhen(true)
                         .setContentIntent(resultPendingIntent);
 
@@ -89,5 +99,14 @@ public class PlayerService extends Service {
 
     public static Intent getIntent(Context context) {
         return new Intent(context, PlayerService.class);
+    }
+
+    public static String namesToString(List<ArtistSimple> artists){
+        List<String> names = new ArrayList<>();
+        for (ArtistSimple i : artists) {
+            names.add(i.name);
+        }
+        Joiner joiner = Joiner.on(", ");
+        return joiner.join(names);
     }
 }

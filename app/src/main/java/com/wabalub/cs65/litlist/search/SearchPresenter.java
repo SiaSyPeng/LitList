@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.wabalub.cs65.litlist.MainActivity;
+import com.wabalub.cs65.litlist.Player;
 import com.wabalub.cs65.litlist.PlayerService;
 import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib;
@@ -125,6 +126,7 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
             logMessage("Resuming the song");
             PlayerService.player.resume();
         }
+        PlayerService.currentTrack = item;
     }
 
     private void logError(String msg) {

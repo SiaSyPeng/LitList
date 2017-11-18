@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.common.base.Joiner;
 import com.squareup.picasso.Picasso;
+import com.wabalub.cs65.litlist.PlayerService;
 import com.wabalub.cs65.litlist.R;
 
 import java.util.ArrayList;
@@ -76,12 +77,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
         holder.title.setText(item.name);
 
-        List<String> names = new ArrayList<>();
-        for (ArtistSimple i : item.artists) {
-            names.add(i.name);
-        }
-        Joiner joiner = Joiner.on(", ");
-        holder.subtitle.setText(joiner.join(names));
+
+        holder.subtitle.setText(PlayerService.namesToString(item.artists));
 
         Image image = item.album.images.get(0);
         if (image != null) {
@@ -93,4 +90,5 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     public int getItemCount() {
         return mItems.size();
     }
+
 }
