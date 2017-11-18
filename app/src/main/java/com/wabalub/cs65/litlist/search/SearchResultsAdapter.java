@@ -98,7 +98,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                 MainActivity.playlist.getIds().add(item.id);
                 MainActivity.updateTracks();
 
-                MainActivity.tracks.add(item);
                 Log.d(TAG,"Added " + item.name);
                 MainActivity.pagerAdapter.notifyDataSetChanged();
             }
