@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.wabalub.cs65.litlist.MainActivity;
+import com.wabalub.cs65.litlist.Player;
 import com.wabalub.cs65.litlist.PlayerService;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib;
 
@@ -114,6 +115,7 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
         }
 
         String currentTrackUrl = PlayerService.previewPlayer.getCurrentTrack();
+        if (PlayerService.player.getPlaybackState().isPlaying) PlayerService.player.pause(null);
 
         if (currentTrackUrl == null || !currentTrackUrl.equals(previewUrl)) {
             logMessage("Playing song");
