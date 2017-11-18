@@ -115,9 +115,14 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        //UserPrivate me = spotifyService.getMe();
-        //logMessage("User ID: " + me.id);
-        //userID = me.id;
+        try {
+            UserPrivate me = spotifyService.getMe();
+            logMessage("User ID: " + me.id);
+            userID = me.id;
+        } catch (Exception e){
+            logError("Access token expired.");
+        }
+
 
         Intent serviceIntent = PlayerService.getIntent(this);
         startService(serviceIntent);
@@ -131,7 +136,6 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         if(item == null) return;
         updateTracks();
 
-        String url = item.uri;
         if (PlayerService.player == null) {
             logMessage("Player is null");
             return;
@@ -251,8 +255,8 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         Log.d(TAG, msg);
     }
 
-    private void updateTracks(){
-        tracks = new ArrayList<Track>();
+    public static void updateTracks(){
+        tracks = new ArrayList<>();
 
         for(String id : playlist.getIds()){
             tracks.add(spotifyService.getTrack(id));
