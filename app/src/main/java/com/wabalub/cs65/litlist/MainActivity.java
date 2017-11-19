@@ -26,6 +26,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -369,5 +371,23 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         } else {
             startService(serviceIntent);
         }
+    }
+
+    public void onPlayPauseClicked(View view) {
+        ImageButton playPauseButton = view.findViewById(R.id.play_pause_button);
+
+        if(PlayerService.previewPlayer == null) return;
+        if(PlayerService.previewPlayer.isPlaying()) {
+            PlayerService.previewPlayer.pause();
+            playPauseButton.setImageResource(R.drawable.play);
+        }
+
+        if(PlayerService.player == null) return;
+        com.spotify.sdk.android.player.PlaybackState playbackState = PlayerService.player.getPlaybackState();
+        if(playbackState != null && playbackState.isPlaying) {
+            PlayerService.player.pause(null);
+            playPauseButton.setImageResource(R.drawable.play);
+        }
+
     }
 }
