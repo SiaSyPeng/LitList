@@ -38,7 +38,7 @@
                 <TextView
                     android:layout_marginHorizontal="10dp"
 
-                    android:id="@+id/_button"
+                    android:id="@+id/profile_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@null"
@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:onClick="signOut"
+                    android:onClick="onSignOutClicked"
                     android:backgroundTint="@color/colorPrimary"
                     android:textColor="@color/white"
                     android:textSize="18sp"
@@ -144,7 +144,7 @@
                 <Button
 
                     android:id="@+id/QR_button"
-                    android:onClick="qr"
+                    android:onClick="onQRClicked"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@null"
@@ -170,13 +170,23 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:gravity="start"
-                    android:onClick="about"
+                    android:onClick="onAboutClicked"
                     android:text="@string/prefs_about_key"
                     android:textAlignment="textStart"
                     android:textSize="18sp"
                     android:layout_weight="1"/>
 
             </LinearLayout>
+            <Spinner
+                android:id="@+id/alert_type_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:entries="@string/alert_type"
+                android:focusable="true">
+            </Spinner>
 
         </LinearLayout>
     </ScrollView>

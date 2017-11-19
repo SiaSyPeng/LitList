@@ -26,6 +26,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -53,7 +54,7 @@ import kaaes.spotify.webapi.android.models.UserPrivate;
 
 public final class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
         InternetListener, OnFragmentInteractionListener, OnListFragmentInteractionListener,
-        SensorEventListener {
+        SensorEventListener, AdapterView.OnItemSelectedListener {
     private static final String TAG = "MAIN" ;
     public static ActionbarPagerAdapter pagerAdapter;
     private GoogleMap map;
@@ -62,9 +63,13 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public static RequestQueue queue;
     public static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     public static String userID = null;
+    public static String userEmail = null;
     public static String token = null;
     public static SpotifyApi spotifyApi;
     public static SpotifyService spotifyService;
+
+    public static String SHARED_PREF = "litlist_" +
+            "shared_pref";
 
     // for playlist management
     public static Playlist playlist = new Playlist(new ArrayList<String>(), "", "");
@@ -163,6 +168,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
             UserPrivate me = spotifyService.getMe();
             logMessage("User ID: " + me.id);
             userID = me.id;
+            userEmail = me.email;
         } catch (Exception e){
             logError("Access token expired.");
         }
@@ -287,7 +293,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
      * On signout Clicked,
      * Clear all the data and go back to sign in
      */
-    public void signOut(View view){
+    public void onSignOutClicked(View view){
 
         //Remove everything from user sharedPrefs
         SharedPreferences sp = getSharedPreferences(MainActivity.USER_PREF, 0);
@@ -306,7 +312,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
      * On About Clicked,
      * Go to our gitlab page
      */
-    public void about(View view){
+    public void onAboutClicked(View view){
 
         String url = "https://gitlab.cs.dartmouth.edu/wubalub/LitList";
         Intent intent = new Intent();
@@ -319,7 +325,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     /*
      * QR code clicked
      */
-    public void qr(View view){
+    public void onQRClicked(View view){
 
     }
 
@@ -373,21 +379,27 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    public void onPlayPauseClicked(View view) {
-        ImageButton playPauseButton = view.findViewById(R.id.play_pause_button);
+    public void onMuteClicked(View view) {
+        ImageButton playPauseButton = view.findViewById(R.id.mute_button);
 
         if(PlayerService.previewPlayer == null) return;
-        if(PlayerService.previewPlayer.isPlaying()) {
-            PlayerService.previewPlayer.pause();
-            playPauseButton.setImageResource(R.drawable.play);
+        if(!PlayerService.muted) {
+            PlayerService.mute();
+            playPauseButton.setImageResource(R.drawable.mute);
         }
+        else {
+            PlayerService.unmute();
+            playPauseButton.setImageResource(R.drawable.unmute);
+        }
+    }
 
-        if(PlayerService.player == null) return;
-        com.spotify.sdk.android.player.PlaybackState playbackState = PlayerService.player.getPlaybackState();
-        if(playbackState != null && playbackState.isPlaying) {
-            PlayerService.player.pause(null);
-            playPauseButton.setImageResource(R.drawable.play);
-        }
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        //TODO switch alert type, save to shared pref
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
 }

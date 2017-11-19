@@ -10,11 +10,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
 import com.google.common.base.Joiner;
+import com.spotify.sdk.android.player.PlaybackState;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.io.InputStream;
@@ -38,6 +40,9 @@ public class PlayerService extends Service {
     public static final String TAG = "PLAYER_SERVICE";
     private String token = "";
 
+    private static AudioManager audioManager;
+    public static boolean muted;
+
     @Override
     public IBinder onBind(Intent arg0)
     {
@@ -49,6 +54,18 @@ public class PlayerService extends Service {
     {
         Log.d(TAG, "onStartCommand");
         super.onStartCommand(intent, flags, startId);
+
+        // if we request to stop the service, stop the service!
+        if (ACTION_STOP_SERVICE.equals(intent.getAction())) {
+            Log.d(TAG,"called to cancel service");
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                notificationManager.cancel(NOTIFICATION_ID);
+            }
+            stopSelf();
+        }
+
+        audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         // setup the notification
         updateNotification();
@@ -70,8 +87,10 @@ public class PlayerService extends Service {
         if(currentTrack == null) {
 
             // build the notification
-            builder = new Notification.Builder(this)
-                    .setContentTitle("LitList Audio Player")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                builder = new Notification.Builder(this, NOTIFICATION_CHANNEL);
+            else builder = new Notification.Builder(this);
+            builder.setContentTitle("LitList Audio Player")
                     .setContentText("Songs will be displayed here")
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setStyle(new Notification.MediaStyle())
@@ -94,7 +113,10 @@ public class PlayerService extends Service {
             }
 
             // build the notification
-            builder = new Notification.Builder(this)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                builder = new Notification.Builder(this, NOTIFICATION_CHANNEL);
+            else builder = new Notification.Builder(this);
+            builder.setContentTitle("LitList Audio Player")
                     .setContentTitle("Track: " + currentTrack.name)
                     .setContentText("Artist: " + namesToString(currentTrack.artists))
                     .setSmallIcon(R.mipmap.ic_launcher)
@@ -105,9 +127,10 @@ public class PlayerService extends Service {
                     .setShowWhen(true)
                     .setContentIntent(resultPendingIntent);
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                builder.setChannelId(NOTIFICATION_CHANNEL);
-            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder.setChannelId(NOTIFICATION_CHANNEL);
         }
 
         // adds a stop service button
@@ -117,19 +140,9 @@ public class PlayerService extends Service {
         builder.addAction(R.mipmap.ic_launcher, "Stop", pStopSelf);
 
         Notification notification = builder.build();
-        notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+        // notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 
         startForeground(SERVICE_ID, notification);
-        /*
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
-            Log.d(TAG, "Notifying!");
-            notificationManager.notify(NOTIFICATION_ID, notification);
-        }
-        else {
-            Log.e(TAG,"Notification manager is null!");
-        }
-        */
     }
 
     @Override
@@ -167,5 +180,15 @@ public class PlayerService extends Service {
         }
         Joiner joiner = Joiner.on(", ");
         return joiner.join(names);
+    }
+
+    public static void mute(){
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE , 0);
+        muted = true;
+    }
+
+    public static void unmute(){
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE , 0);
+        muted = false;
     }
 }

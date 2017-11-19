@@ -1,14 +1,20 @@
 package com.wabalub.cs65.litlist;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 public class SettingsFragment extends Fragment{
     private static final String TAG = "SETTINGS";
+    private Spinner alertTypeSpinner;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -32,8 +38,14 @@ public class SettingsFragment extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setupEditTexts(view);
         setupButtons(view);
         addItemsOnAlertSpinner();
+    }
+
+    private void setupEditTexts(View view) {
+        EditText nameEditText = (EditText) view.findViewById(R.id.profile_name);
+        nameEditText.setText(MainActivity.userEmail);
     }
 
 
@@ -47,7 +59,7 @@ public class SettingsFragment extends Fragment{
 
     // add items into spinner dynamically
     public void addItemsOnAlertSpinner() {
-        /*
+
         alertTypeSpinner = getActivity().findViewById(R.id.alert_type_spinner);
         Log.d(TAG, "Spinner = " + alertTypeSpinner.toString());
 
@@ -65,6 +77,6 @@ public class SettingsFragment extends Fragment{
         SharedPreferences sp = getActivity().getSharedPreferences(MainActivity.SHARED_PREF, 0);
 
         alertTypeSpinner.setSelection(sp.getInt("noti_type", 0));
-        */
+
     }
 }

@@ -92,4 +92,9 @@ public class TrackPlayer implements Player, MediaPlayer.OnCompletionListener {
         mMediaPlayer.setOnCompletionListener(this);
         mMediaPlayer.prepareAsync();
     }
+
+    public void setVolume(float volume){
+        if(mMediaPlayer != null)
+            mMediaPlayer.setVolume(volume, volume);
+    }
 }
