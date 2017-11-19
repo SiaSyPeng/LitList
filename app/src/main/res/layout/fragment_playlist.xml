@@ -22,7 +22,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginBottom="8dp"
-        android:background="@null"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_marginEnd="8dp"
         android:onClick="onAddSongClicked"
         android:scaleType="fitCenter"
@@ -36,12 +36,26 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginBottom="8dp"
-        android:background="@null"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_marginEnd="8dp"
-        android:onClick="onAddSongClicked"
+        android:onClick="onShareClicked"
         android:scaleType="fitCenter"
         android:src="@drawable/facebook_share"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/add_by_search_button"
         android:layout_marginRight="8dp" />
+
+    <ImageButton
+        android:id="@+id/play_pause_button"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="13dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_marginEnd="13dp"
+        android:onClick="onPlayPauseClicked"
+        android:scaleType="fitCenter"
+        android:src="@drawable/play"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/share_button"
+        android:layout_marginRight="13dp" />
 </android.support.constraint.ConstraintLayout>

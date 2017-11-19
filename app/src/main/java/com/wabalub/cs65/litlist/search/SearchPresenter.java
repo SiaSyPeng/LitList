@@ -102,7 +102,7 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
             return;
         }
 
-        if (PlayerService.player == null) {
+        if (PlayerService.player == null || PlayerService.previewPlayer == null) {
             logMessage("Player is null");
             return;
         }
@@ -113,6 +113,7 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
         if (currentTrackUrl == null || !currentTrackUrl.equals(previewUrl)) {
             logMessage("Playing song");
             PlayerService.previewPlayer.play(previewUrl);
+
         }
         else if (PlayerService.previewPlayer.isPlaying()) {
             logMessage("Pausing the song");

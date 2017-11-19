@@ -108,13 +108,13 @@ public class PlayerService extends Service {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 builder.setChannelId(NOTIFICATION_CHANNEL);
             }
-
-            // adds a stop service button
-            Intent stopSelf = new Intent(this, PlayerService.class);
-            stopSelf.setAction(ACTION_STOP_SERVICE);
-            PendingIntent pStopSelf = PendingIntent.getService(this, 0, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT);
-            builder.addAction(R.mipmap.ic_launcher, "Stop", pStopSelf);
         }
+
+        // adds a stop service button
+        Intent stopSelf = new Intent(this, PlayerService.class);
+        stopSelf.setAction(ACTION_STOP_SERVICE);
+        PendingIntent pStopSelf = PendingIntent.getService(this, 0, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.addAction(R.mipmap.ic_launcher, "Stop", pStopSelf);
 
         Notification notification = builder.build();
         notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
