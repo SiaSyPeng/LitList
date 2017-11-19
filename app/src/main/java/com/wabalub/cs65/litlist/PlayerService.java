@@ -43,6 +43,8 @@ public class PlayerService extends Service {
     private static AudioManager audioManager;
     public static boolean muted;
 
+    private static int prevVolume = 0;
+
     @Override
     public IBinder onBind(Intent arg0)
     {
@@ -182,12 +184,13 @@ public class PlayerService extends Service {
     }
 
     public static void mute(){
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE , 0);
+        prevVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
         muted = true;
     }
 
     public static void unmute(){
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE , 0);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, prevVolume , 0);
         muted = false;
     }
 }

@@ -52,7 +52,11 @@ public class SignInActivity extends AppCompatActivity implements ConnectionState
                 .setScopes(new String[]{"playlist-read", "user-read-private", "streaming"})
                 .build();
 
-        AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+        try {
+            AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+        } catch (Exception e) {
+            logError(e.toString());
+        }
     }
 
     @Override

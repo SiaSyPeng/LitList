@@ -23,11 +23,14 @@ public class FPlaylist {
     //public List<String> users_listening = new List<>();
     public Integer user_lis_tot = 0; // will be used in the rank to rank the playlist as a whole
 
+
     public FPlaylist() {
         // Default constructor required for calls to DataSnapshot.getValue(Playlist.class)
     }
 
-    public void FPLaylist(String curr_track_id, Double curr_song_pos,
+
+    // Made this into a constructor, was a method for some reason
+    public FPlaylist(String curr_track_id, Double curr_song_pos,
                     Double lat, Double lon,ArrayList<Song> songs, ArrayList<String> users_listening, Integer user_lis_tot) {
         this.curr_track_id = curr_track_id;
         this.curr_song_pos = curr_song_pos;

@@ -18,7 +18,7 @@ public class User {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public void User(String username, Long userid, ArrayList<String> playlist, ArrayList<String> downVote_list, ArrayList<String> upVote_List) {
+    public User(String username, Long userid, ArrayList<String> playlist, ArrayList<String> downVote_list, ArrayList<String> upVote_List) {
         this.username = username;
         this.userid = userid;
         this.playlist = playlist;
