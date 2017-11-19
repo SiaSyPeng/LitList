@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.wabalub.cs65.litlist.MainActivity;
 import com.wabalub.cs65.litlist.Player;
 import com.wabalub.cs65.litlist.PlayerService;
+import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib;
 
 import java.util.HashMap;
@@ -140,12 +141,9 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
      * Method to request adding a song to the playlist
      * @param track the track to add tot he playlist
      */
-    private void requestAddToPlaylist(Track track){
-        Map<String, String> args = new HashMap<String, String>();
-        args.put("user_id", MainActivity.userID);
-        args.put("playlist_id", MainActivity.playlist.getId());
-        args.put("track_id", track.id);
-        InternetMgmtLib.getString(this, MainActivity.queue, ADD_URL, ADD_REQUEST, args);
+    private void addToPlayList(Track track) {
+        Song song = new Song(track.id);
+        // TODO add the song to the current playlist in the database
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import com.wabalub.cs65.litlist.MainActivity;
 import com.wabalub.cs65.litlist.PlayerService;
 import com.wabalub.cs65.litlist.R;
+import com.wabalub.cs65.litlist.gson.Song;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +97,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             @Override
             public void onClick(View view) {
                 // add to the local playlist
-                MainActivity.playlist.getIds().add(item.id);
+                Song song = new Song(item.id);
+                MainActivity.playlist.songs.add(song);
                 MainActivity.updateTracks();
 
                 Log.d(TAG,"Added " + item.name);

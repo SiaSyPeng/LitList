@@ -82,14 +82,15 @@ public class PlayerService extends Service {
         Notification.Builder builder;
         // setup a pending intent so if the user clicks on the notification it can open the main activity
         PendingIntent resultPendingIntent = getPendingIntent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                builder = new Notification.Builder(this, NOTIFICATION_CHANNEL);
+            else builder = new Notification.Builder(this);
+
 
         // if we don't have a song, notify with the default notification
         if(currentTrack == null) {
 
             // build the notification
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                builder = new Notification.Builder(this, NOTIFICATION_CHANNEL);
-            else builder = new Notification.Builder(this);
             builder.setContentTitle("LitList Audio Player")
                     .setContentText("Songs will be displayed here")
                     .setSmallIcon(R.mipmap.ic_launcher)
@@ -102,7 +103,6 @@ public class PlayerService extends Service {
 
         // otherwise show the song that's playing
         else {
-
             //get the album art
             Image album_art = currentTrack.album.images.get(0);
             Bitmap icon = null;
@@ -126,7 +126,6 @@ public class PlayerService extends Service {
                     .setOngoing(true)
                     .setShowWhen(true)
                     .setContentIntent(resultPendingIntent);
-
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

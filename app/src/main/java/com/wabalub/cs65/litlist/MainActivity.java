@@ -31,6 +31,8 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
+import com.wabalub.cs65.litlist.gson.FPlaylist;
+import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib.InternetListener;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
 import com.wabalub.cs65.litlist.search.SearchActivity;
@@ -63,13 +65,16 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public static SpotifyApi spotifyApi;
     public static SpotifyService spotifyService;
 
+    // TODO is this not imported correctly?
+    // public static DatabaseReference database;
+
     public static String SHARED_PREF = "litlist_" +
             "shared_pref";
 
     // for playlist management
 
     //Todo: Come back here to look at the playlist will cause error
-    public static Playlist playlist = new Playlist(new ArrayList<String>(), "", "");
+    public static FPlaylist playlist = new FPlaylist();
     public static List<Track> tracks = new ArrayList<Track>();
 
     public static String USER_PREF = "profile_data";
@@ -281,7 +286,8 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         Log.d(TAG, "Updating tracks!");
         tracks = new ArrayList<>();
 
-        for(String id : playlist.getIds()){
+        for(Song song : playlist.songs){
+            String id = song.id;
             tracks.add(spotifyService.getTrack(id));
         }
     }

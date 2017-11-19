@@ -14,8 +14,7 @@ public class FPlaylists {
 
     }
 
-    public void FPlaylists(ArrayList<FPlaylist> playlists) {
+    public FPlaylists(ArrayList<FPlaylist> playlists) {
         this.playlists = playlists;
     }
-
 }
