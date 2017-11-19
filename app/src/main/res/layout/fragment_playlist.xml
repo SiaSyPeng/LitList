@@ -40,7 +40,7 @@
         android:layout_marginEnd="8dp"
         android:onClick="onAddSongClicked"
         android:scaleType="fitCenter"
-        android:src="@drawable/fire"
+        android:src="@drawable/facebook_share"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/add_by_search_button"
         android:layout_marginRight="8dp" />

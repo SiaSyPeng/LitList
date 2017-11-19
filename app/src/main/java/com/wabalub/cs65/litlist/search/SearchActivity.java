@@ -90,6 +90,9 @@ public class SearchActivity extends AppCompatActivity implements Search.View {
             String currentQuery = savedInstanceState.getString(KEY_CURRENT_QUERY);
             mActionListener.search(currentQuery);
         }
+
+        // TODO figure out why this doesn't work (low priority)
+        // getWindow().setBackgroundDrawableResource(R.drawable.bg);
     }
 
     @Override

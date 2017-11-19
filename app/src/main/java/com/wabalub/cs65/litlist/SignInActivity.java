@@ -100,7 +100,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionState
 
             @Override
             public void onError(Throwable throwable) {
-                Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+                Log.e(TAG, "Could not initialize player: " + throwable.getMessage());
             }
         });
     }

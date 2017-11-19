@@ -15,6 +15,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorListener;
 import android.hardware.SensorManager;
+import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -164,14 +165,15 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
             logError("Access token expired.");
         }
 
-        Intent serviceIntent = PlayerService.getIntent(this);
-        startService(serviceIntent);
+        startPlayerService();
+
     }
 
     /**
      * Method for handling selecting a song in the playlist
      * @param item song selected
      */
+    @TargetApi(Build.VERSION_CODES.O)
     public void onListFragmentInteraction(@Nullable Track item) {
         if(item == null) return;
         updateTracks();
@@ -181,12 +183,17 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
             return;
         }
         if(PlayerService.previewPlayer.isPlaying()) PlayerService.previewPlayer.pause();
-        if(PlayerService.player.getPlaybackState().isPlaying) PlayerService.player.pause(null);
+        com.spotify.sdk.android.player.PlaybackState playbackState = PlayerService.player.getPlaybackState();
+        if(playbackState != null && playbackState.isPlaying) PlayerService.player.pause(null);
 
         PlayerService.currentTrack = item;
         String currentTrackId = item.id;
         logMessage("currentTrackId: " + currentTrackId);
+
+        startPlayerService();
+
         PlayerService.player.playUri(null, "spotify:track:" + currentTrackId, 0, 0);
+
     }
 
     /**
@@ -237,36 +244,6 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public void onAddSongClicked(View view) {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
-    }
-
-    /**
-     * Method to setup or update the notification
-     */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void updateNotification(){
-        Log.d(TAG, "Updating notification");
-        //TODO get the track title form the url
-        String title = PlayerService.currentTrack.name;
-
-        // setup a pending intent so if the user clicks on the notification it can open the main activity
-        PendingIntent resultPendingIntent = getPendingIntent();
-
-        // build the notification
-        Notification.Builder builder = new Notification.Builder(this)
-                        .setSmallIcon(R.drawable.icon)
-                        .setContentTitle("Playing " + title)
-                        .setContentText("Artist")
-                        .setAutoCancel(false)
-                        .setOngoing(true)
-                        .setShowWhen(true)
-                        .setContentIntent(resultPendingIntent);
-
-        Notification notification = builder.build();
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
-            notificationManager.notify(PlayerService.NOTIFICATION_ID, notification);
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -334,7 +311,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         intent.setData(Uri.parse(url));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-//        finish();
+//      finish();
     }
 
     /*
@@ -380,6 +357,17 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public void onShareClicked(View view) {
+    }
 
+    private void startPlayerService(){
+        Intent serviceIntent = new Intent(this, PlayerService.class);
+        serviceIntent.putExtra(EXTRA_TOKEN, token);
+
+        // we need a foreground service for oreo and up so the service doesn't get killed
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent);
+        } else {
+            startService(serviceIntent);
+        }
     }
 }

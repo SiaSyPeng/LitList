@@ -10,11 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Icon;
-import android.media.session.MediaSession;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.google.common.base.Joiner;
@@ -35,8 +32,11 @@ public class PlayerService extends Service {
     public static SpotifyPlayer player;
     public static Track currentTrack = null;
     public static final int SERVICE_ID = 1;
-    public static final int NOTIFICATION_ID = 2048;
+    public static final String NOTIFICATION_CHANNEL = "LITLIST_PLAYER";
+    public static final String ACTION_STOP_SERVICE = "STOP";
+    public static final int NOTIFICATION_ID = 1;
     public static final String TAG = "PLAYER_SERVICE";
+    private String token = "";
 
     @Override
     public IBinder onBind(Intent arg0)
@@ -63,9 +63,12 @@ public class PlayerService extends Service {
     private void updateNotification(){
         Log.d(TAG, "Updating notification");
         Notification.Builder builder;
+        // setup a pending intent so if the user clicks on the notification it can open the main activity
+        PendingIntent resultPendingIntent = getPendingIntent();
 
         // if we don't have a song, notify with the default notification
         if(currentTrack == null) {
+
             // build the notification
             builder = new Notification.Builder(this)
                     .setContentTitle("LitList Audio Player")
@@ -74,15 +77,12 @@ public class PlayerService extends Service {
                     .setStyle(new Notification.MediaStyle())
                     .setAutoCancel(false)
                     .setOngoing(true)
-                    .setShowWhen(true);
-            return;
+                    .setShowWhen(true)
+                    .setContentIntent(resultPendingIntent);
         }
 
         // otherwise show the song that's playing
         else {
-
-            // setup a pending intent so if the user clicks on the notification it can open the main activity
-            PendingIntent resultPendingIntent = getPendingIntent();
 
             //get the album art
             Image album_art = currentTrack.album.images.get(0);
@@ -104,12 +104,23 @@ public class PlayerService extends Service {
                     .setOngoing(true)
                     .setShowWhen(true)
                     .setContentIntent(resultPendingIntent);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                builder.setChannelId(NOTIFICATION_CHANNEL);
+            }
+
+            // adds a stop service button
+            Intent stopSelf = new Intent(this, PlayerService.class);
+            stopSelf.setAction(ACTION_STOP_SERVICE);
+            PendingIntent pStopSelf = PendingIntent.getService(this, 0, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT);
+            builder.addAction(R.mipmap.ic_launcher, "Stop", pStopSelf);
         }
 
         Notification notification = builder.build();
-        //startForeground(SERVICE_ID, notification);
+        notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 
-
+        startForeground(SERVICE_ID, notification);
+        /*
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {
             Log.d(TAG, "Notifying!");
@@ -118,6 +129,7 @@ public class PlayerService extends Service {
         else {
             Log.e(TAG,"Notification manager is null!");
         }
+        */
     }
 
     @Override
