@@ -7,6 +7,8 @@ import android.util.Log;
 
 import java.io.IOException;
 
+import kaaes.spotify.webapi.android.SpotifyService;
+
 public class TrackPlayer implements Player, MediaPlayer.OnCompletionListener {
 
     private static final String TAG = TrackPlayer.class.getSimpleName();

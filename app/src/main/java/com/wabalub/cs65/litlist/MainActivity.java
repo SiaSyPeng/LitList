@@ -336,7 +336,6 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public static String userEmail = null;
     public static String token = null;
     public static SpotifyApi spotifyApi;
-    public static SpotifyService spotifyService;
 
     /**
      * Method to setup the Spotify API
@@ -350,7 +349,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
 
         if (token != null) {
             spotifyApi.setAccessToken(token);
-            spotifyService = MainActivity.spotifyApi.getService();
+            PlayerService.spotifyService = MainActivity.spotifyApi.getService();
         } else {
             logError("No valid access token");
         }
@@ -360,7 +359,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         StrictMode.setThreadPolicy(policy);
 
         try {
-            UserPrivate me = spotifyService.getMe();
+            UserPrivate me = PlayerService.spotifyService.getMe();
             logMessage("User ID: " + me.id);
             userID = me.id;
             userEmail = me.email;
@@ -444,7 +443,7 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
 
         for(Song song : playlist.songs){
             String id = song.id;
-            tracks.add(spotifyService.getTrack(id));
+            tracks.add(PlayerService.spotifyService.getTrack(id));
         }
     }
 

@@ -16,7 +16,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.google.common.base.Joiner;
-import com.spotify.sdk.android.player.PlaybackState;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.io.InputStream;
@@ -24,6 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
@@ -42,6 +42,7 @@ public class PlayerService extends Service {
 
     private static AudioManager audioManager;
     public static boolean muted;
+    public static SpotifyService spotifyService;
 
     private static int prevVolume = 0;
 
@@ -114,10 +115,6 @@ public class PlayerService extends Service {
                 Log.e(TAG, e.toString());
             }
 
-            // build the notification
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                builder = new Notification.Builder(this, NOTIFICATION_CHANNEL);
-            else builder = new Notification.Builder(this);
             builder.setContentTitle("LitList Audio Player")
                     .setContentTitle("Track: " + currentTrack.name)
                     .setContentText("Artist: " + namesToString(currentTrack.artists))
@@ -185,12 +182,12 @@ public class PlayerService extends Service {
 
     public static void mute(){
         prevVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE , 0);
         muted = true;
     }
 
     public static void unmute(){
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, prevVolume , 0);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, prevVolume, 0);
         muted = false;
     }
 }
