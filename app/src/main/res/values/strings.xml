@@ -45,5 +45,14 @@
     <string name="prefs_QR_key">QR Code</string>
     <string name="prefs_about_key">About US</string>
     <string name="alert_type">Alert type</string>
+    <string name="playlist_name">Playlist name</string>
+    <string name="playlist_creator">Playlist creator</string>
+    <string name="join">Join</string>
+    <string name="zoom_level">Zoom level</string>
+    <string name="alert_type_text">Alert type</string>
+    <string name="alert_on_text">Alerts enabled</string>
+    <string name="create_playlist">Create playlist</string>
+    <string name="create">Create</string>
+    <string name="click_markers_prompt">Click on a marker to view a playlist.</string>
 
 </resources>

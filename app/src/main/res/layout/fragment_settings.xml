@@ -99,15 +99,15 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_marginHorizontal="10dp"
+                    android:layout_margin="10dp"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:text="@string/prefs_alert_key"/>
+                    android:text="@string/alert_on_text"/>
 
                 <Switch
-                    android:layout_marginHorizontal="10dp"
+                    android:layout_margin="10dp"
 
                     android:id="@+id/show_score_switch"
                     android:layout_width="0dp"
@@ -123,10 +123,64 @@
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray"/>
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="18sp"
+                    android:text="@string/alert_type_text"/>
+
+                <Spinner
+                    android:id="@+id/alert_type_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:clickable="true"
+                    android:entries="@string/alert_type"
+                    android:focusable="true">
+                </Spinner>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:layout_margin="10dp"
+                    android:text="@string/zoom_level"/>
+
+                <SeekBar
+                    android:id="@+id/zoom_slider"
+                    android:layout_margin="10dp"
+                    android:layout_width="200dp"
+                    android:layout_height="20dp"
+                    />
+
+            </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
+                android:layout_margin="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:textSize="18sp"
@@ -151,7 +205,7 @@
                     android:gravity="start"
                     android:text="@string/prefs_QR_key"
                     android:textAlignment="textStart"
-                    android:layout_marginHorizontal="10dp"
+                    android:layout_margin="10dp"
                     android:textSize="18sp"
                     android:layout_weight="1"/>
 
@@ -177,16 +231,8 @@
                     android:layout_weight="1"/>
 
             </LinearLayout>
-            <Spinner
-                android:id="@+id/alert_type_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:padding="10dp"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:entries="@string/alert_type"
-                android:focusable="true">
-            </Spinner>
+
+
 
         </LinearLayout>
     </ScrollView>

@@ -56,7 +56,7 @@ public class SearchActivity extends AppCompatActivity implements Search.View {
         mActionListener.init(MainActivity.token);
 
         // Setup search field
-        final SearchView searchView = (SearchView) findViewById(R.id.search_view);
+        final SearchView searchView = findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -80,7 +80,7 @@ public class SearchActivity extends AppCompatActivity implements Search.View {
             }
         });
 
-        RecyclerView resultsList = (RecyclerView) findViewById(R.id.search_results);
+        RecyclerView resultsList = findViewById(R.id.search_results);
         resultsList.setHasFixedSize(true);
         resultsList.setLayoutManager(mLayoutManager);
         resultsList.setAdapter(mAdapter);

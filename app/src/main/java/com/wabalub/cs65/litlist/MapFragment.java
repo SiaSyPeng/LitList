@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.SupportMapFragment;
 
@@ -23,6 +26,9 @@ public class MapFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     public static final String TAG = "MAP_FRAGMENT";
+    private ImageView playlistImage;
+    private Button joinCreateButton;
+    private TextView playlistNameText, playlistCreatorText;
 
     public MapFragment() {
         // Required empty public constructor
@@ -71,6 +77,11 @@ public class MapFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        playlistImage = view.findViewById(R.id.map_playlist_image);
+        playlistNameText = view.findViewById(R.id.map_playlist_name);
+        playlistCreatorText = view.findViewById(R.id.map_playlist_creator);
+        joinCreateButton = view.findViewById(R.id.join_create_button);
+
     }
 
     @Override
@@ -91,5 +102,24 @@ public class MapFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+     /**
+     * Method to update the cat panel at the bottom of the screen
+     */
+    public void updatePanel(){
+        // if we have a playlist
+        if(MainActivity.playlist == null){
+            playlistNameText.setText(R.string.click_markers_prompt);
+            playlistCreatorText.setText("");
+            joinCreateButton.setText(R.string.create);
+        }
+
+        // otherwise we are on a cat, so update the panel view
+        else {
+            playlistNameText.setText(MainActivity.playlist.name);
+            playlistCreatorText.setText(MainActivity.playlist.creator);
+            joinCreateButton.setText(R.string.join);
+        }
     }
 }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -40,7 +41,7 @@ public class SettingsFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
 
         setupEditTexts(view);
-        setupButtons(view);
+        setupSlider(view);
         addItemsOnAlertSpinner();
     }
 
@@ -54,7 +55,24 @@ public class SettingsFragment extends Fragment{
      * Method to setup all buttons
      * @param view The view to these buttons are in
      */
-    private void setupButtons(View view) {
+    private void setupSlider(View view) {
+        SeekBar zoomSlider = view.findViewById(R.id.zoom_slider);
+        zoomSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                MainActivity.zoom = 7.5f * (float) seekBar.getProgress() / (float) seekBar.getMax() + 12.5f;
+            }
+        });
 
     }
 

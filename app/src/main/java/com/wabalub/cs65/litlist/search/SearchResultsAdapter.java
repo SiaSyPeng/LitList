@@ -41,10 +41,10 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
         public ViewHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.entity_title);
-            subtitle = (TextView) itemView.findViewById(R.id.entity_subtitle);
-            image = (ImageView) itemView.findViewById(R.id.entity_image);
-            addBtn = (Button) itemView.findViewById(R.id.add_button);
+            title = itemView.findViewById(R.id.entity_title);
+            subtitle = itemView.findViewById(R.id.entity_subtitle);
+            image = itemView.findViewById(R.id.entity_image);
+            addBtn = itemView.findViewById(R.id.add_button);
             itemView.setOnClickListener(this);
         }
 
@@ -96,6 +96,11 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         holder.addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(MainActivity.playlist == null) {
+                    Log.e(TAG, "Playlist is null");
+                }
+
+                // TODO add to global playlist
                 // add to the local playlist
                 Song song = new Song(item.id);
                 MainActivity.playlist.songs.add(song);

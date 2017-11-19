@@ -9,10 +9,13 @@ import java.util.ArrayList;
 public class FPlaylist {
 
     // basic info
+    public String name; // TODO add to firebase, we need a name
+    public String creator; // TODO add to firebase, also need a creator
     public String curr_track_id;
     public Double curr_song_pos;
     public Double lat;
     public Double lon;
+    public int index; // TODO need to assign IDs to playlists so users know which one to rejoin
 
     // Songs in the list
     public ArrayList<Song> songs = new ArrayList<>();

@@ -8,10 +8,10 @@ import java.util.concurrent.TimeUnit;
 
 public class CredentialsHandler {
 
-    private static final String ACCESS_TOKEN_NAME = "webapi.credentials.access_token";
-    private static final String ACCESS_TOKEN = "access_token";
-    private static final String EXPIRES_AT = "expires_at";
-    private static final String TAG = "CREDENTIALS";
+    public static final String ACCESS_TOKEN_NAME = "webapi.credentials.access_token";
+    public static final String ACCESS_TOKEN = "access_token";
+    public static final String EXPIRES_AT = "expires_at";
+    public static final String TAG = "CREDENTIALS";
 
     public static void setToken(Context context, String token, long expiresIn, TimeUnit unit) {
         Context appContext = context.getApplicationContext();

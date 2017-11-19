@@ -4,13 +4,20 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Criteria;
+import android.location.LocationListener;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,16 +29,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
 import com.wabalub.cs65.litlist.gson.FPlaylist;
+import com.wabalub.cs65.litlist.gson.FPlaylists;
 import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib.InternetListener;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
@@ -44,19 +60,30 @@ import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.Nullable;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.UserPrivate;
 
-public final class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
-        InternetListener, OnFragmentInteractionListener, OnListFragmentInteractionListener,
-        SensorEventListener, AdapterView.OnItemSelectedListener {
+public final class MainActivity extends AppCompatActivity implements
+        InternetListener,
+        OnFragmentInteractionListener,
+        OnListFragmentInteractionListener,
+        SensorEventListener,
+        AdapterView.OnItemSelectedListener,
+        OnMapReadyCallback,
+        LocationListener,
+        GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnMapClickListener{
+
     private static final String TAG = "MAIN" ;
     public static String USER_PREF = "profile_data";
+    public static String PLAYLIST_ID_PREF = "playlist_id";
+    public static DatabaseReference root = FirebaseDatabase.getInstance().getReference().getRoot();
 
     // for network requests and Spotify api
     public static RequestQueue queue;
+
+    private ViewPager viewPager;
+    private ActionbarPagerAdapter pagerAdapter;
 
     // TODO is this not imported correctly?
     // public static DatabaseReference database;
@@ -66,8 +93,10 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     // for playlist management
 
     //Todo: Come back here to look at the playlist will cause error
-    public static FPlaylist playlist = new FPlaylist();
+    public static FPlaylist playlist = null;
+    public static FPlaylists playlists = null;
     public static List<Track> tracks = new ArrayList<>();
+    public static int playlistIndex;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +111,10 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
 
         // setup the sensors
         setupSensors();
+
+        // setup the playlist
+        setupPlaylist();
+
     }
 
     /**
@@ -96,8 +129,8 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         }
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = findViewById(R.id.viewpager);
-        ActionbarPagerAdapter pagerAdapter = new ActionbarPagerAdapter(getSupportFragmentManager(),
+        viewPager = findViewById(R.id.viewpager);
+        pagerAdapter = new ActionbarPagerAdapter(getSupportFragmentManager(),
                 MainActivity.this);
 
         viewPager.setAdapter(pagerAdapter);
@@ -112,6 +145,10 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         tab.select();
     }
 
+    private void setupPlaylist(){
+        // TODO get playlist from database
+        playlist = new FPlaylist();
+    }
     /*
     ================================================================================================
     Interaction listeners
@@ -301,6 +338,13 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     ================================================================================================
      */
     private GoogleMap map;
+    private Marker[] playlistMarkers;
+    private Marker myPosMarker;
+    private LatLng currentPos;
+    public static float zoom = 10;
+    private boolean zoomedOut = true;
+
+    FPlaylist closestPlaylist = null;
 
     /**
      * Manipulates the map once available.
@@ -321,9 +365,195 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
             return;
         }
         map.setMyLocationEnabled(true);
-        // Add a marker in Sydney and move the camera
+        getLocation();
+        getPlaylists();
+        setupPlaylistMarkers();
+        moveToCurrentLocation(currentPos);
     }
 
+
+    /**
+     * Method to get a list of playlists from the server
+     */
+    private void getPlaylists() {
+        // TODO get the playlists from the database
+    }
+
+
+    /**
+     * Method to make all of the playlist markers
+     */
+    private void setupPlaylistMarkers() {
+        if(playlists == null) {
+            logError("No playlists");
+            return;
+        }
+
+        if(playlistMarkers != null)
+            for(Marker marker : playlistMarkers)
+                marker.remove();
+
+        playlistMarkers = new Marker[playlists.playlists.size()];
+
+        Double closestDist = Double.POSITIVE_INFINITY;
+
+
+        for(int i = 0; i < playlists.playlists.size(); i++){
+
+            FPlaylist playlist = playlists.playlists.get(i);
+            LatLng l = new LatLng(playlist.lat, playlist.lon);
+
+            // calculate the distance (for figuring out which cat is the closest)
+            Double dist = dist(l, currentPos);
+            if(dist < closestDist){
+                closestPlaylist = playlist;
+                closestDist = dist;
+            }
+
+
+            // add the marker for the playlist
+            Bitmap catMarkerIcon = BitmapFactory.decodeResource(getResources(), R.drawable.fire);
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(
+                    catMarkerIcon, 100, 125, false);
+            playlistMarkers[i] = map.addMarker(new MarkerOptions().position(l).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+
+        }
+    }
+
+    /**
+     * Method to calculate the distance in miles between two locations
+     * @param l1 latlng 1
+     * @param l2 latlng 2
+     * @return distance in miles
+     */
+    public static double dist(LatLng l1, LatLng l2){
+        if(l1 == null || l2 == null) return 0.0;
+        return 69.0 * Math.sqrt((l1.latitude - l2.latitude) * (l1.latitude - l2.latitude)
+                + (l1.longitude - l2.longitude) * (l1.longitude - l2.longitude));
+    }
+
+
+    @Override
+     public void onLocationChanged(Location location) {
+        updateWithNewLocation(location);
+     }
+
+     @Override
+     public void onStatusChanged(String provider, int status, Bundle extras) {
+
+     }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        getLocation();
+        moveToCurrentLocation(currentPos);
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) { }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        // TODO get the playlist whose marker is at this position
+
+        MapFragment mapFragment = (MapFragment) pagerAdapter.getItem(0);
+        mapFragment.updatePanel();
+        return false;
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        MapFragment mapFragment = (MapFragment) pagerAdapter.getItem(0);
+        mapFragment.updatePanel();
+        playlist = null;
+    }
+
+     // You NEED to first check for location permissions before using the location.
+    // Make sure you declare the corresponding permission in your manifest.
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            Criteria criteria = getCriteria();
+            String provider;
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+            if (locationManager != null) {
+                provider = locationManager.getBestProvider(criteria, true);
+                Location l = locationManager.getLastKnownLocation(provider);
+
+                if(l!=null){
+                    Log.d(TAG, "location: " + l.toString());
+                    updateWithNewLocation(l);
+                }
+                else{
+                    Log.e(TAG, "location is null");
+                }
+                locationManager.requestLocationUpdates(provider, 0, 0, this);
+            }
+            else{
+                Log.e(TAG, "location manager is null");
+            }
+        }
+    }
+
+    // Application criteria for selecting a location provider. See line 158 "getBestProvider"
+    // https://developer.android.com/reference/android/location/Criteria.html
+    private Criteria getCriteria(){
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        criteria.setAltitudeRequired(true);
+        criteria.setBearingRequired(false);
+        criteria.setSpeedRequired(true);
+        criteria.setCostAllowed(true);
+        return criteria;
+    }
+
+        // Put the marker at given location and zoom into the location
+    private void updateWithNewLocation(Location location) {
+        if (location != null) {
+            LatLng l = fromLocationToLatLng(location);
+            currentPos = l;
+            drawMyMarker(l);
+            moveToCurrentLocation(l);
+        }
+    }
+
+    // LatLng stores the "location" as two doubles, latitude and longitude.
+    public static LatLng fromLocationToLatLng(Location location){
+        return new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    // Remove old marker and place new marker.
+    private void drawMyMarker(LatLng l){
+        if (myPosMarker != null)
+            myPosMarker.remove();
+        myPosMarker = map.addMarker(new MarkerOptions()
+                .position(l)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_self)));
+    }
+
+    /**
+     * Method to zoom camera to current location
+     * @param currentLocation our current location
+     */
+    private void moveToCurrentLocation(LatLng currentLocation)
+    {
+        if(currentLocation == null) {
+            Log.d(TAG, "current location is null");
+            return;
+        }
+
+        LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;
+        if(!bounds.contains(currentLocation) || zoomedOut ){
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,15));
+            // Zoom in, animating the camera.
+            map.animateCamera(CameraUpdateFactory.zoomIn());
+            // Zoom out to zoom level 10, animating with a duration of 1 second.
+            map.animateCamera(CameraUpdateFactory.zoomTo(zoom), 1000, null);
+            zoomedOut = false;
+        }
+    }
 
     /*
     ================================================================================================
@@ -365,6 +595,10 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
             userEmail = me.email;
         } catch (Exception e){
             logError("Access token expired.");
+            SharedPreferences sp = getSharedPreferences(SHARED_PREF, 0);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(CredentialsHandler.ACCESS_TOKEN, null);
+            editor.apply();
         }
 
         startPlayerService();
@@ -437,7 +671,20 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
+    private void savePlaylistIdInSharedPred(){
+        if(playlist == null) {
+            logError("Playlist is null, cannot be saved");
+            return;
+        }
+
+        SharedPreferences sp = getSharedPreferences(SHARED_PREF, 0);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(PLAYLIST_ID_PREF, playlist.index);
+        editor.apply();
+    }
     public static void updateTracks(){
+        if(playlist == null) return;
+
         Log.d(TAG, "Updating tracks!");
         tracks = new ArrayList<>();
 

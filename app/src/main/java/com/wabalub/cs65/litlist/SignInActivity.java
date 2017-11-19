@@ -33,11 +33,8 @@ public class SignInActivity extends AppCompatActivity implements ConnectionState
         setContentView(R.layout.activity_sign_in);
 
         String token = CredentialsHandler.getToken(this);
-        if (token == null) {
+        if (token != null) {
             // if we don't have a valid token, make them sign in again
-            setContentView(R.layout.activity_sign_in);
-        } else {
-            // otherwise open the main activity
             initializePlayer(token);
             startMainActivity(token);
         }
