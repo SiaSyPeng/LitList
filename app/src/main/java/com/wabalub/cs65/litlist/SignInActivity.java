@@ -115,7 +115,6 @@ public class SignInActivity extends AppCompatActivity implements ConnectionState
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(MainActivity.EXTRA_TOKEN, token);
         startActivity(intent);
-        finish();
     }
 
     private void logError(String msg) {

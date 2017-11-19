@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class SettingsFragment extends Fragment{
     private static final String TAG = "SETTINGS";
@@ -44,7 +45,7 @@ public class SettingsFragment extends Fragment{
     }
 
     private void setupEditTexts(View view) {
-        EditText nameEditText = (EditText) view.findViewById(R.id.profile_name);
+        TextView nameEditText = view.findViewById(R.id.profile_name);
         nameEditText.setText(MainActivity.userEmail);
     }
 

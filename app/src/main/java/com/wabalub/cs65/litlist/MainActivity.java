@@ -53,41 +53,21 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         InternetListener, OnFragmentInteractionListener, OnListFragmentInteractionListener,
         SensorEventListener, AdapterView.OnItemSelectedListener {
     private static final String TAG = "MAIN" ;
-    public static ActionbarPagerAdapter pagerAdapter;
-    private GoogleMap map;
+    public static String USER_PREF = "profile_data";
 
     // for network requests and Spotify api
     public static RequestQueue queue;
-    public static final String EXTRA_TOKEN = "EXTRA_TOKEN";
-    public static String userID = null;
-    public static String userEmail = null;
-    public static String token = null;
-    public static SpotifyApi spotifyApi;
-    public static SpotifyService spotifyService;
 
     // TODO is this not imported correctly?
     // public static DatabaseReference database;
 
-    public static String SHARED_PREF = "litlist_" +
-            "shared_pref";
+    public static String SHARED_PREF = "litlist_" + "shared_pref";
 
     // for playlist management
 
     //Todo: Come back here to look at the playlist will cause error
     public static FPlaylist playlist = new FPlaylist();
-    public static List<Track> tracks = new ArrayList<Track>();
-
-    public static String USER_PREF = "profile_data";
-
-
-    // for sensors
-    private SensorManager sensorMgr;
-    private Sensor accelerometer;
-    private static final int SHAKE_THRESHOLD = 800;
-    private long lastTime = 0, lastShakeTime = 0, TIME_THRESHOLD = 2000;
-    private int samplingPeriod = 100000; // 10 ^ 5 us = 0.1 s
-    private float last_x = 0f, last_y = 0f, last_z = 0f;
-
+    public static List<Track> tracks = new ArrayList<>();
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,19 +85,6 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     /**
-     * Method to setup the sensors for accelerometer shaking
-     */
-    private void setupSensors(){
-        sensorMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
-        if(sensorMgr == null) {
-            logError("Sensor manager is null.");
-            return;
-        }
-        accelerometer = sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorMgr.registerListener(this, accelerometer, samplingPeriod);
-    }
-
-    /**
      * Method to setup the tab layout
      */
     private void setupTabLayout(){
@@ -129,14 +96,14 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         }
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        pagerAdapter = new ActionbarPagerAdapter(getSupportFragmentManager(),
+        ViewPager viewPager = findViewById(R.id.viewpager);
+        ActionbarPagerAdapter pagerAdapter = new ActionbarPagerAdapter(getSupportFragmentManager(),
                 MainActivity.this);
 
         viewPager.setAdapter(pagerAdapter);
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         // Start on the only tab we have implemented
@@ -145,37 +112,88 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         tab.select();
     }
 
-    /**
-     * Method to setup the Spotify API
+    /*
+    ================================================================================================
+    Interaction listeners
+    ================================================================================================
      */
-    @TargetApi(Build.VERSION_CODES.O)
-    private void setupSpotifyAPI(){
-        Intent intent = getIntent();
-        token = intent.getStringExtra(EXTRA_TOKEN);
-        logMessage("Api Client created");
-        spotifyApi = new SpotifyApi();
 
-        if (token != null) {
-            spotifyApi.setAccessToken(token);
-            spotifyService = MainActivity.spotifyApi.getService();
-        } else {
-            logError("No valid access token");
+    public void onShareClicked(View view) {
+    }
+
+    public void onMuteClicked(View view) {
+        ImageButton playPauseButton = view.findViewById(R.id.mute_button);
+
+        if(PlayerService.previewPlayer == null) return;
+        if(!PlayerService.muted) {
+            PlayerService.mute();
+            playPauseButton.setImageResource(R.drawable.mute);
         }
-
-        // allows the get me request to work
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        try {
-            UserPrivate me = spotifyService.getMe();
-            logMessage("User ID: " + me.id);
-            userID = me.id;
-            userEmail = me.email;
-        } catch (Exception e){
-            logError("Access token expired.");
+        else {
+            PlayerService.unmute();
+            playPauseButton.setImageResource(R.drawable.unmute);
         }
+    }
 
-        startPlayerService();
+    /**
+     * Listener for the alert type spinner
+     * @param adapterView the view for the adapter
+     * @param view the view
+     * @param i position
+     * @param l code
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        //TODO switch alert type, save to shared pref
+    }
+
+    /**
+     * For alert type spinner
+     * @param adapterView adapter view
+     */
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    /**
+     * On signout Clicked,
+     * Clear all the data and go back to sign in
+     */
+    public void onSignOutClicked(View view){
+
+        //Remove everything from user sharedPrefs
+        SharedPreferences sp = getSharedPreferences(MainActivity.USER_PREF, 0);
+        sp.edit().clear().apply();
+
+        CredentialsHandler.setToken(this, null, 0, TimeUnit.HOURS);
+
+        //Go back to login
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+
+    /**
+     * On About Clicked,
+     * Go to our gitlab page
+     */
+    public void onAboutClicked(View view){
+
+        String url = "https://gitlab.cs.dartmouth.edu/wubalub/LitList";
+        Intent intent = new Intent();
+        intent.setData(Uri.parse(url));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+//      finish();
+    }
+
+    /**
+     * QR code clicked
+     * @param view view clicked in
+     */
+    public void onQRClicked(View view){
 
     }
 
@@ -213,123 +231,32 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public void onFragmentInteraction(@Nullable Uri uri) {
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        map.setMyLocationEnabled(true);
-        // Add a marker in Sydney and move the camera
-    }
-
-    /**
-     * Method to handle error responses form the server
-     * @param requestCode request code
-     * @param res response
-     */
-    public void onErrorResponse(int requestCode, @Nullable String res) {
-    }
-
-    /**
-     * Method to handle responses form the server
-     * @param requestCode request code
-     * @param res response
-     */
-    public void onResponse(int requestCode, @Nullable String res) {
-    }
-
     public void onAddSongClicked(View view) {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private PendingIntent getPendingIntent(){
-        Intent resultIntent = new Intent(this, MainActivity.class);
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-
-        // Adds the back stack
-        stackBuilder.addParentStack(MainActivity.class);
-
-        // Adds the Intent to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-
-        // Gets a PendingIntent containing the entire back stack
-        return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private void logError(String msg) {
-        Toast.makeText(this, "Error: " + msg, Toast.LENGTH_SHORT).show();
-        Log.e(TAG, msg);
-    }
-
-    private void logMessage(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, msg);
-    }
-
-    public static void updateTracks(){
-        Log.d(TAG, "Updating tracks!");
-        tracks = new ArrayList<>();
-
-        for(Song song : playlist.songs){
-            String id = song.id;
-            tracks.add(spotifyService.getTrack(id));
-        }
-    }
-
-    /**
-     * On signout Clicked,
-     * Clear all the data and go back to sign in
-     */
-    public void onSignOutClicked(View view){
-
-        //Remove everything from user sharedPrefs
-        SharedPreferences sp = getSharedPreferences(MainActivity.USER_PREF, 0);
-        sp.edit().clear().apply();
-
-        CredentialsHandler.setToken(this, null, 0, TimeUnit.HOURS);
-
-        //Go back to login
-        Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-
-    /**
-     * On About Clicked,
-     * Go to our gitlab page
-     */
-    public void onAboutClicked(View view){
-
-        String url = "https://gitlab.cs.dartmouth.edu/wubalub/LitList";
-        Intent intent = new Intent();
-        intent.setData(Uri.parse(url));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-//      finish();
-    }
-
     /*
-     * QR code clicked
+    ================================================================================================
+    For Sensors
+    ================================================================================================
      */
-    public void onQRClicked(View view){
+    private static final int SHAKE_THRESHOLD = 800;
+    private long lastTime = 0, lastShakeTime = 0, TIME_THRESHOLD = 2000;
+    private int samplingPeriod = 100000; // 10 ^ 5 us = 0.1 s
+    private float last_x = 0f, last_y = 0f, last_z = 0f;
 
+    /**
+     * Method to setup the sensors for accelerometer shaking
+     */
+    private void setupSensors(){
+        SensorManager sensorMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
+        if(sensorMgr == null) {
+            logError("Sensor manager is null.");
+            return;
+        }
+        Sensor accelerometer = sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorMgr.registerListener(this, accelerometer, samplingPeriod);
     }
 
     @Override
@@ -367,7 +294,82 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
     public void onAccuracyChanged(Sensor sensor, int i) {
     }
 
-    public void onShareClicked(View view) {
+
+    /*
+    ================================================================================================
+    for Google maps
+    ================================================================================================
+     */
+    private GoogleMap map;
+
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        map.setMyLocationEnabled(true);
+        // Add a marker in Sydney and move the camera
+    }
+
+
+    /*
+    ================================================================================================
+    for Spotify API
+    ================================================================================================
+     */
+
+    public static final String EXTRA_TOKEN = "EXTRA_TOKEN";
+    public static String userID = null;
+    public static String userEmail = null;
+    public static String token = null;
+    public static SpotifyApi spotifyApi;
+    public static SpotifyService spotifyService;
+
+    /**
+     * Method to setup the Spotify API
+     */
+    @TargetApi(Build.VERSION_CODES.O)
+    private void setupSpotifyAPI(){
+        Intent intent = getIntent();
+        token = intent.getStringExtra(EXTRA_TOKEN);
+        logMessage("Api Client created");
+        spotifyApi = new SpotifyApi();
+
+        if (token != null) {
+            spotifyApi.setAccessToken(token);
+            spotifyService = MainActivity.spotifyApi.getService();
+        } else {
+            logError("No valid access token");
+        }
+
+        // allows the get me request to work
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        try {
+            UserPrivate me = spotifyService.getMe();
+            logMessage("User ID: " + me.id);
+            userID = me.id;
+            userEmail = me.email;
+        } catch (Exception e){
+            logError("Access token expired.");
+        }
+
+        startPlayerService();
+
     }
 
     private void startPlayerService(){
@@ -382,27 +384,77 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    public void onMuteClicked(View view) {
-        ImageButton playPauseButton = view.findViewById(R.id.mute_button);
+    /*
+    ================================================================================================
+    For Facebook API
+    ================================================================================================
+     */
 
-        if(PlayerService.previewPlayer == null) return;
-        if(!PlayerService.muted) {
-            PlayerService.mute();
-            playPauseButton.setImageResource(R.drawable.mute);
-        }
-        else {
-            PlayerService.unmute();
-            playPauseButton.setImageResource(R.drawable.unmute);
+    /*
+    ================================================================================================
+    For general networking
+    ================================================================================================
+     */
+    /**
+     * Method to handle error responses form the server
+     * @param requestCode request code
+     * @param res response
+     */
+    public void onErrorResponse(int requestCode, @Nullable String res) {
+    }
+
+    /**
+     * Method to handle responses form the server
+     * @param requestCode request code
+     * @param res response
+     */
+    public void onResponse(int requestCode, @Nullable String res) {
+    }
+
+
+    /*
+    ================================================================================================
+    General utility
+    ================================================================================================
+     */
+
+    /**
+     * Method to get the pending intent for starting this activity
+     * @return pending intent tos tart the activity
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private PendingIntent getPendingIntent(){
+        Intent resultIntent = new Intent(this, MainActivity.class);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+
+        // Adds the back stack
+        stackBuilder.addParentStack(MainActivity.class);
+
+        // Adds the Intent to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+
+        // Gets a PendingIntent containing the entire back stack
+        return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public static void updateTracks(){
+        Log.d(TAG, "Updating tracks!");
+        tracks = new ArrayList<>();
+
+        for(Song song : playlist.songs){
+            String id = song.id;
+            tracks.add(spotifyService.getTrack(id));
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        //TODO switch alert type, save to shared pref
+    private void logError(String msg) {
+        Toast.makeText(this, "Error: " + msg, Toast.LENGTH_SHORT).show();
+        Log.e(TAG, msg);
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
+    private void logMessage(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, msg);
     }
 }
