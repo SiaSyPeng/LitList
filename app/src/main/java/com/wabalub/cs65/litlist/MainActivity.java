@@ -2,20 +2,15 @@ package com.wabalub.cs65.litlist;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorListener;
 import android.hardware.SensorManager;
-import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,7 +30,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.wabalub.cs65.litlist.gson.Playlist;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib.InternetListener;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
@@ -49,6 +43,7 @@ import org.jetbrains.annotations.Nullable;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.UserPrivate;
 
@@ -72,6 +67,8 @@ public final class MainActivity extends AppCompatActivity implements OnMapReadyC
             "shared_pref";
 
     // for playlist management
+
+    //Todo: Come back here to look at the playlist will cause error
     public static Playlist playlist = new Playlist(new ArrayList<String>(), "", "");
     public static List<Track> tracks = new ArrayList<Track>();
 
