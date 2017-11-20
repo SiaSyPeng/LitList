@@ -107,10 +107,17 @@ public final class MainActivity extends AppCompatActivity implements
     public static List<Track> tracks = new ArrayList<>();
     public static int playlistIndex;
 
+    // for firebase
+    private DatabaseReference mDatabase;
+
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         queue = Volley.newRequestQueue(this);
+
+        // setup database
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
         // setup the tab layout
         setupTabLayout();
@@ -124,6 +131,34 @@ public final class MainActivity extends AppCompatActivity implements
         // setup the playlist
         setupPlaylist();
     }
+
+    /*
+    ================================================================================================
+    Server methods
+    ================================================================================================
+     */
+
+    /*
+     * Get playlists in firebase
+     */
+
+
+//    ValueEventListener fplaylistsListener = new ValueEventListener() {
+//        @Override
+//        public void onDataChange(DataSnapshot dataSnapshot) {
+//            // Get Post object and use the values to update the UI
+//            FPlaylists playListsInServer = dataSnapshot.getValue(FPlaylists.class);
+//            // ...
+//        }
+//
+//        @Override
+//        public void onCancelled(DatabaseError databaseError) {
+//            // Getting Post failed, log a message
+//            Log.w(TAG, "loadFPlaylists:onCancelled", databaseError.toException());
+//            // ...
+//        }
+//    };
+//    mPostReference.addValueEventListener(fplaylistsListener);
 
     /**
      * Method to setup the tab layout
@@ -409,6 +444,7 @@ public final class MainActivity extends AppCompatActivity implements
     private boolean zoomedOut = true;
     public static boolean permissionsGranted = true;
     private MapFragment mapFragment = null;
+
 
     FPlaylist closestPlaylist = null;
 
