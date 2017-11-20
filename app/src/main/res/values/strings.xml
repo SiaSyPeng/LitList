@@ -54,5 +54,13 @@
     <string name="create_playlist">Create playlist</string>
     <string name="create">Create</string>
     <string name="click_markers_prompt">Click on a marker to view a playlist.</string>
+    <string name="create_new_playlist">Create new playlist</string>
+    <string name="new_playlist_name">Playlist name:</string>
+    <string name="new_playlist_name_hint">Playlist name</string>
+    <string name="new_playlist_tag">Genre tag:</string>
+    <string name="new_playlist_tag_hint">Genre tag</string>
+    <string name="public_playlist_text">Public playlist</string>
+    <string name="new_playlist_display_name">User display name:</string>
+    <string name="new_playlist_display_name_hint">Display name</string>
 
 </resources>

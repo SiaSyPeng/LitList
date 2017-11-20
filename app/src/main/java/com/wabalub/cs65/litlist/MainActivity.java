@@ -85,6 +85,7 @@ public final class MainActivity extends AppCompatActivity implements
         GoogleMap.OnMapClickListener{
 
     private static final String TAG = "MAIN" ;
+    private static final int CREATE_PLAYLIST_REQUEST = 1;
     public static String USER_PREF = "profile_data";
     public static String SHARED_PREF = "litlist_" + "shared_pref";
     public static String PLAYLIST_ID_PREF = "playlist_id";
@@ -156,13 +157,14 @@ public final class MainActivity extends AppCompatActivity implements
         SharedPreferences sp = getSharedPreferences(SHARED_PREF, 0);
         int playlistID = sp.getInt(PLAYLIST_ID_PREF, -1);
         if(playlistID == -1) return;
-
+        /*
         for(int i = 0; i < playlists.playlists.size(); i++){
             if(playlists.playlists.get(i).id == playlistID){
-                viewedPlaylist = playlists.playlists.get(i);
+                playlist = playlists.playlists.get(i);
                 playlistIndex = i;
             }
         }
+        */
         // TODO get playlist from database based on the ID of our connected playlist
 
     }
@@ -192,11 +194,43 @@ public final class MainActivity extends AppCompatActivity implements
     public void onJoinCreateClicked(View view) {
         if(viewedPlaylist == null) {
             // TODO start create playlist Activity for result
+            startActivityForResult(new Intent(this, CreatePlaylistActivity.class), CREATE_PLAYLIST_REQUEST);
         }
         else {
             playlist = viewedPlaylist;
+            savePlaylistIdInSharedPred();
         }
         pagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode) {
+            // when we get back the information for the playlist to be created, make the playlist
+
+            case CREATE_PLAYLIST_REQUEST:
+                if(resultCode == RESULT_OK) {
+
+                    playlist = new FPlaylist(data.getStringExtra(CreatePlaylistActivity.EXTRA_NAME),
+                            data.getStringExtra(CreatePlaylistActivity.EXTRA_CREATOR),
+                            null,
+                            0.0,
+                            currentPos.latitude,
+                            currentPos.longitude,
+                            new ArrayList<Song>(),
+                            new ArrayList<String>(),
+                            1
+                            );
+                    playlists.playlists.add(playlist);
+                    setupPlaylistMarkers();
+                    updateTracks();
+                    pagerAdapter.notifyDataSetChanged();
+                    //TODO add this to the database
+                }
+                break;
+        }
     }
 
     /**
@@ -415,10 +449,13 @@ public final class MainActivity extends AppCompatActivity implements
      * Method to get a list of playlists from the server
      */
     private void getPlaylists() {
+        //TODO remove this when getting from server
+        if(playlists != null) return;
+
         // TODO get the playlists from the database
 
         ArrayList<FPlaylist> listOfPlaylists = new ArrayList<>();
-        listOfPlaylists.add(viewedPlaylist = new FPlaylist("name", "creator", null, 0.0, 43.1939, -71.5724, new ArrayList<Song>(), new ArrayList<String>(), 0));
+        listOfPlaylists.add(new FPlaylist("name", "creator", null, 0.0, 43.1939, -71.5724, new ArrayList<Song>(), new ArrayList<String>(), 0));
         playlists = new FPlaylists(listOfPlaylists);
     }
 
@@ -447,7 +484,7 @@ public final class MainActivity extends AppCompatActivity implements
             Log.d(TAG, "adding playlist marker for " + playlist.name + " at " + playlist.lat + ", " + playlist.lon);
             LatLng l = new LatLng(playlist.lat, playlist.lon);
 
-            // calculate the distance (for figuring out which cat is the closest)
+            // calculate the distance (for figuring out which playlist is closer)
             Double dist = dist(l, currentPos);
             if(dist < closestDist){
                 closestPlaylist = playlist;
@@ -568,7 +605,6 @@ public final class MainActivity extends AppCompatActivity implements
         if (location != null) {
             LatLng l = fromLocationToLatLng(location);
             currentPos = l;
-            drawMyMarker(l);
             moveToCurrentLocation(l);
         }
     }
@@ -576,15 +612,6 @@ public final class MainActivity extends AppCompatActivity implements
     // LatLng stores the "location" as two doubles, latitude and longitude.
     public static LatLng fromLocationToLatLng(Location location){
         return new LatLng(location.getLatitude(), location.getLongitude());
-    }
-
-    // Remove old marker and place new marker.
-    private void drawMyMarker(LatLng l){
-        if (myPosMarker != null)
-            myPosMarker.remove();
-        myPosMarker = map.addMarker(new MarkerOptions()
-                .position(l)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_self)));
     }
 
     /**

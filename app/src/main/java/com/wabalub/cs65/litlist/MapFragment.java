@@ -122,6 +122,8 @@ public class MapFragment extends Fragment {
         if(playlistNameText == null) Log.e(TAG, "name text is null");
         if(playlistCreatorText == null) Log.e(TAG, "creator text is null");
         if(joinCreateButton == null) Log.e(TAG, "join button is null");
+
+        updatePanel();
     }
 
     @Override
@@ -170,16 +172,27 @@ public class MapFragment extends Fragment {
 
         // if we have a playlist
         if(MainActivity.viewedPlaylist == null){
-            if(playlistNameText != null) playlistNameText.setText(R.string.click_markers_prompt);
-            if(playlistCreatorText != null) playlistCreatorText.setText("");
+            Log.d(TAG, "No playlist viewed");
+            if(playlistNameText != null) playlistNameText.setVisibility(View.GONE);
+            if(playlistCreatorText != null) playlistCreatorText.setText(R.string.click_markers_prompt);
             if(joinCreateButton != null)joinCreateButton.setText(R.string.create);
         }
 
-        // otherwise we are on a cat, so update the panel view
+        // otherwise we are looking at a playlist, so update the panel view
         else {
-            if(playlistNameText != null) playlistNameText.setText(MainActivity.viewedPlaylist.name);
+            Log.d(TAG, "Playlist viewed");
+            if(playlistNameText != null) {
+                playlistNameText.setVisibility(View.VISIBLE);
+                playlistNameText.setText(MainActivity.viewedPlaylist.name);
+            }
             if(playlistCreatorText != null) playlistCreatorText.setText(MainActivity.viewedPlaylist.creator);
             if(joinCreateButton != null) joinCreateButton.setText(R.string.join);
+        }
+        boolean enabled = MainActivity.viewedPlaylist != MainActivity.playlist || MainActivity.viewedPlaylist == null;
+        if(joinCreateButton != null) {
+            joinCreateButton.setEnabled(enabled);
+            if(enabled) joinCreateButton.setAlpha(1f);
+            else joinCreateButton.setAlpha(0.5f);
         }
     }
 }
