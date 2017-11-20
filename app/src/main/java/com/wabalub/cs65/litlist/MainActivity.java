@@ -53,6 +53,8 @@ import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib.InternetListener;
 import com.wabalub.cs65.litlist.search.SearchActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -181,6 +183,7 @@ public final class MainActivity extends AppCompatActivity implements
     }
 
     public void onJoinCreateClicked(View view) {
+        if(playlist != null) playlist.users_listening.remove(userID);
         if(viewedPlaylist == null) {
             startActivityForResult(new Intent(this, CreatePlaylistActivity.class), CREATE_PLAYLIST_REQUEST);
         }
@@ -215,7 +218,7 @@ public final class MainActivity extends AppCompatActivity implements
                             );
                     playlists.playlists.add(playlist);
                     viewedPlaylist = playlist;
-
+                    sortPlaylistsByListeners();
                     setupPlaylistMarkers();
                     pagerAdapter.notifyDataSetChanged();
                     //TODO add this to the database
@@ -705,7 +708,6 @@ public final class MainActivity extends AppCompatActivity implements
         }
 
         startPlayerService();
-
     }
 
     private void startPlayerService(){
@@ -763,6 +765,17 @@ public final class MainActivity extends AppCompatActivity implements
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(PLAYLIST_ID_PREF, playlistIndex);
         editor.apply();
+    }
+
+    private void sortPlaylistsByListeners() {
+        Collections.sort(playlists.playlists,
+                new Comparator<FPlaylist>() {
+                    @Override
+                    public int compare(FPlaylist playlist1, FPlaylist playlist2) {
+                        return playlist2.users_listening.size() - playlist1.users_listening.size();
+                    }
+                }
+        );
     }
 
     /*

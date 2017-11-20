@@ -76,6 +76,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionState
                 // Auth flow returned an error
                 case ERROR:
                     logError("Auth error: " + response.getError());
+                    Toast.makeText(this, "Connection error. Are you connected to the internet?", Toast.LENGTH_SHORT).show();
                     break;
 
                 // Most likely auth flow was cancelled
@@ -115,12 +116,12 @@ public class SignInActivity extends AppCompatActivity implements ConnectionState
     }
 
     private void logError(String msg) {
-        Toast.makeText(this, "Error: " + msg, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Error: " + msg, Toast.LENGTH_SHORT).show();
         Log.e(TAG, msg);
     }
 
     private void logMessage(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         Log.d(TAG, msg);
     }
 
