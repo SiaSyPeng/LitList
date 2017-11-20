@@ -442,7 +442,7 @@ public final class MainActivity extends AppCompatActivity implements
     For Sensors
     ================================================================================================
      */
-    private static final int SHAKE_THRESHOLD = 800;
+    private static final int SHAKE_THRESHOLD = 10000;
     private long lastTime = 0, lastShakeTime = 0, TIME_THRESHOLD = 2000;
     private int samplingPeriod = 100000; // 10 ^ 5 us = 0.1 s
     private float last_x = 0f, last_y = 0f, last_z = 0f;
@@ -466,7 +466,7 @@ public final class MainActivity extends AppCompatActivity implements
             long now = System.currentTimeMillis();
             long dTime = now - lastTime;
             lastTime = now;
-            if(dTime < 50) return;
+            if(dTime < 20) return;
 
             float x = sensorEvent.values[SensorManager.DATA_X];
             float y = sensorEvent.values[SensorManager.DATA_Y];
