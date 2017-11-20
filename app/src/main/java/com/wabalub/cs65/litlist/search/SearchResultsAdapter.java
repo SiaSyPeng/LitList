@@ -114,6 +114,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                 DatabaseReference songsDatabase = FirebaseDatabase.getInstance().getReference("playlists").child(playlistID).child("songs");
                 songsDatabase.child("" + MainActivity.playlist.songs.size()).setValue(song);
 
+
+
                 // add to the local playlist
                 MainActivity.playlist.songs.add(song);
 
@@ -123,6 +125,27 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                 intent.putExtra("tab_position", 1);
                 intent.putExtra(MainActivity.EXTRA_TOKEN, MainActivity.token);
                 mContext.startActivity(intent);
+
+                //update in real-time
+                songsDatabase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        //User user = dataSnapshot.getValue(User.class);
+                        for (DataSnapshot child: dataSnapshot.getChildren()) {
+                            Song song = child.getValue(Song.class);
+                            MainActivity.playlist.songs.add(song);
+                        }
+
+                        Log.d(TAG, "playlist updated");
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        // Failed to read value
+                        Log.w(TAG, "Failed to update songs value in real-time.", error.toException());
+                    }
+                });
 
             }
         });
