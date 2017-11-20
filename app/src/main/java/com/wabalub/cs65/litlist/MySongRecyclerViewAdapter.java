@@ -24,6 +24,8 @@ import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListen
 import com.wabalub.cs65.litlist.gson.Song;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.ArtistSimple;
@@ -56,7 +58,7 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Song song = mValues.get(position);
+        final Song song = mValues.get(position);
         Track track = PlayerService.spotifyService.getTrack(song.id);
 
         holder.title.setText(track.name);
@@ -94,7 +96,7 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
                 // TODO upvote the track ID, then get the updated playlist
                 Log.d(TAG, "Upvote clicked");
                 Toast.makeText(context, "Upvote clicked", Toast.LENGTH_SHORT).show();
-
+                upvoteSong(song);
             }
         });
 
@@ -104,6 +106,7 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
                 // TODO downvote the track ID, then get the updated playlist
                 Log.d(TAG, "Downvote clicked");
                 Toast.makeText(context, "Downvote clicked", Toast.LENGTH_SHORT).show();
+                downvoteSong(song);
             }
         });
     }
@@ -204,4 +207,42 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
 
     }
     */
+
+    /**
+     * Method to upvote a song
+     */
+    private void upvoteSong(Song song){
+        if(song.downVote_list_user.contains(MainActivity.userID)){
+            song.downVote_list_user.remove(MainActivity.userID);
+        }
+        else if(!song.upVote_list_user.contains(MainActivity.userID))
+            song.upVote_list_user.add(MainActivity.userID);
+        sortSongsByVote();
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Method to downvote a song
+     */
+    private void downvoteSong(Song song){
+        if(song.upVote_list_user.contains(MainActivity.userID)){
+            song.upVote_list_user.remove(MainActivity.userID);
+        }
+        else if(!song.downVote_list_user.contains(MainActivity.userID))
+            song.downVote_list_user.add(MainActivity.userID);
+        sortSongsByVote();
+        notifyDataSetChanged();
+    }
+
+    private void sortSongsByVote() {
+        Collections.sort(MainActivity.playlist.songs,
+                new Comparator<Song>(){
+
+                    @Override
+                    public int compare(Song song1, Song song2) {
+                        return (song1.upVote_list_user.size() - song1.downVote_list_user.size()) -
+                                (song2.upVote_list_user.size()) - song2.downVote_list_user.size();
+                    }
+                });
+    }
 }
