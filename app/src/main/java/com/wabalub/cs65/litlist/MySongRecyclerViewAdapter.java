@@ -240,8 +240,8 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
 
                     @Override
                     public int compare(Song song1, Song song2) {
-                        return (song1.upVote_list_user.size() - song1.downVote_list_user.size()) -
-                                ((song2.upVote_list_user.size()) - song2.downVote_list_user.size());
+                        return (song2.upVote_list_user.size() - song2.downVote_list_user.size()) -
+                                ((song1.upVote_list_user.size()) - song1.downVote_list_user.size());
                     }
                 });
     }
