@@ -182,11 +182,11 @@ public final class MainActivity extends AppCompatActivity implements
 
     public void onJoinCreateClicked(View view) {
         if(viewedPlaylist == null) {
-            // TODO start create playlist Activity for result
             startActivityForResult(new Intent(this, CreatePlaylistActivity.class), CREATE_PLAYLIST_REQUEST);
         }
         else {
             playlist = viewedPlaylist;
+            playlist.users_listening.add(userID);
             savePlaylistIdInSharedPred();
         }
         pagerAdapter.notifyDataSetChanged();
@@ -211,7 +211,7 @@ public final class MainActivity extends AppCompatActivity implements
                             currentPos.latitude,
                             currentPos.longitude,
                             new ArrayList<Song>(),
-                            new ArrayList<String>()
+                            listeners
                             );
                     playlists.playlists.add(playlist);
                     viewedPlaylist = playlist;

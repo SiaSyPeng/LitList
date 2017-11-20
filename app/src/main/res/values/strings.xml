@@ -62,5 +62,8 @@
     <string name="public_playlist_text">Public playlist</string>
     <string name="new_playlist_display_name">User display name:</string>
     <string name="new_playlist_display_name_hint">Display name</string>
+    <string name="listeners">Listeners</string>
+    <string name="creator">Creator</string>
+    <string name="playlist">Playlist</string>
 
 </resources>
