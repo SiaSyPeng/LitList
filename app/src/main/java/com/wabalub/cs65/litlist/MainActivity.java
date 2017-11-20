@@ -89,14 +89,11 @@ public final class MainActivity extends AppCompatActivity implements
     private ViewPager viewPager;
     private ActionbarPagerAdapter pagerAdapter;
 
-    // TODO is this not imported correctly?
-    // public static DatabaseReference database;
 
     public static String SHARED_PREF = "litlist_" + "shared_pref";
 
     // for playlist management
 
-    //Todo: Come back here to look at the playlist will cause error
     public static FPlaylist playlist = null;
     public static FPlaylists playlists = null;
     public static List<Track> tracks = new ArrayList<>();
@@ -472,8 +469,6 @@ public final class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onMarkerClick(Marker marker) {
         // TODO get the playlist whose marker is at this position
-
-        MapFragment mapFragment = (MapFragment) pagerAdapter.getItem(0);
         mapFragment.updatePanel();
         return false;
     }

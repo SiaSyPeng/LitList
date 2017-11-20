@@ -45,13 +45,19 @@
     </LinearLayout>
     <ImageButton
         android:id="@+id/upvote_button"
-        android:layout_width="50dp"
+        android:layout_width="40dp"
         android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/upvote"
+        android:layout_margin="10dp"
+        android:scaleType="fitCenter"
         android:layout_height="50dp"
         android:layout_weight="0"/>
     <ImageButton
         android:id="@+id/downvote_button"
-        android:layout_width="50dp"
+        android:layout_width="40dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/downvote"
+        android:scaleType="fitCenter"
         android:background="?android:attr/selectableItemBackground"
         android:layout_height="50dp"
         android:layout_weight="0"/>

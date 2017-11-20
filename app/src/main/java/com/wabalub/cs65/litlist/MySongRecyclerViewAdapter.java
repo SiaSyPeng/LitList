@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.base.Joiner;
 import com.squareup.picasso.Picasso;
@@ -27,7 +28,6 @@ import kaaes.spotify.webapi.android.models.Track;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Track} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecyclerViewAdapter.ViewHolder> {
 
@@ -84,7 +84,9 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
         holder.upvoteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO upvote the track ID
+                // TODO upvote the track ID, then get the updated playlist
+                Log.d(TAG, "Upvote clicked");
+                Toast.makeText(context, "Upvote clicked", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -92,13 +94,12 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
         holder.downvoteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO downvote the track ID
-
+                // TODO downvote the track ID, then get the updated playlist
+                Log.d(TAG, "Downvote clicked");
+                Toast.makeText(context, "Downvote clicked", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-
 
     @Override
     public int getItemCount() {
