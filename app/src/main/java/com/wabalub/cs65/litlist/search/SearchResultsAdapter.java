@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.common.base.Joiner;
 import com.squareup.picasso.Picasso;
 import com.wabalub.cs65.litlist.MainActivity;
 import com.wabalub.cs65.litlist.PlayerService;
@@ -21,7 +20,6 @@ import com.wabalub.cs65.litlist.gson.Song;
 import java.util.ArrayList;
 import java.util.List;
 
-import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 
@@ -75,7 +73,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_search_item, parent, false);
         return new ViewHolder(v);
     }
 
@@ -104,7 +102,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                 // add to the local playlist
                 Song song = new Song(item.id);
                 MainActivity.playlist.songs.add(song);
-                MainActivity.updateTracks();
 
                 Log.d(TAG,"Added " + item.name);
                 Intent intent = new Intent(mContext, MainActivity.class);
