@@ -137,7 +137,6 @@ public final class MainActivity extends AppCompatActivity implements
     Server methods
     ================================================================================================
      */
-
     /*
      * Get playlists in firebase
      */
