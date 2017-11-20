@@ -491,7 +491,8 @@ public final class MainActivity extends AppCompatActivity implements
     private void getPlaylists() {
         // get the playlists from the database
         FirebaseDatabase.getInstance().getReference("playlists")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() { //this updates in real time. When server changes, this will be called
+                //.addListenerForSingleValueEvent(new ValueEventListener() { //this would only update once
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         ArrayList<FPlaylist> listOfPlaylists = new ArrayList<>();
