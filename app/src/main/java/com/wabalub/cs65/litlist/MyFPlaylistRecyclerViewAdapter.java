@@ -44,7 +44,7 @@ public class MyFPlaylistRecyclerViewAdapter extends RecyclerView.Adapter<MyFPlay
         holder.mItem = mValues.get(position);
         holder.name.setText(mValues.get(position).name);
         holder.creator.setText(mValues.get(position).creator);
-        holder.listenerCount.setText(String.format("%s", mValues.get(position).users_listening.size()));
+        holder.listenerCount.setText(String.format("%s", countListeners(mValues.get(position))));
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,10 +90,18 @@ public class MyFPlaylistRecyclerViewAdapter extends RecyclerView.Adapter<MyFPlay
                 new Comparator<FPlaylist>() {
                     @Override
                     public int compare(FPlaylist playlist1, FPlaylist playlist2) {
-                        return playlist2.users_listening.size() - playlist1.users_listening.size();
+                        return countListeners(playlist2) - countListeners(playlist1);
                     }
                 }
         );
     }
 
+    private int countListeners(FPlaylist playlist){
+        int total = 0;
+        for(String userID : playlist.users_listening){
+            if(userID != null)
+                total ++;
+        }
+        return total;
+    }
 }
