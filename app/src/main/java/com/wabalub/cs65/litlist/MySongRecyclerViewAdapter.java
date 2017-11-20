@@ -97,7 +97,6 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
         holder.upvoteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO upvote the track ID, then get the updated playlist
                 Log.d(TAG, "Upvote clicked");
                 Toast.makeText(context, "Upvote clicked", Toast.LENGTH_SHORT).show();
                 upvoteSong(song, pos);
@@ -107,7 +106,6 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
         holder.downvoteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO downvote the track ID, then get the updated playlist
                 Log.d(TAG, "Downvote clicked");
                 Toast.makeText(context, "Downvote clicked", Toast.LENGTH_SHORT).show();
                 downvoteSong(song, pos);
@@ -210,7 +208,7 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
     private DatabaseReference songReference(Song song, int position){
         Log.d(TAG, "playlist ID" + MainActivity.playlist.key);
         DatabaseReference songRef = FirebaseDatabase.getInstance().getReference("playlists")
-                .child(MainActivity.playlist.key).child("songs").child(""+position);
+                .child(MainActivity.playlist.key).child("songs").child(""+ MainActivity.playlist.songs.get(position).index);
         return songRef;
     }
 

@@ -13,20 +13,23 @@ public class Song {
     public ArrayList<String> downVote_list_user = new ArrayList<>();
     public ArrayList<String> upVote_list_user = new ArrayList<>();
     public String id;
+    public Integer index;
 
     public Song() {
         //empty constructor
     }
 
-    public Song(String id) {
+    public Song(String id, Integer index) {
         this.id = id;
+        this.index = index;
         this.downVote_list_user = new ArrayList<String>();
         this.upVote_list_user =  new ArrayList<String>();
     }
 
-    public Song(String id, ArrayList<String> downVote_list_user, ArrayList<String> upVote_list_user) {
+    public Song(String id, ArrayList<String> downVote_list_user, ArrayList<String> upVote_list_user, Integer index) {
         this.id = id;
         this.downVote_list_user = downVote_list_user;
         this.upVote_list_user = upVote_list_user;
+        this.index = index;
     }
 }

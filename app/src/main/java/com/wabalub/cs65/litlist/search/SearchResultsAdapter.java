@@ -106,7 +106,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                     Log.e(TAG, "Playlist is null");
                 }
 
-                Song song = new Song(item.id);
+                Song song = new Song(item.id, MainActivity.playlist.songs.size());
 
                 //  Add to global playlist
                 String playlistID = MainActivity.playlist.key;

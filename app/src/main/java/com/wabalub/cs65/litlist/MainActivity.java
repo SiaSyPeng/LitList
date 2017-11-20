@@ -91,6 +91,7 @@ public final class MainActivity extends AppCompatActivity implements
     public static String PLAYLIST_ID_PREF = "playlist_id";
     public static String ZOOM_PREF = "zoom";
     public static String playlistKey;
+    private int userIndex = 0;
 
     // for network requests and Spotify api
     public static RequestQueue queue;
@@ -235,13 +236,26 @@ public final class MainActivity extends AppCompatActivity implements
     }
 
     public void onJoinCreateClicked(View view) {
-        if(playlist != null) playlist.users_listening.remove(userID);
+        if(playlist != null) {
+
+            // remove self form last playlist
+            playlist.users_listening.remove(userID);
+            DatabaseReference playlistRef = FirebaseDatabase.getInstance().getReference("playlists")
+                .child(MainActivity.playlist.key).child("users_listening");
+            playlistRef.child("" + (userIndex-1)).removeValue();
+        }
         if(viewedPlaylist == null) {
+            userIndex = 0;
             startActivityForResult(new Intent(this, CreatePlaylistActivity.class), CREATE_PLAYLIST_REQUEST);
         }
         else {
+            // add self to new playlist
             playlist = viewedPlaylist;
             playlist.users_listening.add(userID);
+            userIndex = playlist.users_listening.size();
+            DatabaseReference playlistRef = FirebaseDatabase.getInstance().getReference("playlists")
+                .child(MainActivity.playlist.key).child("users_listening");
+            playlistRef.child("" + (userIndex)).setValue(userID);
             savePlaylistIdInSharedPred();
         }
         pagerAdapter.notifyDataSetChanged();

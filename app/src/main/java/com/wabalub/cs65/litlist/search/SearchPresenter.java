@@ -137,14 +137,6 @@ public class SearchPresenter implements Search.ActionListener, InternetMgmtLib.I
         Log.d(TAG, msg);
     }
 
-    /**
-     * Method to request adding a song to the playlist
-     * @param track the track to add tot he playlist
-     */
-    private void addToPlayList(Track track) {
-        Song song = new Song(track.id);
-        // TODO add the song to the current playlist in the database
-    }
 
     @Override
     public void onResponse(int requestCode, String res) {
