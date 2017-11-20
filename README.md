@@ -13,53 +13,30 @@ Dartmouth has many barriers between the ability to be vulnerable on campus and e
 And finally...
 DEMOCRACY! Something that has been tragically lost in 2k17 will be revived through the LitList! All members of a playlist will have the ability to upvote, downvote and add songs!
 
-## TODO
-* UI
-    * Improved search UI
-    * Pause, play, volume slider in the Playlist fragment
-    * Settings fragment
-    * Map markers
-    * Map Panel (where you can press "join playlist" and see the playlist info)
-    * Add a upvote/downvote button to the song view in the Playlist fragment
-
-* Server
-    * Receive GET requests for a list of all playlists
-    * Receive GET requests for a nearest playlist
-    * Receive POST requests for adding a song to a playlist, voting on a song
-    * Send play messages ot all users in a playlist
-
-### Why people should care
-- Its a better way to experience and share music
-- Understanding the musical environment on campus
-- If you care about what people are thinking you care about what people are listening to
-
-
 ## User experience
 - Login page - uses Spotify login, after successful login opens main view
 - Main view - sliding tab layout
     - Map view
         - Google maps fragment appears, users can select playlist or create their own
+        - User can hit the create button to open the create activity
     - Playlist view
         - When a playlist is selected, this shows the current songs in the playlist. Users can upvote, downvote and add their own songs
-           - Shows the current song playing at the top
-           - Lists songs in order of being added initially
+           - Lists songs in order of votes
         - If not selected, users can manage their song collection.
+        - Contains buttons for stopping the current song, muting the media player, sharing to facebook and adding a song.
     - Rank view
-        - Ranks playlists based on number of members listening and subscribed
+        - Ranks playlists based on number of members listening
     - Settings view
         - Notification settings, etc.
-
-
-	Songs get upvoted and downvoted by users, which sorts the playing order
-
-![litlist](./proposal/LitListMockup.png "All")
-![Landing](./proposal/Landing.png "Landing")
-![Home](./proposal/Home.png "Home")
-![Map](./proposal/Map.png "Map")
-![Playlist](./proposal/Playlist.png "Playlist")
-![Rank](./proposal/Rank.png "Rank")
+- Create activity
+    - Users edit the new playlist's name, their own display name, and a tag to categorize the music they want in their playlist.
+- Facebook dialog
+    - This view can be opened by pressing the share button in the playlist tab. This shares the current song's preview to Facebook
+- Player service
+    - Audio continues streaming in the background of the app because it is all run inside of a foreground service. A notification is created that displays the current song playing along with its album art.
 
 ## Implementation Notes
+This section details our implementation and highlights known bugs.
 
 ### APIs
 We used the following APIs:
@@ -71,13 +48,23 @@ We used Spotify for authentication, music streaming and getting metadata. We use
 We used the Google maps API for the playlist view.
 
 ### Sensors
-Accelerometers, GPS.
-Shaking the phone auto-joins the nearest session.
+We use an accelerometer for shake detection. Shaking the phone auto-joins the nearest session.
+We also use GPS for getting location when creating playlists and joining others.
 
 ### Server development
-This project required a server implementation. We are using Firebase to manage a list of created playlists, all users listening to the playlists, and all songs that have been added to those playlists.
-The server sends
+We used Firebase to manage a database for all of the playlists. The database holds a list of Playlist objects, which contains all of the song ids, all of the users listening, the name of the creator, the name of the playlist, and a key to reference it by.
+
+Each song object contains a track ID and a list of the user ids for people who upvoted/downvoted the track. The lengths of these lists are used for sorting the priority.
+
+### Bugs
+The Spotify Web API wrapper has some unstable Retrofit code inside of it which causes the app to crash if too many requests are sent. We need to use a different wrapper if we want to pursue this into the future.
+
+Although the playlists themselves update automatically, the songs inside the playlist do not refresh unless the user leaves and rejoins the playlist. The song objects to not update with their parent objects due to Firebase's method of JSON parsing. We attempted to set a specific listener for each playlist and explicitly update the songs, but this process was slow and unreliable.
 
 ## UI Design
 Here is our mockup on Figma.
 https://www.figma.com/file/TadFx7fYTgYNrsfTsq5YclMd/LitListMockup
+
+The follow are our mockups (actual app looks different).
+
+![litlist](./proposal/LitListMockup.png "All")

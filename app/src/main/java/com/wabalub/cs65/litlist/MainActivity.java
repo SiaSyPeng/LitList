@@ -342,7 +342,6 @@ public final class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        //TODO switch alert type, save to shared pref
     }
 
     /**
@@ -909,8 +908,6 @@ public final class MainActivity extends AppCompatActivity implements
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    // TODO: handle the track
-                    //TODO: fix the view of tracks
                 }
             }
 
@@ -950,7 +947,6 @@ public final class MainActivity extends AppCompatActivity implements
             public void onCancelled(DatabaseError databaseError) {
 
             }
-            // TODO: implement the ChildEventListener methods as documented above
             // ...
         });
     }
