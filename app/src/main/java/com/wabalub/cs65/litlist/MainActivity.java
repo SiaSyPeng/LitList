@@ -185,7 +185,12 @@ public final class MainActivity extends AppCompatActivity implements
     }
 
     public void onJoinCreateClicked(View view) {
-        playlist = viewedPlaylist;
+        if(viewedPlaylist == null) {
+            // TODO start create playlist Activity for result
+        }
+        else {
+            playlist = viewedPlaylist;
+        }
         pagerAdapter.notifyDataSetChanged();
     }
 
