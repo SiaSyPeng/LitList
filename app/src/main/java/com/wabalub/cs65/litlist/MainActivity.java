@@ -46,8 +46,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
 import com.wabalub.cs65.litlist.gson.FPlaylist;
 import com.wabalub.cs65.litlist.gson.FPlaylists;
@@ -747,6 +752,60 @@ public final class MainActivity extends AppCompatActivity implements
             tracks.add(PlayerService.spotifyService.getTrack(id));
         }
     }
+    /*
+    private void sortTracks() {
+        // Top TrackID by number of upvotes
+        TopTrackQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    // TODO: handle the track
+                    //TODO: fix the view of tracks
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting track failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
+        // Top tracks by number of up_votes
+        String myUserId = userID;
+        Query TopVotesQuery = root.child("user-votes").child(myUserId)
+                .orderByValue("VoteCount");
+        myTopPostsQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+            // TODO: implement the ChildEventListener methods as documented above
+            // ...
+        });
+    }
+
+    */
 
     private void logError(String msg) {
         Toast.makeText(this, "Error: " + msg, Toast.LENGTH_SHORT).show();

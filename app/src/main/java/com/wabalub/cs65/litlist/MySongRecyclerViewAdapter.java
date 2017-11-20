@@ -14,6 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.base.Joiner;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.squareup.picasso.Picasso;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
 import com.wabalub.cs65.litlist.gson.Song;
@@ -131,4 +136,68 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
         }
     }
 
+    /*
+    // upVote && downVote transactions
+    private void upVoteClicked(DatabaseReference songRef) {
+        songRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Song s = mutableData.getValue(Song.class);
+                if (s == null) {
+                    return Transaction.success(mutableData);
+                }
+
+                if (s.vote.containsKey(MainActivity.userID)) {
+                    // downVote the track
+                    s.up_votes = s.up_votes + 1;
+                    s.up_votes.put(MainActivity.userID, true);
+                }
+
+                // Set value and report transaction success
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
+    */
+
+
+    /*
+    private void downVoteClicked(DatabaseReference songRef) {
+        songRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Song s = mutableData.getValue(Song.class);
+                if (s == null) {
+                    return Transaction.success(mutableData);
+                }
+
+                if (s.vote.containsKey(MainActivity.userID)) {
+                    // downVote the track
+                    s.down_votes = s.down_votes + 1;
+                    s.down_votes.put(getUid(), true);
+                }
+
+                // Set value and report transaction success
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+            }
+        });
+
+    }
+    */
 }
