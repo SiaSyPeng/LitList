@@ -17,6 +17,7 @@ import android.location.LocationListener;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.FaceDetector;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,6 +54,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.spotify.sdk.android.player.*;
+import com.spotify.sdk.android.player.Error;
+import com.spotify.sdk.android.player.Player;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
 import com.wabalub.cs65.litlist.gson.FPlaylist;
 import com.wabalub.cs65.litlist.gson.FPlaylists;
@@ -82,7 +86,7 @@ public final class MainActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         LocationListener,
         GoogleMap.OnMarkerClickListener,
-        GoogleMap.OnMapClickListener{
+        GoogleMap.OnMapClickListener {
 
     private static final String TAG = "MAIN" ;
     private static final int CREATE_PLAYLIST_REQUEST = 1;
@@ -225,6 +229,29 @@ public final class MainActivity extends AppCompatActivity implements
         else {
             PlayerService.unmute();
             playPauseButton.setImageResource(R.drawable.unmute);
+        }
+    }
+
+
+    public void onPlayPauseClicked(View view) {
+        if(playlist == null || playlist.songs.size() == 0) return;
+
+        ImageButton playButton =  view.findViewById(R.id.play_button);
+
+        if(PlayerService.player.getPlaybackState().isPlaying){
+           playButton.setImageResource(R.drawable.play);
+           PlayerService.player.pause(null);
+        }
+        else {
+            playButton.setImageResource(R.drawable.pause);
+            for(int i = 1; i < playlist.songs.size(); i++) {
+                Song song = playlist.songs.get(i);
+                Track track = PlayerService.spotifyService.getTrack(song.id);
+                PlayerService.player.queue(null, track.uri);
+            }
+            Song song = playlist.songs.get(0);
+            Track track = PlayerService.spotifyService.getTrack(song.id);
+            PlayerService.player.playUri(null, track.uri, 0, 0);
         }
     }
 
@@ -386,6 +413,7 @@ public final class MainActivity extends AppCompatActivity implements
         String currentTrackId = item.id;
         logMessage("currentTrackId: " + currentTrackId);
 
+        pagerAdapter.notifyDataSetChanged();
         startPlayerService();
 
         PlayerService.player.playUri(null, "spotify:track:" + currentTrackId, 0, 0);
@@ -459,6 +487,8 @@ public final class MainActivity extends AppCompatActivity implements
     private void onShake(){
         Log.d("sensor", "shake detected");
         Toast.makeText(this, "shake detected ", Toast.LENGTH_SHORT).show();
+        viewedPlaylist = closestPlaylist;
+        pagerAdapter.notifyDataSetChanged();
     }
 
     @Override

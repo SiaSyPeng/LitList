@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.wabalub.cs65.litlist.gson.Song;
 
@@ -84,14 +85,21 @@ public class PlaylistFragment extends Fragment {
         // if the user has not joined a playlist, hide the views!
         if(MainActivity.playlist == null) {
             view.findViewById(R.id.share_button).setVisibility(View.GONE);
+            view.findViewById(R.id.play_button).setVisibility(View.GONE);
             view.findViewById(R.id.add_by_search_button).setVisibility(View.GONE);
             view.findViewById(R.id.mute_button).setVisibility(View.GONE);
         }
         else {
             view.findViewById(R.id.share_button).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.play_button).setVisibility(View.VISIBLE);
             view.findViewById(R.id.add_by_search_button).setVisibility(View.VISIBLE);
             view.findViewById(R.id.mute_button).setVisibility(View.VISIBLE);
         }
+
+        ImageButton playButton = view.findViewById(R.id.play_button);
+        if(PlayerService.player == null || PlayerService.player.getPlaybackState().isPlaying)
+            playButton.setImageResource(R.drawable.pause);
+        else playButton.setImageResource(R.drawable.play);
     }
 
     @Override
