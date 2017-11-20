@@ -110,6 +110,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
                 //  Add to global playlist
                 String playlistID = MainActivity.playlist.key;
+                Log.d(TAG, "playlist ID" + playlistID);
                 DatabaseReference songsDatabase = FirebaseDatabase.getInstance().getReference("playlists").child(playlistID).child("songs");
                 String songkey = songsDatabase.push().getKey();
                 songsDatabase.child(songkey).setValue(song);

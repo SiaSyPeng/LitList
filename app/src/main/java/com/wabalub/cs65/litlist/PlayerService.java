@@ -58,6 +58,10 @@ public class PlayerService extends Service {
         Log.d(TAG, "onStartCommand");
         super.onStartCommand(intent, flags, startId);
 
+        if (intent == null) {
+            return START_STICKY;
+        }
+
         // if we request to stop the service, stop the service!
         if (ACTION_STOP_SERVICE.equals(intent.getAction())) {
             Log.d(TAG,"called to cancel service");
