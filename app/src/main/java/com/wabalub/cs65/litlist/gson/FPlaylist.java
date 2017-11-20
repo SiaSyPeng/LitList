@@ -15,7 +15,7 @@ public class FPlaylist {
     public Double curr_song_pos;
     public Double lat;
     public Double lon;
-    public int index; // TODO need to assign IDs to playlists so users know which one to rejoin
+    public int id; // TODO need to assign IDs to playlists so users know which one to rejoin
 
     // Songs in the list
     public ArrayList<Song> songs = new ArrayList<>();
@@ -35,6 +35,8 @@ public class FPlaylist {
     // Made this into a constructor, was a method for some reason
     public FPlaylist(String name, String creator, String curr_track_id, Double curr_song_pos,
                     Double lat, Double lon,ArrayList<Song> songs, ArrayList<String> users_listening, Integer user_lis_tot) {
+        this.name = name;
+        this.creator = creator;
         this.curr_track_id = curr_track_id;
         this.curr_song_pos = curr_song_pos;
         this.lat = lat;

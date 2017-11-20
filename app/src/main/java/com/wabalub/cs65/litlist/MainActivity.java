@@ -56,6 +56,7 @@ import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib.InternetListener;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
 import com.wabalub.cs65.litlist.search.SearchActivity;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,7 @@ public final class MainActivity extends AppCompatActivity implements
 
     private static final String TAG = "MAIN" ;
     public static String USER_PREF = "profile_data";
+    public static String SHARED_PREF = "litlist_" + "shared_pref";
     public static String PLAYLIST_ID_PREF = "playlist_id";
     public static DatabaseReference root = FirebaseDatabase.getInstance().getReference().getRoot();
 
@@ -89,8 +91,6 @@ public final class MainActivity extends AppCompatActivity implements
     private ViewPager viewPager;
     private ActionbarPagerAdapter pagerAdapter;
 
-
-    public static String SHARED_PREF = "litlist_" + "shared_pref";
 
     // for playlist management
 
@@ -146,8 +146,19 @@ public final class MainActivity extends AppCompatActivity implements
     }
 
     private void setupPlaylist(){
-        // TODO get playlist from database
-        playlist = new FPlaylist("name", "cerator", null, 0.0, 43.1939, 71.5724, new ArrayList<Song>(), new ArrayList<String>(), 0);
+        getPlaylists();
+        SharedPreferences sp = getSharedPreferences(SHARED_PREF, 0);
+        int playlistID = sp.getInt(PLAYLIST_ID_PREF, -1);
+        if(playlistID == -1) return;
+
+        for(int i = 0; i < playlists.playlists.size(); i++){
+            if(playlists.playlists.get(i).id == playlistID){
+                playlist = playlists.playlists.get(i);
+                playlistIndex = i;
+            }
+        }
+        // TODO get playlist from database based on the ID of our connected playlist
+
     }
     /*
     ================================================================================================
@@ -360,7 +371,6 @@ public final class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        logMessage("Map is ready!");
         map = googleMap;
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -391,6 +401,10 @@ public final class MainActivity extends AppCompatActivity implements
      */
     private void getPlaylists() {
         // TODO get the playlists from the database
+
+        ArrayList<FPlaylist> listOfPlaylists = new ArrayList<>();
+        listOfPlaylists.add(playlist = new FPlaylist("name", "creator", null, 0.0, 43.1939, -71.5724, new ArrayList<Song>(), new ArrayList<String>(), 0));
+        playlists = new FPlaylists(listOfPlaylists);
     }
 
 
@@ -398,10 +412,12 @@ public final class MainActivity extends AppCompatActivity implements
      * Method to make all of the playlist markers
      */
     private void setupPlaylistMarkers() {
+
         if(playlists == null) {
             logError("No playlists");
             return;
         }
+        logMessage("setting up playlists, num playlists: " + playlists.playlists.size());
 
         if(playlistMarkers != null)
             for(Marker marker : playlistMarkers)
@@ -413,8 +429,8 @@ public final class MainActivity extends AppCompatActivity implements
 
 
         for(int i = 0; i < playlists.playlists.size(); i++){
-
             FPlaylist playlist = playlists.playlists.get(i);
+            Log.d(TAG, "adding playlist marker for " + playlist.name + " at " + playlist.lat + ", " + playlist.lon);
             LatLng l = new LatLng(playlist.lat, playlist.lon);
 
             // calculate the distance (for figuring out which cat is the closest)
@@ -714,9 +730,10 @@ public final class MainActivity extends AppCompatActivity implements
 
         SharedPreferences sp = getSharedPreferences(SHARED_PREF, 0);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(PLAYLIST_ID_PREF, playlist.index);
+        editor.putInt(PLAYLIST_ID_PREF, playlistIndex);
         editor.apply();
     }
+
     public static void updateTracks(){
         if(playlist == null) return;
 
