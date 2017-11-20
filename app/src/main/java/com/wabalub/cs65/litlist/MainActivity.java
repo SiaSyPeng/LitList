@@ -119,8 +119,10 @@ public final class MainActivity extends AppCompatActivity implements
 
         // setup playlists from the database
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        //Offline data persistence(will update in server as soon as the device connects to internet
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        // Offline data persistence(will update in server as soon as the device connects to internet
+
+        // Setup the facebook API
         FacebookSdk.setApplicationId("481383872246980");
         FacebookSdk.sdkInitialize(getApplicationContext());
 
@@ -130,6 +132,9 @@ public final class MainActivity extends AppCompatActivity implements
         // setup the Spotify API and Player
         setupSpotifyAPI();
 
+        // setup server listener
+        setupServerListener();
+
         // setup the sensors
         setupSensors();
 
@@ -137,11 +142,6 @@ public final class MainActivity extends AppCompatActivity implements
         setupPlaylist();
     }
 
-    /*
-    ================================================================================================
-    Server methods
-    ================================================================================================
-     */
 
     /**
      * Method to setup the tab layout
@@ -171,43 +171,27 @@ public final class MainActivity extends AppCompatActivity implements
         tab.select();
     }
 
+    /*
+    ================================================================================================
+    Server methods
+    ================================================================================================
+     */
+
+
     private void setupPlaylist(){
         getPlaylists();
         SharedPreferences sp = getSharedPreferences(SHARED_PREF, 0);
-        int playlistID = sp.getInt(PLAYLIST_ID_PREF, -1);
-        if(playlistID == -1) return;
-        /*
+        String playlistKey = sp.getString(PLAYLIST_ID_PREF, "");
+        if(playlistKey == "") return;
+
         for(int i = 0; i < playlists.playlists.size(); i++){
-            if(playlists.playlists.get(i).id == playlistID){
+            if(playlists.playlists.get(i).key.equals(playlistKey)){
                 playlist = playlists.playlists.get(i);
                 playlistIndex = i;
             }
         }
-        */
-        // TODO get playlist from database based on the ID of our connected playlist
-
     }
 
-    private void setupServerListeners()
-    {
-        /*
-         * Get playlists in firebase
-         */
-       ValueEventListener fplaylistsListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                FPlaylists playListsInServer = dataSnapshot.getValue(FPlaylists.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting playlists failed, log a message
-                Log.w(TAG, "loadFPlaylists:onCancelled", databaseError.toException());
-            }
-        };
-        //mPostReference.addValueEventListener(fplaylistsListener);
-    }
 
     /*
     ================================================================================================
@@ -535,21 +519,15 @@ public final class MainActivity extends AppCompatActivity implements
     /**
      * Method to get a list of playlists from the server
      */
-    private void getPlaylists() {
+    private void setupServerListener() {
         // get the playlists from the database
         FirebaseDatabase.getInstance().getReference("playlists")
                 .addValueEventListener(new ValueEventListener() { //this updates in real time. When server changes, this will be called
                 //.addListenerForSingleValueEvent(new ValueEventListener() { //this would only update once
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        ArrayList<FPlaylist> listOfPlaylists = new ArrayList<>();
-                        //Ger List Information
-                        for (DataSnapshot child: dataSnapshot.getChildren()) {
-                            FPlaylist playlist = child.getValue(FPlaylist.class);
-                            listOfPlaylists.add(playlist);
-                        }
-                        Log.d(TAG, "get Playlists called " + listOfPlaylists + "and its size is "+ listOfPlaylists.size());
-                        playlists = new FPlaylists(listOfPlaylists);
+                        Log.d(TAG, "onDataChanged called!");
+                        getPlaylists(dataSnapshot);
                     }
 
                     @Override
@@ -557,6 +535,25 @@ public final class MainActivity extends AppCompatActivity implements
 
                     }
                 });
+    }
+
+    private void getPlaylists(DataSnapshot dataSnapshot){
+        ArrayList<FPlaylist> listOfPlaylists = new ArrayList<>();
+        //Gert List Information
+        for (DataSnapshot child: dataSnapshot.getChildren()) {
+            FPlaylist playlist = child.getValue(FPlaylist.class);
+            listOfPlaylists.add(playlist);
+        }
+        Log.d(TAG, "Get playlists changed Playlists called " + listOfPlaylists + "and its size is "+ listOfPlaylists.size());
+
+        playlists = new FPlaylists(listOfPlaylists);
+        pagerAdapter.notifyDataSetChanged();
+    }
+
+    private void getPlaylists(){
+        // DatabaseReference playlistsReference = FirebaseDatabase.getInstance().getReference("playlists");
+
+        // pagerAdapter.notifyDataSetChanged();
     }
 
 
@@ -872,7 +869,7 @@ public final class MainActivity extends AppCompatActivity implements
 
         SharedPreferences sp = getSharedPreferences(SHARED_PREF, 0);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(PLAYLIST_ID_PREF, playlistIndex);
+        editor.putString(PLAYLIST_ID_PREF, playlistKey);
         editor.apply();
     }
 
@@ -937,7 +934,7 @@ public final class MainActivity extends AppCompatActivity implements
     }
 
     private void logMessage(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         Log.d(TAG, msg);
     }
 }
