@@ -16,6 +16,7 @@ import android.location.Criteria;
 import android.location.LocationListener;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.FaceDetector;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +36,10 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareButton;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -85,6 +90,7 @@ public final class MainActivity extends AppCompatActivity implements
     public static String SHARED_PREF = "litlist_" + "shared_pref";
     public static String PLAYLIST_ID_PREF = "playlist_id";
     public static String ZOOM_PREF = "zoom";
+    public static String playlistKey;
 
     // for network requests and Spotify api
     public static RequestQueue queue;
@@ -113,6 +119,8 @@ public final class MainActivity extends AppCompatActivity implements
         mDatabase = FirebaseDatabase.getInstance().getReference();
         //Offline data persistence(will update in server as soon as the device connects to internet
         //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FacebookSdk.setApplicationId("481383872246980");
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         // setup the tab layout
         setupTabLayout();
@@ -201,6 +209,15 @@ public final class MainActivity extends AppCompatActivity implements
      */
 
     public void onShareClicked(View view) {
+        Log.d(TAG, "onShareClicked");
+        ShareLinkContent.Builder builder = new ShareLinkContent.Builder();
+
+        if(PlayerService.currentTrack != null);
+                builder.setContentUrl(Uri.parse(PlayerService.currentTrack.uri));
+
+        ShareLinkContent content = builder.build();
+        ShareDialog shareDialog = new ShareDialog(this);
+        shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
     }
 
     public void onMuteClicked(View view) {

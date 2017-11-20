@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -37,6 +38,15 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="481383872246980"
+            />
+
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
 
         <activity android:name=".SignInActivity">
             <intent-filter>
@@ -58,14 +68,18 @@
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity
             android:name=".search.SearchActivity"
-            android:label="@string/search_activity_title"></activity>
+            android:label="@string/search_activity_title">
+        </activity>
 
         <service
             android:name=".PlayerService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true">
+
+        </service>
 
         <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
             <intent-filter>
@@ -79,7 +93,10 @@
             android:authorities="com.facebook.app.FacebookContentProvider{APP_ID}"
             android:exported="true" />
 
-        <activity android:name=".CreatePlaylistActivity"></activity>
+        <activity android:name=".CreatePlaylistActivity">
+        </activity>
+
+
     </application>
 
 </manifest>

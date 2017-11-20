@@ -65,5 +65,7 @@
     <string name="listeners">Listeners</string>
     <string name="creator">Creator</string>
     <string name="playlist">Playlist</string>
+    <string name="mute">Mute</string>
+    <string name="song_search_image">Search button</string>
 
 </resources>
