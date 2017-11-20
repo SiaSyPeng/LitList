@@ -11,10 +11,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.wabalub.cs65.litlist.CreatePlaylistActivity;
 import com.wabalub.cs65.litlist.MainActivity;
 import com.wabalub.cs65.litlist.PlayerService;
 import com.wabalub.cs65.litlist.R;
+import com.wabalub.cs65.litlist.gson.FPlaylist;
+import com.wabalub.cs65.litlist.gson.FPlaylists;
 import com.wabalub.cs65.litlist.gson.Song;
 
 import java.util.ArrayList;
@@ -98,9 +106,15 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                     Log.e(TAG, "Playlist is null");
                 }
 
-                // TODO add to global playlist
-                // add to the local playlist
                 Song song = new Song(item.id);
+
+                //  Add to global playlist
+                String playlistID = MainActivity.playlist.key;
+                DatabaseReference songsDatabase = FirebaseDatabase.getInstance().getReference("playlists").child(playlistID).child("songs");
+                String songkey = songsDatabase.push().getKey();
+                songsDatabase.child(songkey).setValue(song);
+
+                // add to the local playlist
                 MainActivity.playlist.songs.add(song);
 
                 Log.d(TAG,"Added " + item.name);

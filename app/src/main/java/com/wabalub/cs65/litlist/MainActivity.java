@@ -240,6 +240,10 @@ public final class MainActivity extends AppCompatActivity implements
             case CREATE_PLAYLIST_REQUEST:
                 if(resultCode == RESULT_OK) {
 
+                    //get playlistID
+                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("playlists");
+                    String playlistkey = mDatabase.push().getKey();
+
                     ArrayList<String> listeners = new ArrayList<String>();
                     listeners.add(userID);
                     playlist = new FPlaylist(data.getStringExtra(CreatePlaylistActivity.EXTRA_NAME),
@@ -249,7 +253,8 @@ public final class MainActivity extends AppCompatActivity implements
                             currentPos.latitude,
                             currentPos.longitude,
                             new ArrayList<Song>(),
-                            listeners
+                            listeners,
+                            playlistkey
                             );
                     playlists.playlists.add(playlist);
                     viewedPlaylist = playlist;
@@ -257,11 +262,9 @@ public final class MainActivity extends AppCompatActivity implements
                     setupPlaylistMarkers();
                     pagerAdapter.notifyDataSetChanged();
 
-                    //TODO add this to the database
-                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("playlists");
-                    String playlistId = mDatabase.push().getKey();
-                    logMessage(playlistId);
-                    mDatabase.child(playlistId).setValue(playlist);
+                    //Add this to the database
+                    logMessage(playlistkey);
+                    mDatabase.child(playlistkey).setValue(playlist);
                 }
                 break;
         }
