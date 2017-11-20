@@ -41,7 +41,6 @@ public class CreatePlaylistActivity extends AppCompatActivity {
      */
     public void onCreateClicked(View view) {
 
-
         Intent data = new Intent();
         //---set the data to pass back---
         data.putExtra(EXTRA_NAME, nameEditText.getText().toString());

@@ -80,7 +80,6 @@ public final class MainActivity extends AppCompatActivity implements
     public static String SHARED_PREF = "litlist_" + "shared_pref";
     public static String PLAYLIST_ID_PREF = "playlist_id";
     public static String ZOOM_PREF = "zoom";
-    public static DatabaseReference root = FirebaseDatabase.getInstance().getReference().getRoot();
 
     // for network requests and Spotify api
     public static RequestQueue queue;
@@ -95,17 +94,20 @@ public final class MainActivity extends AppCompatActivity implements
     public static FPlaylists playlists = null;
     public static int playlistIndex;
 
+
     // for firebase
-    private DatabaseReference mDatabase;
+    public static DatabaseReference root = FirebaseDatabase.getInstance().getReference().getRoot();
+    public DatabaseReference mDatabase;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         queue = Volley.newRequestQueue(this);
 
-        // setup database
+        // setup playlists from the database
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        //Offline data persistence(will update in server as soon as the device connects to internet
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         // setup the tab layout
         setupTabLayout();
@@ -128,9 +130,7 @@ public final class MainActivity extends AppCompatActivity implements
     /*
      * Get playlists in firebase
      */
-
-
-//    ValueEventListener fplaylistsListener = new ValueEventListener() {
+//   ValueEventListener fplaylistsListener = new ValueEventListener() {
 //        @Override
 //        public void onDataChange(DataSnapshot dataSnapshot) {
 //            // Get Post object and use the values to update the UI
@@ -570,6 +570,7 @@ public final class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
+
         playlistIndex = -1;
         for(int i = 0; i < playlistMarkers.length; i++){
             if(playlistMarkers[i].equals(marker))
@@ -584,6 +585,7 @@ public final class MainActivity extends AppCompatActivity implements
 
         mapFragment.updatePanel();
         return false;
+
     }
 
     @Override
