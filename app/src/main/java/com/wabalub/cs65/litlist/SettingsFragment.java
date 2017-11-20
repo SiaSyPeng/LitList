@@ -14,6 +14,8 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.facebook.share.Share;
+
 public class SettingsFragment extends Fragment{
     private static final String TAG = "SETTINGS";
     private Spinner alertTypeSpinner;
@@ -57,6 +59,11 @@ public class SettingsFragment extends Fragment{
      */
     private void setupSlider(View view) {
         SeekBar zoomSlider = view.findViewById(R.id.zoom_slider);
+
+        SharedPreferences sp = getActivity().getSharedPreferences(MainActivity.SHARED_PREF, 0);
+        int zoom = sp.getInt(MainActivity.ZOOM_PREF, 0);
+
+        zoomSlider.setProgress((int)MainActivity.zoom);
         zoomSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -71,6 +78,10 @@ public class SettingsFragment extends Fragment{
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 MainActivity.zoom = 7.5f * (float) seekBar.getProgress() / (float) seekBar.getMax() + 12.5f;
+                SharedPreferences sp = getActivity().getSharedPreferences(MainActivity.SHARED_PREF, 0);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putInt(MainActivity.ZOOM_PREF, (int) ((MainActivity.zoom - 12.5) / 7.5f));
+                editor.apply();
             }
         });
 

@@ -169,6 +169,9 @@ public class MapFragment extends Fragment {
      * Method to update the cat panel at the bottom of the screen
      */
     public void updatePanel(){
+        Log.d(TAG, "updating panel");
+        if(MainActivity.viewedPlaylist != null) Log.d(TAG, "viewed playlist = " + MainActivity.viewedPlaylist.name);
+        if(MainActivity.playlist != null) Log.d(TAG, "current playlist = " + MainActivity.playlist.name);
 
         // if we have a playlist
         if(MainActivity.viewedPlaylist == null){

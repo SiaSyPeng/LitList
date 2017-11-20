@@ -89,6 +89,7 @@ public final class MainActivity extends AppCompatActivity implements
     public static String USER_PREF = "profile_data";
     public static String SHARED_PREF = "litlist_" + "shared_pref";
     public static String PLAYLIST_ID_PREF = "playlist_id";
+    public static String ZOOM_PREF = "zoom";
     public static DatabaseReference root = FirebaseDatabase.getInstance().getReference().getRoot();
 
     // for network requests and Spotify api
@@ -224,6 +225,8 @@ public final class MainActivity extends AppCompatActivity implements
                             1
                             );
                     playlists.playlists.add(playlist);
+                    viewedPlaylist = playlist;
+
                     setupPlaylistMarkers();
                     updateTracks();
                     pagerAdapter.notifyDataSetChanged();
@@ -496,7 +499,11 @@ public final class MainActivity extends AppCompatActivity implements
             Bitmap catMarkerIcon = BitmapFactory.decodeResource(getResources(), R.drawable.fire);
             Bitmap resizedBitmap = Bitmap.createScaledBitmap(
                     catMarkerIcon, 100, 125, false);
-            playlistMarkers[i] = map.addMarker(new MarkerOptions().position(l).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+            playlistMarkers[i] = map.addMarker(new MarkerOptions()
+                    .position(l)
+                    .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap))
+                    .title(playlist.name)
+                );
 
         }
     }
@@ -535,6 +542,7 @@ public final class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        marker.showInfoWindow();
         playlistIndex = -1;
         for(int i = 0; i < playlistMarkers.length; i++){
             if(playlistMarkers[i].equals(marker))
@@ -835,12 +843,12 @@ public final class MainActivity extends AppCompatActivity implements
     */
 
     private void logError(String msg) {
-        Toast.makeText(this, "Error: " + msg, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "Error: " + msg, Toast.LENGTH_SHORT).show();
         Log.e(TAG, msg);
     }
 
     private void logMessage(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         Log.d(TAG, msg);
     }
 }
