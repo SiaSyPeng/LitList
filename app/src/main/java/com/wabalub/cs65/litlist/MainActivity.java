@@ -182,6 +182,8 @@ public final class MainActivity extends AppCompatActivity implements
 
 
     private void setupPlaylist(){
+        if(playlists == null || playlists.playlists == null) return;
+
         Log.e(TAG, "setting up playlist");
         SharedPreferences sp = getSharedPreferences(SHARED_PREF, 0);
         playlistKey = sp.getString(SHARED_PREF, "");
@@ -210,7 +212,7 @@ public final class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "onShareClicked");
         ShareLinkContent.Builder builder = new ShareLinkContent.Builder();
 
-        if(PlayerService.currentTrack != null);
+        if(PlayerService.currentTrack != null)
                 builder.setContentUrl(Uri.parse(PlayerService.currentTrack.uri));
 
         ShareLinkContent content = builder.build();
