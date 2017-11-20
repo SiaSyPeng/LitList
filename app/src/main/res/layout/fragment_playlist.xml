@@ -28,8 +28,9 @@
 
         <ImageButton
             android:id="@+id/add_by_search_button"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="80dp"
+            android:layout_weight="1"
             android:contentDescription="@string/song_search_image"
             android:layout_margin="10dp"
 
@@ -41,19 +42,21 @@
 
         <ImageButton
             android:src="@drawable/facebook_share"
-            android:layout_height="60dp"
+            android:layout_height="70dp"
             android:id="@+id/share_button"
             android:scaleType="fitCenter"
+            android:layout_weight="1"
             android:layout_gravity="center"
             android:background="?android:attr/selectableItemBackground"
             android:onClick="onShareClicked"
-            android:layout_width="60dp"
+            android:layout_width="0dp"
             android:layout_margin="10dp"/>
 
         <ImageButton
             android:id="@+id/mute-button"
-            android:layout_width="75dp"
+            android:layout_width="0dp"
             android:layout_height="75dp"
+            android:layout_weight="1"
 
             android:layout_gravity="center"
             android:layout_margin="10dp"
@@ -62,6 +65,19 @@
             android:onClick="onMuteClicked"
             android:scaleType="fitCenter"
             android:src="@drawable/unmute"/>
+
+        <ImageButton
+            android:id="@+id/play_button"
+            android:layout_width="0dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/mute"
+            android:background="?android:attr/selectableItemBackground"
+            android:onClick="onPlayPauseClicked"
+            android:scaleType="fitCenter"
+            android:src="@drawable/play"/>
     </LinearLayout>
 
 </LinearLayout>

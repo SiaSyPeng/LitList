@@ -98,7 +98,6 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Upvote clicked");
-                Toast.makeText(context, "Upvote clicked", Toast.LENGTH_SHORT).show();
                 upvoteSong(song, pos);
             }
         });
@@ -107,7 +106,6 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Downvote clicked");
-                Toast.makeText(context, "Downvote clicked", Toast.LENGTH_SHORT).show();
                 downvoteSong(song, pos);
             }
         });
