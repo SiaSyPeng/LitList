@@ -19,13 +19,9 @@ public class FPlaylist {
 
     // Songs in the list
     public ArrayList<Song> songs = new ArrayList<>();
-    // public List<Song> songs = new List<>();
 
     // User in the list
     public ArrayList<String> users_listening = new ArrayList<>();
-    //public List<String> users_listening = new List<>();
-    public Integer user_lis_tot = 0; // will be used in the rank to rank the playlist as a whole
-
 
     public FPlaylist() {
         // Default constructor required for calls to DataSnapshot.getValue(Playlist.class)
@@ -44,6 +40,5 @@ public class FPlaylist {
         this.songs = songs;
         this.users_listening = users_listening;
         // if(!users_listening.isEmpty()) this.user_lis_tot = len(users_listening)-1;
-        this.user_lis_tot = users_listening.size();
     }
 }

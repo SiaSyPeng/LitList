@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "345992690849-d3d5n5om4fscb832gapnte2qjdh1j8q9.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.wabalub.cs65.litlist",
-            "certificate_hash": "af1896c65367536f2ac2c549f88407d7a725850a"
-          }
-        },
-        {
           "client_id": "345992690849-qthi6e6pmkmt4s1ies6tu8386t3vplfg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

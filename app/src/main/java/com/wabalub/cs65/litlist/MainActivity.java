@@ -259,7 +259,7 @@ public final class MainActivity extends AppCompatActivity implements
                     //TODO add this to the database
                     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("playlists");
                     String playlistId = mDatabase.push().getKey();
-                    FPlaylist playlist = new FPlaylist();
+                    logMessage(playlistId);
                     mDatabase.child(playlistId).setValue(playlist);
                 }
                 break;
@@ -730,6 +730,7 @@ public final class MainActivity extends AppCompatActivity implements
             PlayerService.spotifyService = MainActivity.spotifyApi.getService();
         } else {
             logError("No valid access token");
+            Toast.makeText(this, "Access token expired.", Toast.LENGTH_SHORT).show();
         }
 
         // allows the get me request to work
@@ -743,7 +744,9 @@ public final class MainActivity extends AppCompatActivity implements
             userEmail = me.email;
         } catch (Exception e){
             logError("Access token expired.");
-            SharedPreferences sp = getSharedPreferences(SHARED_PREF, 0);
+            Toast.makeText(this, "Access token expired.", Toast.LENGTH_SHORT).show();
+
+            SharedPreferences sp = getSharedPreferences(CredentialsHandler.ACCESS_TOKEN_NAME, 0);
             SharedPreferences.Editor editor = sp.edit();
             editor.putString(CredentialsHandler.ACCESS_TOKEN, null);
             editor.apply();
@@ -881,7 +884,7 @@ public final class MainActivity extends AppCompatActivity implements
     }
 
     private void logMessage(String msg) {
-        // Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         Log.d(TAG, msg);
     }
 }
