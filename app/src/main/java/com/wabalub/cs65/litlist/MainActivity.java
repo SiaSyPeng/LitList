@@ -257,11 +257,10 @@ public final class MainActivity extends AppCompatActivity implements
                     pagerAdapter.notifyDataSetChanged();
 
                     //TODO add this to the database
-                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("playlists");
+                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("playlists");
                     String playlistId = mDatabase.push().getKey();
                     FPlaylist playlist = new FPlaylist();
                     mDatabase.child(playlistId).setValue(playlist);
-
                 }
                 break;
         }
