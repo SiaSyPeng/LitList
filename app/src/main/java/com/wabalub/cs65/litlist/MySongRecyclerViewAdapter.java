@@ -59,6 +59,8 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Song song = mValues.get(position);
+        if(song == null) return;
+
         Track track = PlayerService.spotifyService.getTrack(song.id);
 
         holder.title.setText(track.name);

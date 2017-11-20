@@ -259,19 +259,23 @@ public final class MainActivity extends AppCompatActivity implements
 
                     //get playlistID
                     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("playlists");
-                    String playlistkey = mDatabase.push().getKey();
+                    playlistKey = mDatabase.push().getKey();
 
                     ArrayList<String> listeners = new ArrayList<String>();
                     listeners.add(userID);
+
+                    ArrayList<Song> songs = new ArrayList<Song>();
+                    songs.add(new Song("2TpxZ7JUBn3uw46aR7qd6V"));
+
                     playlist = new FPlaylist(data.getStringExtra(CreatePlaylistActivity.EXTRA_NAME),
                             data.getStringExtra(CreatePlaylistActivity.EXTRA_CREATOR),
                             null,
                             0.0,
                             currentPos.latitude,
                             currentPos.longitude,
-                            new ArrayList<Song>(),
+                            songs,
                             listeners,
-                            playlistkey
+                            playlistKey
                             );
                     playlists.playlists.add(playlist);
                     viewedPlaylist = playlist;
@@ -280,8 +284,8 @@ public final class MainActivity extends AppCompatActivity implements
                     pagerAdapter.notifyDataSetChanged();
 
                     //Add this to the database
-                    logMessage(playlistkey);
-                    mDatabase.child(playlistkey).setValue(playlist);
+                    logMessage(playlistKey);
+                    mDatabase.child(playlistKey).setValue(playlist);
                 }
                 break;
         }
