@@ -43,8 +43,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
 import com.wabalub.cs65.litlist.gson.FPlaylist;
 import com.wabalub.cs65.litlist.gson.FPlaylists;
@@ -137,14 +140,12 @@ public final class MainActivity extends AppCompatActivity implements
 //        public void onDataChange(DataSnapshot dataSnapshot) {
 //            // Get Post object and use the values to update the UI
 //            FPlaylists playListsInServer = dataSnapshot.getValue(FPlaylists.class);
-//            // ...
 //        }
 //
 //        @Override
 //        public void onCancelled(DatabaseError databaseError) {
-//            // Getting Post failed, log a message
+//            // Getting playlists failed, log a message
 //            Log.w(TAG, "loadFPlaylists:onCancelled", databaseError.toException());
-//            // ...
 //        }
 //    };
 //    mPostReference.addValueEventListener(fplaylistsListener);
@@ -485,17 +486,28 @@ public final class MainActivity extends AppCompatActivity implements
      * Method to get a list of playlists from the server
      */
     private void getPlaylists() {
-        //TODO remove this when getting from server
-        if(playlists != null) return;
+        // get the playlists from the database
+        FirebaseDatabase.getInstance().getReference("playlists")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        ArrayList<FPlaylist> listOfPlaylists = new ArrayList<>();
+                        //Ger List Information
+                        for (DataSnapshot child: dataSnapshot.getChildren()) {
+                            listOfPlaylists.add(child.getValue(FPlaylist.class));
+                        }
+                        Log.d(TAG, "get Playlists called " + listOfPlaylists + "and its size is "+ listOfPlaylists.size());
+                        playlists = new FPlaylists(listOfPlaylists);
+                    }
 
-        // TODO get the playlists from the database
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-        ArrayList<FPlaylist> listOfPlaylists = new ArrayList<>();
-        listOfPlaylists.add(new FPlaylist("playlist1", "user1",
-                null, 0.0, 43.6939, -71.9724,
-                new ArrayList<Song>(), new ArrayList<String>()));
-        playlists = new FPlaylists(listOfPlaylists);
+                    }
+                });
     }
+
+
 
     /**
      * Method to make all of the playlist markers

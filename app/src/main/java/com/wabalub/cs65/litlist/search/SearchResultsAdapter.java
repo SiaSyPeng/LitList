@@ -109,6 +109,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                 intent.putExtra("tab_position", 1);
                 intent.putExtra(MainActivity.EXTRA_TOKEN, MainActivity.token);
                 mContext.startActivity(intent);
+
             }
         });
     }
