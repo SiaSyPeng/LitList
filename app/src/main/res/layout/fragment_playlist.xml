@@ -1,61 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:name="com.wabalub.cs65.litlist.PlaylistFragment"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:layout_width="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/playlist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.wabalub.cs65.litlist.PlaylistFragment"
         tools:listitem="@layout/fragment_song" />
 
-    <ImageButton
-        android:id="@+id/add_by_search_button"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:layout_marginEnd="8dp"
-        android:onClick="onAddSongClicked"
-        android:scaleType="fitCenter"
-        android:src="@drawable/fire"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginRight="8dp" />
 
-    <ImageButton
-        android:id="@+id/share_button"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:layout_marginEnd="8dp"
-        android:onClick="onShareClicked"
-        android:scaleType="fitCenter"
-        android:src="@drawable/facebook_share"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/add_by_search_button"
-        android:layout_marginRight="8dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="0"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
 
-    <ImageButton
-        android:id="@+id/mute-button"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_marginBottom="13dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:layout_marginEnd="13dp"
-        android:onClick="onMuteClicked"
-        android:scaleType="fitCenter"
-        android:src="@drawable/unmute"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/share_button"
-        android:layout_marginRight="13dp" />
-</android.support.constraint.ConstraintLayout>
+        <ImageButton
+            android:id="@+id/add_by_search_button"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="@string/song_search_image"
+            android:layout_margin="10dp"
+
+            android:layout_gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:onClick="onAddSongClicked"
+            android:scaleType="fitCenter"
+            android:src="@drawable/fire" />
+
+        <ImageButton
+            android:src="@drawable/facebook_share"
+            android:layout_height="60dp"
+            android:id="@+id/share_button"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:onClick="onShareClicked"
+            android:layout_width="60dp"
+            android:layout_margin="10dp"/>
+
+        <ImageButton
+            android:id="@+id/mute-button"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/mute"
+            android:background="?android:attr/selectableItemBackground"
+            android:onClick="onMuteClicked"
+            android:scaleType="fitCenter"
+            android:src="@drawable/unmute"/>
+    </LinearLayout>
+
+</LinearLayout>
