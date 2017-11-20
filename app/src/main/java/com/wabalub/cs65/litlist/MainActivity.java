@@ -22,8 +22,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -38,6 +40,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -55,6 +58,7 @@ import com.wabalub.cs65.litlist.search.SearchActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.jetbrains.annotations.Nullable;
@@ -114,7 +118,6 @@ public final class MainActivity extends AppCompatActivity implements
 
         // setup the playlist
         setupPlaylist();
-
     }
 
     /**
@@ -147,7 +150,7 @@ public final class MainActivity extends AppCompatActivity implements
 
     private void setupPlaylist(){
         // TODO get playlist from database
-        playlist = new FPlaylist();
+        playlist = new FPlaylist("name", "cerator", null, 0.0, 43.1939, 71.5724, new ArrayList<Song>(), new ArrayList<String>(), 0);
     }
     /*
     ================================================================================================
@@ -343,6 +346,9 @@ public final class MainActivity extends AppCompatActivity implements
     private LatLng currentPos;
     public static float zoom = 10;
     private boolean zoomedOut = true;
+    public static boolean permissionsGranted = true;
+    public static boolean setup;
+    private MapFragment mapFragment = null;
 
     FPlaylist closestPlaylist = null;
 
@@ -357,6 +363,7 @@ public final class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        logMessage("Map is ready!");
         map = googleMap;
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -365,12 +372,22 @@ public final class MainActivity extends AppCompatActivity implements
             return;
         }
         map.setMyLocationEnabled(true);
+        map.setOnMapClickListener(this);
+        map.setOnMarkerClickListener(this);
+
         getLocation();
         getPlaylists();
         setupPlaylistMarkers();
         moveToCurrentLocation(currentPos);
     }
 
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        if(fragment instanceof MapFragment){
+            mapFragment = ((MapFragment) fragment);
+        }
+    }
 
     /**
      * Method to get a list of playlists from the server
@@ -434,14 +451,14 @@ public final class MainActivity extends AppCompatActivity implements
 
 
     @Override
-     public void onLocationChanged(Location location) {
+    public void onLocationChanged(Location location) {
         updateWithNewLocation(location);
-     }
+    }
 
-     @Override
-     public void onStatusChanged(String provider, int status, Bundle extras) {
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
 
-     }
+    }
 
     @Override
     public void onProviderEnabled(String provider) {
@@ -463,6 +480,7 @@ public final class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMapClick(LatLng latLng) {
+        logMessage("Map clicked!");
         MapFragment mapFragment = (MapFragment) pagerAdapter.getItem(0);
         mapFragment.updatePanel();
         playlist = null;
@@ -554,6 +572,28 @@ public final class MainActivity extends AppCompatActivity implements
             zoomedOut = false;
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissions result");
+        switch (requestCode) {
+            case MapFragment.MY_PERMISSIONS_REQUEST: {
+                // If request is cancelled, the result arrays are empty.
+                if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED &&
+                        grantResults[2] == PackageManager.PERMISSION_GRANTED)) {
+                    // permissions not obtained
+                    Toast.makeText(this,"failed request permission!", Toast.LENGTH_SHORT).show();
+                    permissionsGranted = false;
+                }
+                else {
+                    if(mapFragment != null) mapFragment.setupMap();
+                    permissionsGranted = true;
+                }
+            }
+        }
+    }
+
 
     /*
     ================================================================================================

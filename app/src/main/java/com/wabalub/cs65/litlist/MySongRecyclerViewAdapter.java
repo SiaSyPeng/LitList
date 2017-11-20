@@ -1,16 +1,21 @@
 package com.wabalub.cs65.litlist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.common.base.Joiner;
 import com.squareup.picasso.Picasso;
 import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
+import com.wabalub.cs65.litlist.gson.Song;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +32,7 @@ import kaaes.spotify.webapi.android.models.Track;
 public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecyclerViewAdapter.ViewHolder> {
 
     private final List<Track> mValues;
+    public static final String TAG = "SONG_ADAPTER";
     private final Context context;
     private final OnListFragmentInteractionListener mListener;
 
@@ -74,6 +80,22 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
                 }
             }
         });
+
+        holder.upvoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO upvote the track ID
+
+            }
+        });
+
+        holder.downvoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO downvote the track ID
+
+            }
+        });
     }
 
 
@@ -88,6 +110,8 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
         public final TextView title;
         public final TextView artist;
         public final ImageView albumArt;
+        public final ImageButton upvoteBtn;
+        public final ImageButton downvoteBtn;
         public Track mItem;
 
         public ViewHolder(View view) {
@@ -96,6 +120,8 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
             title = view.findViewById(R.id.song_title);
             artist = view.findViewById(R.id.song_artist);
             albumArt = view.findViewById(R.id.song_album_art);
+            upvoteBtn = view.findViewById(R.id.upvote_button);
+            downvoteBtn = view.findViewById(R.id.downvote_button);
         }
 
         @Override

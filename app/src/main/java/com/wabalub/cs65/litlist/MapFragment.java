@@ -1,9 +1,16 @@
 package com.wabalub.cs65.litlist;
 
+import android.*;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +18,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.SupportMapFragment;
+
+import java.lang.reflect.Field;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,8 +36,11 @@ public class MapFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     public static final String TAG = "MAP_FRAGMENT";
+
+    public static final int MY_PERMISSIONS_REQUEST = 301;
     private ImageView playlistImage;
     private Button joinCreateButton;
+    SupportMapFragment googleMapsFragment;
     private TextView playlistNameText, playlistCreatorText;
 
     public MapFragment() {
@@ -50,21 +63,45 @@ public class MapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            // mParam1 = getArguments().getString(ARG_PARAM1);
         }
-        setupGoogleMapsFragment();
     }
 
-    private void setupGoogleMapsFragment(){
-            SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
-                .findFragmentById(R.id.google_map);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        requestPermissions();
+    }
 
-            if(mapFragment == null) {
-                Log.e(TAG, "Map fragment is null");
-                return;
+    public void requestPermissions(){
+        // Here, thisActivity is the current activity
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED ||
+                    getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED ||
+                    getActivity().checkSelfPermission(android.Manifest.permission.INTERNET)
+                            != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                                android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.INTERNET},
+                        MY_PERMISSIONS_REQUEST);
             }
+            else {
+                setupMap();
+            }
+        }
+    }
 
-            mapFragment.getMapAsync((MainActivity)getActivity());
+    public void setupMap(){
+        Log.d(TAG, "Setting up map");
+        FragmentManager fm = getChildFragmentManager();
+        googleMapsFragment = (SupportMapFragment) fm.findFragmentById(R.id.map_container);
+        if (googleMapsFragment == null) {
+            googleMapsFragment = SupportMapFragment.newInstance();
+            fm.beginTransaction().replace(R.id.map_container, googleMapsFragment).commit();
+        }
+        googleMapsFragment.getMapAsync((MainActivity)getActivity());
     }
 
     @Override
@@ -76,17 +113,39 @@ public class MapFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "on view created!");
         super.onViewCreated(view, savedInstanceState);
         playlistImage = view.findViewById(R.id.map_playlist_image);
         playlistNameText = view.findViewById(R.id.map_playlist_name);
         playlistCreatorText = view.findViewById(R.id.map_playlist_creator);
         joinCreateButton = view.findViewById(R.id.join_create_button);
-
+        if(playlistNameText == null) Log.e(TAG, "name text is null");
+        if(playlistCreatorText == null) Log.e(TAG, "creator text is null");
+        if(joinCreateButton == null) Log.e(TAG, "join button is null");
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.e(TAG, "onAttach called");
+    }
+
+
 
     @Override
     public void onDetach() {
         super.onDetach();
+
+        // solves the Illegal state exception error
+        try {
+            Field childFragmentManager = Fragment.class
+                    .getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
         mListener = null;
     }
 
@@ -108,18 +167,25 @@ public class MapFragment extends Fragment {
      * Method to update the cat panel at the bottom of the screen
      */
     public void updatePanel(){
+
         // if we have a playlist
         if(MainActivity.playlist == null){
-            playlistNameText.setText(R.string.click_markers_prompt);
-            playlistCreatorText.setText("");
-            joinCreateButton.setText(R.string.create);
+            if(playlistNameText != null) playlistNameText.setText(R.string.click_markers_prompt);
+            else Log.e(TAG, "this view is null");
+            if(playlistCreatorText != null) playlistCreatorText.setText("");
+            else Log.e(TAG, "this view is null");
+            if(joinCreateButton != null)joinCreateButton.setText(R.string.create);
+            else Log.e(TAG, "this view is null");
         }
 
         // otherwise we are on a cat, so update the panel view
         else {
-            playlistNameText.setText(MainActivity.playlist.name);
-            playlistCreatorText.setText(MainActivity.playlist.creator);
-            joinCreateButton.setText(R.string.join);
+            if(playlistNameText != null) playlistNameText.setText(MainActivity.playlist.name);
+            else Log.e(TAG, "this view is null");
+            if(playlistCreatorText != null) playlistCreatorText.setText(MainActivity.playlist.creator);
+            else Log.e(TAG, "this view is null");
+            if(joinCreateButton != null) joinCreateButton.setText(R.string.join);
+            else Log.e(TAG, "this view is null");
         }
     }
 }

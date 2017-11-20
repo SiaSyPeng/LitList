@@ -5,12 +5,12 @@
     android:orientation="vertical"
     tools:context="com.wabalub.cs65.litlist.MainActivity">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
-        android:id="@+id/google_map"
-        class="com.google.android.gms.maps.SupportMapFragment" />
+        android:id="@+id/map_container"/>
+
     <LinearLayout
         android:layout_weight="1"
         android:layout_width="match_parent"
