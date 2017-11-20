@@ -17,6 +17,7 @@ import com.google.common.base.Joiner;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.squareup.picasso.Picasso;
@@ -59,6 +60,7 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Song song = mValues.get(position);
+        final int pos = position;
         if(song == null) return;
 
         Track track = PlayerService.spotifyService.getTrack(song.id);
@@ -98,7 +100,7 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
                 // TODO upvote the track ID, then get the updated playlist
                 Log.d(TAG, "Upvote clicked");
                 Toast.makeText(context, "Upvote clicked", Toast.LENGTH_SHORT).show();
-                upvoteSong(song);
+                upvoteSong(song, pos);
             }
         });
 
@@ -108,7 +110,7 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
                 // TODO downvote the track ID, then get the updated playlist
                 Log.d(TAG, "Downvote clicked");
                 Toast.makeText(context, "Downvote clicked", Toast.LENGTH_SHORT).show();
-                downvoteSong(song);
+                downvoteSong(song, pos);
             }
         });
     }
@@ -143,6 +145,73 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
         public String toString() {
             return super.toString() + " '" + title.getText() + "'";
         }
+    }
+
+    /**
+     * Method to upvote a song
+     */
+    private void upvoteSong(Song song, int position){
+        if(song.downVote_list_user.contains(MainActivity.userID)){
+            songReference(song, position)
+                    .child("downVote_list_user")
+                    .child("" + (song.upVote_list_user.size()-1)) //TODO make this remove the id of this user
+                    .removeValue();
+
+            song.downVote_list_user.remove(MainActivity.userID);
+        }
+        else if(!song.upVote_list_user.contains(MainActivity.userID)) {
+            songReference(song, position)
+                    .child("upVote_list_user")
+                    .child("" + song.upVote_list_user.size())
+                    .setValue(MainActivity.userID);
+            song.upVote_list_user.add(MainActivity.userID);
+        }
+        sortSongsByVote();
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Method to downvote a song
+     */
+    private void downvoteSong(Song song, int position){
+        if(song.upVote_list_user.contains(MainActivity.userID)){
+            songReference(song, position)
+                    .child("upVote_list_user")
+                    .child("" + (song.upVote_list_user.size()-1))
+                    .removeValue();
+
+            song.upVote_list_user.remove(MainActivity.userID);
+        }
+        else if(!song.downVote_list_user.contains(MainActivity.userID)) {
+            songReference(song, position)
+                    .child("downVote_list_user")
+                    .child("" + song.downVote_list_user.size())
+                    .setValue(MainActivity.userID);
+
+            song.downVote_list_user.add(MainActivity.userID);
+        }
+        sortSongsByVote();
+        notifyDataSetChanged();
+    }
+
+    private void sortSongsByVote() {
+        Collections.sort(MainActivity.playlist.songs,
+                new Comparator<Song>(){
+
+                    @Override
+                    public int compare(Song song1, Song song2) {
+                        return (song2.upVote_list_user.size() - song2.downVote_list_user.size()) -
+                                ((song1.upVote_list_user.size()) - song1.downVote_list_user.size());
+                    }
+                });
+    }
+
+    //TODO find song ID based on position
+    private DatabaseReference songReference(Song song, int position){
+        Log.d(TAG, "playlist ID" + MainActivity.playlist.key);
+        DatabaseReference songRef = FirebaseDatabase.getInstance().getReference("playlists")
+                .child(MainActivity.playlist.key).child("songs").child(""+position);
+        return songRef;
     }
 
     /*
@@ -209,42 +278,4 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
 
     }
     */
-
-    /**
-     * Method to upvote a song
-     */
-    private void upvoteSong(Song song){
-        if(song.downVote_list_user.contains(MainActivity.userID)){
-            song.downVote_list_user.remove(MainActivity.userID);
-        }
-        else if(!song.upVote_list_user.contains(MainActivity.userID))
-            song.upVote_list_user.add(MainActivity.userID);
-        sortSongsByVote();
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Method to downvote a song
-     */
-    private void downvoteSong(Song song){
-        if(song.upVote_list_user.contains(MainActivity.userID)){
-            song.upVote_list_user.remove(MainActivity.userID);
-        }
-        else if(!song.downVote_list_user.contains(MainActivity.userID))
-            song.downVote_list_user.add(MainActivity.userID);
-        sortSongsByVote();
-        notifyDataSetChanged();
-    }
-
-    private void sortSongsByVote() {
-        Collections.sort(MainActivity.playlist.songs,
-                new Comparator<Song>(){
-
-                    @Override
-                    public int compare(Song song1, Song song2) {
-                        return (song2.upVote_list_user.size() - song2.downVote_list_user.size()) -
-                                ((song1.upVote_list_user.size()) - song1.downVote_list_user.size());
-                    }
-                });
-    }
 }

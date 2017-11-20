@@ -264,16 +264,13 @@ public final class MainActivity extends AppCompatActivity implements
                     ArrayList<String> listeners = new ArrayList<String>();
                     listeners.add(userID);
 
-                    ArrayList<Song> songs = new ArrayList<Song>();
-                    songs.add(new Song("2TpxZ7JUBn3uw46aR7qd6V"));
-
                     playlist = new FPlaylist(data.getStringExtra(CreatePlaylistActivity.EXTRA_NAME),
                             data.getStringExtra(CreatePlaylistActivity.EXTRA_CREATOR),
                             null,
                             0.0,
                             currentPos.latitude,
                             currentPos.longitude,
-                            songs,
+                            new ArrayList<Song>(),
                             listeners,
                             playlistKey
                             );
@@ -519,7 +516,8 @@ public final class MainActivity extends AppCompatActivity implements
                         ArrayList<FPlaylist> listOfPlaylists = new ArrayList<>();
                         //Ger List Information
                         for (DataSnapshot child: dataSnapshot.getChildren()) {
-                            listOfPlaylists.add(child.getValue(FPlaylist.class));
+                            FPlaylist playlist = child.getValue(FPlaylist.class);
+                            listOfPlaylists.add(playlist);
                         }
                         Log.d(TAG, "get Playlists called " + listOfPlaylists + "and its size is "+ listOfPlaylists.size());
                         playlists = new FPlaylists(listOfPlaylists);
