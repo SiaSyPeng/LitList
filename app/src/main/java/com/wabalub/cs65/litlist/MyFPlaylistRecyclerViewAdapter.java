@@ -1,6 +1,7 @@
 package com.wabalub.cs65.litlist;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import com.wabalub.cs65.litlist.RankingFragment.OnListFragmentInteractionListene
 
 import com.wabalub.cs65.litlist.gson.FPlaylist;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -20,6 +23,7 @@ public class MyFPlaylistRecyclerViewAdapter extends RecyclerView.Adapter<MyFPlay
 
     private final List<FPlaylist> mValues;
     private final OnListFragmentInteractionListener mListener;
+    public static String TAG = "RANKING_ADAPTER";
 
     public MyFPlaylistRecyclerViewAdapter(List<FPlaylist> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -28,8 +32,10 @@ public class MyFPlaylistRecyclerViewAdapter extends RecyclerView.Adapter<MyFPlay
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.d(TAG, "oncreateViewholder");
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_playlist_item, parent, false);
+        sortPlaylistsByListeners();
         return new ViewHolder(view);
     }
 
@@ -77,4 +83,17 @@ public class MyFPlaylistRecyclerViewAdapter extends RecyclerView.Adapter<MyFPlay
             return super.toString() + " '" + name.getText() + "'";
         }
     }
+
+
+    private void sortPlaylistsByListeners() {
+        Collections.sort(MainActivity.playlists.playlists,
+                new Comparator<FPlaylist>() {
+                    @Override
+                    public int compare(FPlaylist playlist1, FPlaylist playlist2) {
+                        return playlist2.users_listening.size() - playlist1.users_listening.size();
+                    }
+                }
+        );
+    }
+
 }

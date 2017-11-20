@@ -191,7 +191,8 @@ public class MapFragment extends Fragment {
             if(playlistCreatorText != null) playlistCreatorText.setText(MainActivity.viewedPlaylist.creator);
             if(joinCreateButton != null) joinCreateButton.setText(R.string.join);
         }
-        boolean enabled = MainActivity.viewedPlaylist != MainActivity.playlist || MainActivity.viewedPlaylist == null;
+        boolean enabled = MainActivity.viewedPlaylist == null || MainActivity.playlist == null ||
+                !MainActivity.viewedPlaylist.key.equals(MainActivity.playlist.key);
         if(joinCreateButton != null) {
             joinCreateButton.setEnabled(enabled);
             if(enabled) joinCreateButton.setAlpha(1f);

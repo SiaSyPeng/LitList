@@ -113,6 +113,7 @@ public final class MainActivity extends AppCompatActivity implements
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_main);
         queue = Volley.newRequestQueue(this);
 
@@ -141,23 +142,6 @@ public final class MainActivity extends AppCompatActivity implements
     Server methods
     ================================================================================================
      */
-    /*
-     * Get playlists in firebase
-     */
-//   ValueEventListener fplaylistsListener = new ValueEventListener() {
-//        @Override
-//        public void onDataChange(DataSnapshot dataSnapshot) {
-//            // Get Post object and use the values to update the UI
-//            FPlaylists playListsInServer = dataSnapshot.getValue(FPlaylists.class);
-//        }
-//
-//        @Override
-//        public void onCancelled(DatabaseError databaseError) {
-//            // Getting playlists failed, log a message
-//            Log.w(TAG, "loadFPlaylists:onCancelled", databaseError.toException());
-//        }
-//    };
-//    mPostReference.addValueEventListener(fplaylistsListener);
 
     /**
      * Method to setup the tab layout
@@ -203,6 +187,28 @@ public final class MainActivity extends AppCompatActivity implements
         // TODO get playlist from database based on the ID of our connected playlist
 
     }
+
+    private void setupServerListeners()
+    {
+        /*
+         * Get playlists in firebase
+         */
+       ValueEventListener fplaylistsListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                FPlaylists playListsInServer = dataSnapshot.getValue(FPlaylists.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting playlists failed, log a message
+                Log.w(TAG, "loadFPlaylists:onCancelled", databaseError.toException());
+            }
+        };
+        //mPostReference.addValueEventListener(fplaylistsListener);
+    }
+
     /*
     ================================================================================================
     Interaction listeners
@@ -242,7 +248,7 @@ public final class MainActivity extends AppCompatActivity implements
             playlist.users_listening.remove(userID);
             DatabaseReference playlistRef = FirebaseDatabase.getInstance().getReference("playlists")
                 .child(MainActivity.playlist.key).child("users_listening");
-            playlistRef.child("" + (userIndex-1)).removeValue();
+            playlistRef.child("" + (userIndex)).removeValue();
         }
         if(viewedPlaylist == null) {
             userIndex = 0;
@@ -251,14 +257,24 @@ public final class MainActivity extends AppCompatActivity implements
         else {
             // add self to new playlist
             playlist = viewedPlaylist;
+
+            userIndex = countListeners();
             playlist.users_listening.add(userID);
-            userIndex = playlist.users_listening.size();
             DatabaseReference playlistRef = FirebaseDatabase.getInstance().getReference("playlists")
                 .child(MainActivity.playlist.key).child("users_listening");
             playlistRef.child("" + (userIndex)).setValue(userID);
             savePlaylistIdInSharedPred();
         }
         pagerAdapter.notifyDataSetChanged();
+    }
+
+    private int countListeners(){
+        int total = 0;
+        for(String userID : playlist.users_listening){
+            if(userID != null)
+                total ++;
+        }
+        return total;
     }
 
     @Override
@@ -290,7 +306,6 @@ public final class MainActivity extends AppCompatActivity implements
                             );
                     playlists.playlists.add(playlist);
                     viewedPlaylist = playlist;
-                    sortPlaylistsByListeners();
                     setupPlaylistMarkers();
                     pagerAdapter.notifyDataSetChanged();
 
@@ -859,17 +874,6 @@ public final class MainActivity extends AppCompatActivity implements
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(PLAYLIST_ID_PREF, playlistIndex);
         editor.apply();
-    }
-
-    private void sortPlaylistsByListeners() {
-        Collections.sort(playlists.playlists,
-                new Comparator<FPlaylist>() {
-                    @Override
-                    public int compare(FPlaylist playlist1, FPlaylist playlist2) {
-                        return playlist2.users_listening.size() - playlist1.users_listening.size();
-                    }
-                }
-        );
     }
 
     /*
