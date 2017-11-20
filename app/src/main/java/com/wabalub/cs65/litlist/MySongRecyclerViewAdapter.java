@@ -36,12 +36,12 @@ import kaaes.spotify.webapi.android.models.Track;
  */
 public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Track> mValues;
+    private final List<Song> mValues;
     public static final String TAG = "SONG_ADAPTER";
     private final Context context;
     private final OnListFragmentInteractionListener mListener;
 
-    public MySongRecyclerViewAdapter(Context context, List<Track> items, OnListFragmentInteractionListener listener) {
+    public MySongRecyclerViewAdapter(Context context, List<Song> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
         this.context = context;
@@ -56,7 +56,8 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Track track = mValues.get(position);
+        Song song = mValues.get(position);
+        Track track = PlayerService.spotifyService.getTrack(song.id);
 
         holder.title.setText(track.name);
 
@@ -73,7 +74,8 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
         }
 
         holder.mItem = mValues.get(position);
-        holder.title.setText(mValues.get(position).name);
+        holder.title.setText(track.name);
+        holder.voteCount.setText(String.format("%s", song.upVote_list_user.size() - song.downVote_list_user.size()));
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +120,8 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
         public final ImageView albumArt;
         public final ImageButton upvoteBtn;
         public final ImageButton downvoteBtn;
-        public Track mItem;
+        public final TextView voteCount;
+        public Song mItem;
 
         public ViewHolder(View view) {
             super(view);
@@ -128,6 +131,7 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
             albumArt = view.findViewById(R.id.song_album_art);
             upvoteBtn = view.findViewById(R.id.upvote_button);
             downvoteBtn = view.findViewById(R.id.downvote_button);
+            voteCount = view.findViewById(R.id.vote_count);
         }
 
         @Override

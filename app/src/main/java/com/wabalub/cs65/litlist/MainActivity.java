@@ -2,8 +2,6 @@ package com.wabalub.cs65.litlist;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,31 +38,22 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.wabalub.cs65.litlist.MapFragment.OnFragmentInteractionListener;
 import com.wabalub.cs65.litlist.gson.FPlaylist;
 import com.wabalub.cs65.litlist.gson.FPlaylists;
 import com.wabalub.cs65.litlist.gson.Song;
 import com.wabalub.cs65.litlist.my_libs.InternetMgmtLib.InternetListener;
-import com.wabalub.cs65.litlist.PlaylistFragment.OnListFragmentInteractionListener;
 import com.wabalub.cs65.litlist.search.SearchActivity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.jetbrains.annotations.Nullable;
@@ -76,7 +65,8 @@ import kaaes.spotify.webapi.android.models.UserPrivate;
 public final class MainActivity extends AppCompatActivity implements
         InternetListener,
         OnFragmentInteractionListener,
-        OnListFragmentInteractionListener,
+        RankingFragment.OnListFragmentInteractionListener,
+        PlaylistFragment.OnListFragmentInteractionListener,
         SensorEventListener,
         AdapterView.OnItemSelectedListener,
         OnMapReadyCallback,
@@ -100,11 +90,9 @@ public final class MainActivity extends AppCompatActivity implements
 
 
     // for playlist management
-
     public static FPlaylist viewedPlaylist = null;
     public static FPlaylist playlist = null;
     public static FPlaylists playlists = null;
-    public static List<Track> tracks = new ArrayList<>();
     public static int playlistIndex;
 
     // for firebase
@@ -248,6 +236,8 @@ public final class MainActivity extends AppCompatActivity implements
             case CREATE_PLAYLIST_REQUEST:
                 if(resultCode == RESULT_OK) {
 
+                    ArrayList<String> listeners = new ArrayList<String>();
+                    listeners.add(userID);
                     playlist = new FPlaylist(data.getStringExtra(CreatePlaylistActivity.EXTRA_NAME),
                             data.getStringExtra(CreatePlaylistActivity.EXTRA_CREATOR),
                             null,
@@ -255,14 +245,12 @@ public final class MainActivity extends AppCompatActivity implements
                             currentPos.latitude,
                             currentPos.longitude,
                             new ArrayList<Song>(),
-                            new ArrayList<String>(),
-                            1
+                            new ArrayList<String>()
                             );
                     playlists.playlists.add(playlist);
                     viewedPlaylist = playlist;
 
                     setupPlaylistMarkers();
-                    updateTracks();
                     pagerAdapter.notifyDataSetChanged();
                     //TODO add this to the database
                 }
@@ -337,9 +325,8 @@ public final class MainActivity extends AppCompatActivity implements
      * @param item song selected
      */
     @TargetApi(Build.VERSION_CODES.O)
-    public void onListFragmentInteraction(@Nullable Track item) {
+    public void onListFragmentInteraction(@Nullable Song item) {
         if(item == null) return;
-        updateTracks();
 
         if (PlayerService.player == null) {
             logMessage("Player is null");
@@ -349,7 +336,7 @@ public final class MainActivity extends AppCompatActivity implements
         com.spotify.sdk.android.player.PlaybackState playbackState = PlayerService.player.getPlaybackState();
         if(playbackState != null && playbackState.isPlaying) PlayerService.player.pause(null);
 
-        PlayerService.currentTrack = item;
+        PlayerService.currentTrack = PlayerService.spotifyService.getTrack(item.id);
         String currentTrackId = item.id;
         logMessage("currentTrackId: " + currentTrackId);
 
@@ -359,6 +346,9 @@ public final class MainActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void onListFragmentInteraction(FPlaylist item) {
+    }
     /**
      * Method for handling selection of a fragment in the tab layout
      * @param uri uri of frag
@@ -493,7 +483,9 @@ public final class MainActivity extends AppCompatActivity implements
         // TODO get the playlists from the database
 
         ArrayList<FPlaylist> listOfPlaylists = new ArrayList<>();
-        listOfPlaylists.add(new FPlaylist("name", "creator", null, 0.0, 43.1939, -71.5724, new ArrayList<Song>(), new ArrayList<String>(), 0));
+        listOfPlaylists.add(new FPlaylist("playlist1", "user1",
+                null, 0.0, 43.6939, -71.9724,
+                new ArrayList<Song>(), new ArrayList<String>()));
         playlists = new FPlaylists(listOfPlaylists);
     }
 
@@ -808,20 +800,6 @@ public final class MainActivity extends AppCompatActivity implements
         editor.apply();
     }
 
-    public static void updateTracks(){
-        if(playlist == null) {
-            tracks = new ArrayList<>();
-            return;
-        }
-
-        Log.d(TAG, "Updating tracks!");
-        tracks = new ArrayList<>();
-
-        for(Song song : playlist.songs){
-            String id = song.id;
-            tracks.add(PlayerService.spotifyService.getTrack(id));
-        }
-    }
     /*
     private void sortTracks() {
         // Top TrackID by number of upvotes

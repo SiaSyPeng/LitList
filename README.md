@@ -1,7 +1,7 @@
 # LitList
 The democratic, crowd-sourced playlist manager.
 
-Team Wubalubadubdub: Josiah Putman, Lessley Hernandez, Sia Peng 
+Team Wubalubadubdub: Josiah Putman, Lessley Hernandez, Sia Peng
 
 ## Project Idea
 Our idea is to create an app that allows users to collaboratively create and manage playlist with other users in their area. This app can be used as an easy way to simultaneously listen to music with others and manage playlists live. Music has always been a way to express emotion and communicate feelings. Through this app we can allow people to share a piece of themselves through music. Users have the ability to see all public playlists in a map view, and joining, participating and giving your vote for the next song are all just a tap away. LitList allows users to use playlists as a liaison for understanding the musical atmosphere on campus.
@@ -21,8 +21,8 @@ DEMOCRACY! Something that has been tragically lost in 2k17 will be revived throu
     * Map markers
     * Map Panel (where you can press "join playlist" and see the playlist info)
     * Add a upvote/downvote button to the song view in the Playlist fragment
-    
-* Server 
+
+* Server
     * Receive GET requests for a list of all playlists
     * Receive GET requests for a nearest playlist
     * Receive POST requests for adding a song to a playlist, voting on a song
@@ -62,33 +62,22 @@ DEMOCRACY! Something that has been tragically lost in 2k17 will be revived throu
 ## Implementation Notes
 
 ### APIs
-We will be using the following APIs. We already have the keys.
-
-### APIs
+We used the following APIs:
 
 #### Spotify
-We plan on using Spotify for playing songs and login.
+We used Spotify for authentication, music streaming and getting metadata. We used both the Spotify Android SDK (https://developer.spotify.com/technologies/spotify-android-sdk/) and a wrapper for the Spotify Web API (https://github.com/kaaes/spotify-web-api-android).
 
 #### Google maps
-We plan on using Google maps for the map view.
+We used the Google maps API for the playlist view.
 
 ### Sensors
-Accelerometers, GPS
+Accelerometers, GPS.
 Shaking the phone auto-joins the nearest session.
 
 ### Server development
-This project will require a server. We want to program in Python on a Raspberry Pi.
-The server either needs to be able to stream audio simultaneously to the users or find some way to sync up the users' audio stream with Spotify.
-
-The server must also handle requests for playlist creation, adding/removing songs from the playlist, upvoting/downvoting songs, etc.
-
-### Platform / Languages
-
-This project will be developed in Java and Kotlin using Android studio. I prefer using Kotlin because it helps me make less null pointer exceptions, but feel free to use as much Java as you want. I will not be converting any Java to Kotlin and am comfortable using both languages. My only request is that all classes for holding JSON objects be defined as Kotlin data classes.
- -- Josiah
+This project required a server implementation. We are using Firebase to manage a list of created playlists, all users listening to the playlists, and all songs that have been added to those playlists.
+The server sends
 
 ## UI Design
-
-Develop the UI via Figma here
+Here is our mockup on Figma.
 https://www.figma.com/file/TadFx7fYTgYNrsfTsq5YclMd/LitListMockup
-

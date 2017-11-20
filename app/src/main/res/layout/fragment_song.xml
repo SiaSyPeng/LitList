@@ -52,6 +52,17 @@
         android:scaleType="fitCenter"
         android:layout_height="50dp"
         android:layout_weight="0"/>
+
+    <TextView
+        android:id="@+id/vote_count"
+        android:text="0"
+        android:textSize="15sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"/>
+
     <ImageButton
         android:id="@+id/downvote_button"
         android:layout_width="40dp"

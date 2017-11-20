@@ -12,7 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import kaaes.spotify.webapi.android.models.Track;
+import com.wabalub.cs65.litlist.gson.Song;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -65,7 +68,12 @@ public class PlaylistFragment extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
         //recyclerView.setAdapter(new MySongRecyclerViewAdapter(MainActivity.playlist.getSongList(), mListener));
-        recyclerView.setAdapter(new MySongRecyclerViewAdapter(getContext(), MainActivity.tracks, mListener));
+        List<Song> songs;
+        if(MainActivity.playlist != null)
+             songs = MainActivity.playlist.songs;
+        else songs = new ArrayList<Song>();
+
+        recyclerView.setAdapter(new MySongRecyclerViewAdapter(getContext(), songs, mListener));
 
         return view;
     }
@@ -115,6 +123,6 @@ public class PlaylistFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
 
-        void onListFragmentInteraction(Track mItem);
+        void onListFragmentInteraction(Song mItem);
     }
 }

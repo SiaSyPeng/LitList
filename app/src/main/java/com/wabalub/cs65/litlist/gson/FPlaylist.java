@@ -34,7 +34,7 @@ public class FPlaylist {
 
     // Made this into a constructor, was a method for some reason
     public FPlaylist(String name, String creator, String curr_track_id, Double curr_song_pos,
-                    Double lat, Double lon,ArrayList<Song> songs, ArrayList<String> users_listening, Integer user_lis_tot) {
+                    Double lat, Double lon,ArrayList<Song> songs, ArrayList<String> users_listening) {
         this.name = name;
         this.creator = creator;
         this.curr_track_id = curr_track_id;
@@ -44,6 +44,6 @@ public class FPlaylist {
         this.songs = songs;
         this.users_listening = users_listening;
         // if(!users_listening.isEmpty()) this.user_lis_tot = len(users_listening)-1;
-        this.user_lis_tot = user_lis_tot;
+        this.user_lis_tot = users_listening.size();
     }
 }

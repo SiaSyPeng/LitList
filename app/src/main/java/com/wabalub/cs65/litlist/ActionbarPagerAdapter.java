@@ -48,9 +48,14 @@ public class ActionbarPagerAdapter extends FragmentPagerAdapter {
                 fragment = PlaylistFragment.newInstance();
                 break;
 
+            case 2:
+                fragment = RankingFragment.newInstance();
+                break;
+
             case 3:
                 fragment = SettingsFragment.newInstance();
                 break;
+
             default:
                 fragment = BlankFragment.newInstance();
                 break;
