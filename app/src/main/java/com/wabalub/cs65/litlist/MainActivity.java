@@ -94,6 +94,7 @@ public final class MainActivity extends AppCompatActivity implements
 
     // for playlist management
 
+    public static FPlaylist viewedPlaylist = null;
     public static FPlaylist playlist = null;
     public static FPlaylists playlists = null;
     public static List<Track> tracks = new ArrayList<>();
@@ -153,7 +154,7 @@ public final class MainActivity extends AppCompatActivity implements
 
         for(int i = 0; i < playlists.playlists.size(); i++){
             if(playlists.playlists.get(i).id == playlistID){
-                playlist = playlists.playlists.get(i);
+                viewedPlaylist = playlists.playlists.get(i);
                 playlistIndex = i;
             }
         }
@@ -181,6 +182,11 @@ public final class MainActivity extends AppCompatActivity implements
             PlayerService.unmute();
             playPauseButton.setImageResource(R.drawable.unmute);
         }
+    }
+
+    public void onJoinCreateClicked(View view) {
+        playlist = viewedPlaylist;
+        pagerAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -355,7 +361,6 @@ public final class MainActivity extends AppCompatActivity implements
     public static float zoom = 10;
     private boolean zoomedOut = true;
     public static boolean permissionsGranted = true;
-    public static boolean setup;
     private MapFragment mapFragment = null;
 
     FPlaylist closestPlaylist = null;
@@ -403,10 +408,9 @@ public final class MainActivity extends AppCompatActivity implements
         // TODO get the playlists from the database
 
         ArrayList<FPlaylist> listOfPlaylists = new ArrayList<>();
-        listOfPlaylists.add(playlist = new FPlaylist("name", "creator", null, 0.0, 43.1939, -71.5724, new ArrayList<Song>(), new ArrayList<String>(), 0));
+        listOfPlaylists.add(viewedPlaylist = new FPlaylist("name", "creator", null, 0.0, 43.1939, -71.5724, new ArrayList<Song>(), new ArrayList<String>(), 0));
         playlists = new FPlaylists(listOfPlaylists);
     }
-
 
     /**
      * Method to make all of the playlist markers
@@ -484,7 +488,18 @@ public final class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        // TODO get the playlist whose marker is at this position
+        playlistIndex = -1;
+        for(int i = 0; i < playlistMarkers.length; i++){
+            if(playlistMarkers[i].equals(marker))
+                playlistIndex = i;
+        }
+        if(playlistIndex == -1) {
+            Log.d(TAG, "No playlist with marker.");
+            return false;
+        }
+
+        viewedPlaylist = playlists.playlists.get(playlistIndex);
+
         mapFragment.updatePanel();
         return false;
     }
@@ -492,9 +507,9 @@ public final class MainActivity extends AppCompatActivity implements
     @Override
     public void onMapClick(LatLng latLng) {
         logMessage("Map clicked!");
-        MapFragment mapFragment = (MapFragment) pagerAdapter.getItem(0);
+
+        viewedPlaylist = null;
         mapFragment.updatePanel();
-        playlist = null;
     }
 
      // You NEED to first check for location permissions before using the location.
@@ -701,29 +716,8 @@ public final class MainActivity extends AppCompatActivity implements
     General utility
     ================================================================================================
      */
-
-    /**
-     * Method to get the pending intent for starting this activity
-     * @return pending intent tos tart the activity
-     */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private PendingIntent getPendingIntent(){
-        Intent resultIntent = new Intent(this, MainActivity.class);
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-
-        // Adds the back stack
-        stackBuilder.addParentStack(MainActivity.class);
-
-        // Adds the Intent to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-
-        // Gets a PendingIntent containing the entire back stack
-        return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
     private void savePlaylistIdInSharedPred(){
-        if(playlist == null) {
+        if(viewedPlaylist == null) {
             logError("Playlist is null, cannot be saved");
             return;
         }
@@ -735,7 +729,10 @@ public final class MainActivity extends AppCompatActivity implements
     }
 
     public static void updateTracks(){
-        if(playlist == null) return;
+        if(playlist == null) {
+            tracks = new ArrayList<>();
+            return;
+        }
 
         Log.d(TAG, "Updating tracks!");
         tracks = new ArrayList<>();

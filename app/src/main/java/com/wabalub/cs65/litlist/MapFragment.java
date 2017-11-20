@@ -169,23 +169,17 @@ public class MapFragment extends Fragment {
     public void updatePanel(){
 
         // if we have a playlist
-        if(MainActivity.playlist == null){
+        if(MainActivity.viewedPlaylist == null){
             if(playlistNameText != null) playlistNameText.setText(R.string.click_markers_prompt);
-            else Log.e(TAG, "this view is null");
             if(playlistCreatorText != null) playlistCreatorText.setText("");
-            else Log.e(TAG, "this view is null");
             if(joinCreateButton != null)joinCreateButton.setText(R.string.create);
-            else Log.e(TAG, "this view is null");
         }
 
         // otherwise we are on a cat, so update the panel view
         else {
-            if(playlistNameText != null) playlistNameText.setText(MainActivity.playlist.name);
-            else Log.e(TAG, "this view is null");
-            if(playlistCreatorText != null) playlistCreatorText.setText(MainActivity.playlist.creator);
-            else Log.e(TAG, "this view is null");
+            if(playlistNameText != null) playlistNameText.setText(MainActivity.viewedPlaylist.name);
+            if(playlistCreatorText != null) playlistCreatorText.setText(MainActivity.viewedPlaylist.creator);
             if(joinCreateButton != null) joinCreateButton.setText(R.string.join);
-            else Log.e(TAG, "this view is null");
         }
     }
 }

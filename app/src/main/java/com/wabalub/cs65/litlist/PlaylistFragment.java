@@ -2,6 +2,7 @@ package com.wabalub.cs65.litlist;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,6 +52,7 @@ public class PlaylistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView called");
+
         View view = inflater.inflate(R.layout.fragment_playlist, container, false);
 
         RecyclerView recyclerView = view.findViewById(R.id.playlist);
@@ -68,6 +70,21 @@ public class PlaylistFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // if the user has not joined a playlist, hide the views!
+        if(MainActivity.playlist == null) {
+            view.findViewById(R.id.share_button).setVisibility(View.GONE);
+            view.findViewById(R.id.add_by_search_button).setVisibility(View.GONE);
+            view.findViewById(R.id.mute_button).setVisibility(View.GONE);
+        }
+        else {
+            view.findViewById(R.id.share_button).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.add_by_search_button).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.mute_button).setVisibility(View.VISIBLE);
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
