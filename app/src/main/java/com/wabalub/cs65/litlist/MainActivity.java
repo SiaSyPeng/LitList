@@ -88,7 +88,6 @@ public final class MainActivity extends AppCompatActivity implements
     private static final int CREATE_PLAYLIST_REQUEST = 1;
     public static String USER_PREF = "profile_data";
     public static String SHARED_PREF = "litlist_" + "shared_pref";
-    public static String PLAYLIST_ID_PREF = "playlist_id";
     public static String ZOOM_PREF = "zoom";
     public static String playlistKey;
     private int userIndex = 0;
@@ -179,12 +178,16 @@ public final class MainActivity extends AppCompatActivity implements
 
 
     private void setupPlaylist(){
-        getPlaylists();
+        Log.e(TAG, "setting up playlist");
         SharedPreferences sp = getSharedPreferences(SHARED_PREF, 0);
-        String playlistKey = sp.getString(PLAYLIST_ID_PREF, "");
-        if(playlistKey == "") return;
+        playlistKey = sp.getString(SHARED_PREF, "");
+        Log.e(TAG, "key =" + playlistKey);
+        if(playlistKey.equals("")) return;
+
+        Log.d(TAG, "desired key = " + playlistKey);
 
         for(int i = 0; i < playlists.playlists.size(); i++){
+            Log.d(TAG, "playlist key = " + playlists.playlists.get(i).key);
             if(playlists.playlists.get(i).key.equals(playlistKey)){
                 playlist = playlists.playlists.get(i);
                 playlistIndex = i;
@@ -247,7 +250,7 @@ public final class MainActivity extends AppCompatActivity implements
             DatabaseReference playlistRef = FirebaseDatabase.getInstance().getReference("playlists")
                 .child(MainActivity.playlist.key).child("users_listening");
             playlistRef.child("" + (userIndex)).setValue(userID);
-            savePlaylistIdInSharedPred();
+            savePlaylistIdInSharedPref();
         }
         pagerAdapter.notifyDataSetChanged();
     }
@@ -503,7 +506,6 @@ public final class MainActivity extends AppCompatActivity implements
         map.setOnMarkerClickListener(this);
 
         getLocation();
-        getPlaylists();
         setupPlaylistMarkers();
         moveToCurrentLocation(currentPos);
     }
@@ -549,13 +551,6 @@ public final class MainActivity extends AppCompatActivity implements
         playlists = new FPlaylists(listOfPlaylists);
         pagerAdapter.notifyDataSetChanged();
     }
-
-    private void getPlaylists(){
-        // DatabaseReference playlistsReference = FirebaseDatabase.getInstance().getReference("playlists");
-
-        // pagerAdapter.notifyDataSetChanged();
-    }
-
 
 
     /**
@@ -861,15 +856,17 @@ public final class MainActivity extends AppCompatActivity implements
     General utility
     ================================================================================================
      */
-    private void savePlaylistIdInSharedPred(){
-        if(viewedPlaylist == null) {
+    private void savePlaylistIdInSharedPref(){
+        if(playlist == null) {
             logError("Playlist is null, cannot be saved");
             return;
         }
+        Log.e(TAG, "saving playlist key:" + playlist.key);
+
 
         SharedPreferences sp = getSharedPreferences(SHARED_PREF, 0);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(PLAYLIST_ID_PREF, playlistKey);
+        editor.putString(SHARED_PREF, playlistKey);
         editor.apply();
     }
 
