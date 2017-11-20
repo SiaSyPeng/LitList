@@ -257,11 +257,10 @@ public final class MainActivity extends AppCompatActivity implements
                     pagerAdapter.notifyDataSetChanged();
 
                     //TODO add this to the database
-                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("playlists");
+                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("playlists");
                     String playlistId = mDatabase.push().getKey();
-                    FPlaylist playlist = new FPlaylist();
+                    logMessage(playlistId);
                     mDatabase.child(playlistId).setValue(playlist);
-
                 }
                 break;
         }
@@ -885,7 +884,7 @@ public final class MainActivity extends AppCompatActivity implements
     }
 
     private void logMessage(String msg) {
-        // Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         Log.d(TAG, msg);
     }
 }
