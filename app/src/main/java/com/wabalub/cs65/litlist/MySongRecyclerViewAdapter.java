@@ -202,7 +202,6 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
                 });
     }
 
-    //TODO find song ID based on position
     private DatabaseReference songReference(Song song, int position){
         Log.d(TAG, "playlist ID" + MainActivity.playlist.key);
         DatabaseReference songRef = FirebaseDatabase.getInstance().getReference("playlists")

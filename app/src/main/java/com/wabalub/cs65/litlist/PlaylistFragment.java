@@ -97,7 +97,7 @@ public class PlaylistFragment extends Fragment {
         }
 
         ImageButton playButton = view.findViewById(R.id.play_button);
-        if(PlayerService.player == null || PlayerService.player.getPlaybackState().isPlaying)
+        if(PlayerService.player == null || (PlayerService.player != null && PlayerService.player.getPlaybackState().isPlaying))
             playButton.setImageResource(R.drawable.pause);
         else playButton.setImageResource(R.drawable.play);
     }
